@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:auth/main.dart';
 import 'package:auth/src/auth/services/auth_service.dart';
 import 'package:auth/src/common/exceptions/http_exception.dart';
 import 'package:auth/src/common/widgets/alert_widget.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
+  static const routeName = '/login';
+
   LoginScreen({Key? key}) : super(key: key);
 
   @override
@@ -13,7 +16,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  late final authService = AuthService();
+  final authService = getIt.get<AuthService>();
 
   final _passwordController = TextEditingController();
 

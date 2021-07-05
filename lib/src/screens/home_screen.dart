@@ -1,8 +1,13 @@
+import 'package:auth/main.dart';
 import 'package:auth/src/auth/models/user.dart';
 import 'package:auth/src/auth/services/auth_service.dart';
+import 'package:auth/src/screens/login_screen.dart';
+import 'package:auth/src/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
+  static const routeName = '/home';
+
   HomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -10,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final authService = AuthService();
+  final authService = getIt.get<AuthService>();
 
   User? _user;
 
@@ -45,12 +50,14 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Spacer(),
             ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, 'login'),
+              onPressed: () =>
+                  Navigator.pushNamed(context, LoginScreen.routeName),
               child: Text('Login'),
             ),
             Spacer(),
             ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, 'register'),
+              onPressed: () =>
+                  Navigator.pushNamed(context, RegisterScreen.routeName),
               child: Text('Register'),
             ),
             Spacer(),

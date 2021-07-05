@@ -8,11 +8,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: HomeScreen.routeName,
       routes: {
-        '/': (context) => HomeScreen(),
-        'login': (context) => LoginScreen(),
-        'register': (context) => RegisterScreen(),
+        HomeScreen.routeName: (context) => HomeScreen(),
+        LoginScreen.routeName: (context) => LoginScreen(),
+        RegisterScreen.routeName: (context) => RegisterScreen(),
       },
     );
   }

@@ -1,3 +1,4 @@
+import 'package:auth/main.dart';
 import 'package:auth/src/auth/services/auth_service.dart';
 import 'package:auth/src/common/exceptions/http_exception.dart';
 import 'package:auth/src/common/widgets/alert_widget.dart';
@@ -5,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class RegisterScreen extends StatefulWidget {
+  static const routeName = '/register';
+
   RegisterScreen({Key? key}) : super(key: key);
 
   @override
@@ -12,8 +15,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  @override
-  late final authService = AuthService();
+  final authService = getIt.get<AuthService>();
 
   final _passwordController = TextEditingController();
 
