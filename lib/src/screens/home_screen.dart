@@ -67,8 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text('Hello, ${_user?.username}!'),
           ElevatedButton(
-            onPressed: () {
-              authService.logout();
+            onPressed: () async {
+              await authService.logout();
 
               setState(() {
                 _user = null;
