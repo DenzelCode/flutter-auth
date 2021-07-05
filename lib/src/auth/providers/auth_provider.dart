@@ -8,10 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 
-class AuthService {
-  static User? user;
-
-  static get isAuthenticated => user != null;
+class AuthProvider extends ChangeNotifier {
+  User? user;
 
   final storage = new FlutterSecureStorage();
 
@@ -55,6 +53,10 @@ class AuthService {
 
   Future<void> logout() async {
     await storage.delete(key: 'token');
+
+    user = null;
+
+    notifyListeners();
   }
 
   Future<User> getProfile() async {
@@ -77,7 +79,7 @@ class AuthService {
 
     final user = User.fromJson(decoded);
 
-    AuthService.user = user;
+    this.user = user;
 
     return user;
   }

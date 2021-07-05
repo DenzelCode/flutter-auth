@@ -1,12 +1,15 @@
 import 'package:auth/src/app.dart';
-import 'package:auth/src/auth/services/auth_service.dart';
+import 'package:auth/src/auth/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-
-GetIt getIt = GetIt.instance;
+import 'package:provider/provider.dart';
 
 void main() {
-  getIt.registerSingleton<AuthService>(AuthService());
-
-  runApp(MyApp());
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (_) => AuthProvider(),
+      ),
+    ],
+    child: MyApp(),
+  ));
 }

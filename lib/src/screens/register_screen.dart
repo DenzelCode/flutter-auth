@@ -1,9 +1,11 @@
 import 'package:auth/main.dart';
-import 'package:auth/src/auth/services/auth_service.dart';
+import 'package:auth/src/auth/providers/auth_provider.dart';
 import 'package:auth/src/common/exceptions/http_exception.dart';
 import 'package:auth/src/common/widgets/alert_widget.dart';
+import 'package:auth/src/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const routeName = '/register';
@@ -15,8 +17,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final authService = getIt.get<AuthService>();
-
   final _passwordController = TextEditingController();
 
   String _username = '';
@@ -90,7 +90,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => _login(context),
+              onPressed: () => _register(context),
               child: Text('Sign up'),
             ),
           )
@@ -99,20 +99,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  _login(BuildContext context) async {
+  _register(BuildContext context) async {
+    final provider = Provider.of<AuthProvider>(context, listen: false);
+
     setState(() {
       _loading = true;
     });
 
     try {
-      await authService.register(
+      await provider.register(
         _username,
         _email,
         _passwordController.text,
       );
 
-      await Navigator.of(context)
-          .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+      await Navigator.of(context).pushNamedAndRemoveUntil(
+        HomeScreen.routeName,
+        (_) => false,
+      );
     } on HttpException catch (e) {
       showDialog(
         context: context,
