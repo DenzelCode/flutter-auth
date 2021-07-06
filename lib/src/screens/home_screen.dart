@@ -23,8 +23,8 @@ class HomeScreen extends StatelessWidget {
             final user = provider.user;
 
             return user != null
-                ? _authenticated(context)
-                : _notAuthenticated(context);
+                ? _AuthenticatedHome()
+                : _NonAuthenticatedHome();
           }
 
           return Center(
@@ -34,8 +34,39 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _notAuthenticated(BuildContext context) {
+class _AuthenticatedHome extends StatelessWidget {
+  const _AuthenticatedHome({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final provider = Provider.of<AuthProvider>(context);
+
+    final user = provider.user;
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Hello, ${user?.username}!'),
+          ElevatedButton(
+            onPressed: () async {
+              await provider.logout();
+            },
+            child: Text('Logout'),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class _NonAuthenticatedHome extends StatelessWidget {
+  const _NonAuthenticatedHome({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: Center(
         child: Row(
@@ -55,27 +86,6 @@ class HomeScreen extends StatelessWidget {
             Spacer(),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _authenticated(BuildContext context) {
-    final provider = Provider.of<AuthProvider>(context);
-
-    final user = provider.user;
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Hello, ${user?.username}!'),
-          ElevatedButton(
-            onPressed: () async {
-              await provider.logout();
-            },
-            child: Text('Logout'),
-          )
-        ],
       ),
     );
   }
