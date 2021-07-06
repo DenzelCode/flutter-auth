@@ -156,6 +156,14 @@ class _RecoverScreenState extends State<RecoverScreen> {
       );
 
       _emailController.text = '';
+
+      showDialog(
+        context: context,
+        builder: (context) => AlertWidget(
+          title: 'Success',
+          description: 'Check your email and change your password!',
+        ),
+      );
     } on HttpException catch (e) {
       showDialog(
         context: context,
