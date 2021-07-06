@@ -7,10 +7,13 @@ class UnderlinedButton extends StatelessWidget {
 
   final Color color;
 
+  final Color? textColor;
+
   const UnderlinedButton({
     Key? key,
     required this.child,
     this.onPressed,
+    this.textColor,
     required this.color,
   }) : super(key: key);
 
@@ -35,9 +38,9 @@ class UnderlinedButton extends StatelessWidget {
         ],
       ),
       style: TextButton.styleFrom(
-        primary: Colors.black,
+        primary: textColor ?? Colors.black,
         textStyle: TextStyle(
-          color: Colors.black,
+          color: textColor ?? Colors.black,
           fontWeight: FontWeight.bold,
           fontSize: 17,
         ),

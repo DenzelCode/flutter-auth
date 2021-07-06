@@ -1,8 +1,12 @@
 import 'package:auth/main.dart';
 import 'package:auth/src/auth/models/user.dart';
 import 'package:auth/src/auth/providers/auth_provider.dart';
+import 'package:auth/src/common/widgets/circles_background.dart';
+import 'package:auth/src/common/widgets/underlined_button.dart';
+import 'package:auth/src/screens/authenticated_home.dart';
 import 'package:auth/src/screens/login_screen.dart';
 import 'package:auth/src/screens/register_screen.dart';
+import 'package:auth/src/screens/non_authenticated_home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +19,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<AuthProvider>(context);
 
+    final theme = Theme.of(context);
+
     return Scaffold(
       body: FutureBuilder(
         future: provider.getProfile(),
@@ -22,70 +28,15 @@ class HomeScreen extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.done) {
             final user = provider.user;
 
-            return user != null
-                ? _AuthenticatedHome()
-                : _NonAuthenticatedHome();
+            return user != null ? AuthenticatedHome() : NonAuthenticatedHome();
           }
 
           return Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              color: theme.primaryColor,
+            ),
           );
         },
-      ),
-    );
-  }
-}
-
-class _AuthenticatedHome extends StatelessWidget {
-  const _AuthenticatedHome({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final provider = Provider.of<AuthProvider>(context);
-
-    final user = provider.user;
-
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('Hello, ${user?.username}!'),
-          ElevatedButton(
-            onPressed: () async {
-              await provider.logout();
-            },
-            child: Text('Logout'),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class _NonAuthenticatedHome extends StatelessWidget {
-  const _NonAuthenticatedHome({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Center(
-        child: Row(
-          children: [
-            Spacer(),
-            ElevatedButton(
-              onPressed: () =>
-                  Navigator.pushNamed(context, LoginScreen.routeName),
-              child: Text('Login'),
-            ),
-            Spacer(),
-            ElevatedButton(
-              onPressed: () =>
-                  Navigator.pushNamed(context, RegisterScreen.routeName),
-              child: Text('Register'),
-            ),
-            Spacer(),
-          ],
-        ),
       ),
     );
   }

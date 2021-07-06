@@ -46,10 +46,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     return Scaffold(
       body: CirclesBackground(
-        backgroundColor: theme.accentColor,
+        backgroundColor: theme.highlightColor,
         topSmallCircleColor: theme.primaryColor,
         topMediumCircleColor: theme.primaryColor,
-        topRightCircleColor: theme.accentColor,
+        topRightCircleColor: theme.highlightColor,
         bottomRightCircleColor: Colors.white,
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 40),
@@ -77,6 +77,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 MainTextField(
                   label: 'Username',
                   usernameField: true,
+                  textColor: Colors.white,
                   onChanged: (value) => setState(() {
                     _username = value;
                   }),
@@ -91,6 +92,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     _email = value;
                   }),
                   emailField: true,
+                  textColor: Colors.white,
                   onEditingComplete: () => node.nextFocus(),
                 ),
                 SizedBox(
@@ -100,6 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   label: 'Password',
                   controller: _passwordController,
                   passwordField: true,
+                  textColor: Colors.white,
                   onSubmitted: (_) {
                     node.unfocus();
 

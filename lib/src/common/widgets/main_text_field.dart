@@ -9,6 +9,7 @@ class MainTextField extends StatelessWidget {
   final bool? passwordField;
   final bool? emailField;
   final bool? usernameField;
+  final Color? textColor;
 
   const MainTextField({
     Key? key,
@@ -19,6 +20,7 @@ class MainTextField extends StatelessWidget {
     this.onSubmitted,
     this.emailField,
     this.usernameField,
+    this.textColor,
     required this.label,
   }) : super(key: key);
 
@@ -26,20 +28,20 @@ class MainTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       decoration: InputDecoration(
-        filled: true,
-        fillColor: Color.fromRGBO(0, 0, 0, 0.1),
-        border: OutlineInputBorder(),
-        hintText: label,
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.transparent),
-          borderRadius: BorderRadius.circular(25),
-        ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.transparent),
-          borderRadius: BorderRadius.circular(25),
-        ),
-        contentPadding: EdgeInsets.all(21),
-      ),
+          filled: true,
+          fillColor: Color.fromRGBO(0, 0, 0, 0.1),
+          border: OutlineInputBorder(),
+          hintText: label,
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.transparent),
+            borderRadius: BorderRadius.circular(25),
+          ),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.transparent),
+            borderRadius: BorderRadius.circular(25),
+          ),
+          contentPadding: EdgeInsets.all(21),
+          hintStyle: TextStyle(color: textColor)),
       keyboardType: emailField == true ? TextInputType.emailAddress : null,
       obscureText: passwordField ?? false,
       maxLength: passwordField == true ? 60 : null,
@@ -48,6 +50,8 @@ class MainTextField extends StatelessWidget {
       onChanged: onChanged,
       onEditingComplete: onEditingComplete,
       onSubmitted: onSubmitted,
+      cursorColor: Color.fromRGBO(0, 0, 0, 0.1),
+      style: TextStyle(color: textColor),
     );
   }
 }
