@@ -8,10 +8,10 @@ The app will be deployed to App Store in a future.
 
 Images:
 
-![image](https://user-images.githubusercontent.com/27902328/124466168-56f07780-dd64-11eb-9289-2dd7834d64e0.png)
+![image](https://user-images.githubusercontent.com/27902328/124671429-716d4280-de83-11eb-9e9e-8617c5e6e382.png)
 
-![image](https://user-images.githubusercontent.com/27902328/124466190-5eb01c00-dd64-11eb-86d9-076726579ce4.png)
+![image](https://user-images.githubusercontent.com/27902328/124671457-7df19b00-de83-11eb-817b-bc4e0c35a2af.png)
 
-![image](https://user-images.githubusercontent.com/27902328/124466220-68d21a80-dd64-11eb-98b7-73ac845cc7b3.png)
+![image](https://user-images.githubusercontent.com/27902328/124671470-84801280-de83-11eb-93b9-5292f36534ed.png)
 
-![image](https://user-images.githubusercontent.com/27902328/124466258-77b8cd00-dd64-11eb-9931-3892c0f6164f.png)
+![image](https://user-images.githubusercontent.com/27902328/124671502-906bd480-de83-11eb-8262-ee4e983eb84f.png)
