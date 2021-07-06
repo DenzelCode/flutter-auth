@@ -4,6 +4,9 @@ import 'package:auth/main.dart';
 import 'package:auth/src/auth/providers/auth_provider.dart';
 import 'package:auth/src/common/exceptions/http_exception.dart';
 import 'package:auth/src/common/widgets/alert_widget.dart';
+import 'package:auth/src/common/widgets/circles_background.dart';
+import 'package:auth/src/common/widgets/go_back.dart';
+import 'package:auth/src/common/widgets/main_text_field.dart';
 import 'package:auth/src/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,54 +36,66 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-        // actions: [_loading ? CircularProgressIndicator() : Container()],
-        actions: [
-          _loadingWidget(),
-        ],
-      ),
-      body: ListView(
-        padding: EdgeInsets.all(8.0),
-        children: [
-          Text(
-            'Sign into your account',
-            style: TextStyle(
-              fontSize: 26,
-            ),
+      body: CirclesBackground(
+        backgroundColor: Colors.white,
+        topSmallCircleColor: Color(0xffFD969C),
+        topMediumCircleColor: Color(0xff8A4C7D),
+        topRightCircleColor: Color(0xffE4DB7C),
+        bottomRightCircleColor: Colors.white,
+        child: Container(
+          padding: EdgeInsets.all(40),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GoBack(),
+              Spacer(),
+              Text(
+                'Sign into your account',
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+              ),
+              Divider(),
+              MainTextField(
+                label: 'Username',
+                onChanged: (value) => setState(() {
+                  _username = value;
+                }),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              MainTextField(
+                label: 'Password',
+                controller: _passwordController,
+                maxLength: 60,
+                obscureText: true,
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Sign in',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                  ),
+                  Spacer(),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xff8A4C7D),
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: IconButton(
+                      color: Colors.white,
+                      onPressed: () => _login(context),
+                      icon: Icon(Icons.arrow_forward),
+                    ),
+                  )
+                ],
+              ),
+              Spacer(),
+            ],
           ),
-          Divider(),
-          TextField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Username',
-              suffixIcon: Icon(Icons.person),
-            ),
-            onChanged: (value) => setState(() {
-              _username = value;
-            }),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          TextField(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: 'Password',
-              suffixIcon: Icon(Icons.lock),
-            ),
-            controller: _passwordController,
-            maxLength: 60,
-            obscureText: true,
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () => _login(context),
-              child: Text('Sign in'),
-            ),
-          )
-        ],
+        ),
       ),
     );
   }
