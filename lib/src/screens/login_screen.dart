@@ -74,7 +74,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 Spacer(),
-                Divider(),
                 MainTextField(
                   label: 'Username',
                   usernameField: true,

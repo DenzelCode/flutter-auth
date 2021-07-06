@@ -74,7 +74,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 Spacer(),
-                Divider(),
                 MainTextField(
                   label: 'Username',
                   usernameField: true,
@@ -127,7 +126,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ],
                 ),
                 SizedBox(
-                  height: 30,
+                  height: 50,
                 ),
                 Spacer(),
                 Row(
