@@ -5,16 +5,12 @@ class GoBack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      style: TextButton.styleFrom(
-        padding: EdgeInsets.zero,
-        minimumSize: Size(0, 0),
-      ),
+    return IconButton(
       onPressed: () => Navigator.pop(context),
-      child: Icon(
+      icon: Icon(
         Icons.chevron_left_sharp,
         color: Colors.white,
-        size: 50,
+        size: 40,
       ),
     );
   }
