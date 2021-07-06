@@ -10,33 +10,32 @@ import 'package:auth/src/common/widgets/main_text_field.dart';
 import 'package:auth/src/common/widgets/next_button.dart';
 import 'package:auth/src/common/widgets/underlined_button.dart';
 import 'package:auth/src/screens/home_screen.dart';
-import 'package:auth/src/screens/recover_screen.dart';
+import 'package:auth/src/screens/login_screen.dart';
 import 'package:auth/src/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class LoginScreen extends StatefulWidget {
-  static const routeName = '/login';
+class RecoverScreen extends StatefulWidget {
+  static const routeName = '/recover';
 
-  LoginScreen({Key? key}) : super(key: key);
+  RecoverScreen({Key? key}) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _RecoverScreenState createState() => _RecoverScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final _passwordController = TextEditingController();
+class _RecoverScreenState extends State<RecoverScreen> {
+  final _emailController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  String _username = '';
   bool _loading = false;
 
   @override
   void dispose() {
     super.dispose();
 
-    _passwordController.dispose();
+    _emailController.dispose();
   }
 
   @override
@@ -66,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 200),
                   child: Text(
-                    'Welcome Back',
+                    'Forgot Password',
                     style: TextStyle(
                       fontSize: 40,
                       fontWeight: FontWeight.bold,
@@ -75,25 +74,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 Spacer(),
-                MainTextField(
-                  label: 'Username',
-                  usernameField: true,
-                  onChanged: (value) => setState(() {
-                    _username = value;
-                  }),
-                  onEditingComplete: () => node.nextFocus(),
-                ),
                 SizedBox(
                   height: 20,
                 ),
                 MainTextField(
-                  label: 'Password',
-                  controller: _passwordController,
-                  passwordField: true,
+                  label: 'Email',
+                  controller: _emailController,
+                  emailField: true,
                   onSubmitted: (_) {
                     node.unfocus();
 
-                    _login(context);
+                    _recover(context);
                   },
                 ),
                 SizedBox(
@@ -102,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   children: [
                     Text(
-                      'Sign in',
+                      'Recover',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 30,
@@ -110,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     Spacer(),
                     NextButton(
-                      onPressed: () => _login(context),
+                      onPressed: () => _recover(context),
                       loading: _loading,
                     )
                   ],
@@ -124,18 +115,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     UnderlinedButton(
                       onPressed: () => Navigator.pushNamed(
                         context,
-                        RegisterScreen.routeName,
+                        LoginScreen.routeName,
                       ),
-                      child: Text('Sign Up'),
+                      child: Text('Sign In'),
                       color: theme.highlightColor,
                     ),
                     Spacer(),
                     UnderlinedButton(
                       onPressed: () => Navigator.pushNamed(
                         context,
-                        RecoverScreen.routeName,
+                        RegisterScreen.routeName,
                       ),
-                      child: Text('Forgot Password'),
+                      child: Text('Sign Up'),
                       color: theme.accentColor,
                     )
                   ],
@@ -148,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  _login(BuildContext context) async {
+  _recover(BuildContext context) async {
     if (_loading || !_formKey.currentState!.validate()) {
       return;
     }
@@ -160,15 +151,11 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await provider.authenticate(
-        _username,
-        _passwordController.text,
+      await provider.recover(
+        _emailController.text,
       );
 
-      await Navigator.of(context).pushNamedAndRemoveUntil(
-        HomeScreen.routeName,
-        (_) => false,
-      );
+      _emailController.text = '';
     } on HttpException catch (e) {
       showDialog(
         context: context,
@@ -177,8 +164,6 @@ class _LoginScreenState extends State<LoginScreen> {
           description: e.message,
         ),
       );
-
-      _passwordController.text = '';
     }
 
     setState(() {

@@ -51,6 +51,26 @@ class AuthProvider extends ChangeNotifier {
     return _handleAuthenticateResponse(response);
   }
 
+  Future<void> recover(String email) async {
+    final uri = Uri.https(_url, 'api/recover');
+
+    final response = await http.post(
+      uri,
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+      },
+      body: json.encode({
+        'email': email,
+      }),
+    );
+
+    if (response.statusCode != 201) {
+      final decoded = json.decode(response.body);
+
+      throw HttpException.fromJson(decoded);
+    }
+  }
+
   Future<void> logout() async {
     await storage.delete(key: 'token');
 
