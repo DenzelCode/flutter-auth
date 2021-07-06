@@ -64,6 +64,18 @@ class AuthenticatedHome extends StatelessWidget {
                     color: theme.highlightColor,
                     fontSize: 30,
                   ),
+                ),
+                Text(
+                  ' (${user.email})',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: theme.highlightColor,
+                  ),
+                ),
+                UnderlinedButton(
+                  child: Text('Logout'),
+                  color: theme.accentColor,
+                  onPressed: () => provider.logout(),
                 )
               ],
             ),
