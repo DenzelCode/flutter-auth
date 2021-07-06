@@ -2,17 +2,23 @@ import 'package:flutter/material.dart';
 
 class MainTextField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
+  final VoidCallback? onEditingComplete;
+  final ValueChanged<String>? onSubmitted;
   final String label;
   final TextEditingController? controller;
-  final int? maxLength;
-  final bool? obscureText;
+  final bool? passwordField;
+  final bool? emailField;
+  final bool? usernameField;
 
   const MainTextField({
     Key? key,
     this.onChanged,
     this.controller,
-    this.maxLength,
-    this.obscureText,
+    this.passwordField,
+    this.onEditingComplete,
+    this.onSubmitted,
+    this.emailField,
+    this.usernameField,
     required this.label,
   }) : super(key: key);
 
@@ -34,9 +40,14 @@ class MainTextField extends StatelessWidget {
         ),
         contentPadding: EdgeInsets.all(21),
       ),
-      obscureText: obscureText ?? false,
+      keyboardType: emailField == true ? TextInputType.emailAddress : null,
+      obscureText: passwordField ?? false,
+      maxLength: passwordField == true ? 60 : null,
+      autocorrect: usernameField != true,
       controller: controller,
       onChanged: onChanged,
+      onEditingComplete: onEditingComplete,
+      onSubmitted: onSubmitted,
     );
   }
 }
