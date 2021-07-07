@@ -28,24 +28,25 @@ class MainTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       decoration: InputDecoration(
-          filled: true,
-          fillColor: Color.fromRGBO(0, 0, 0, 0.1),
-          border: OutlineInputBorder(),
-          hintText: label,
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.transparent),
-            borderRadius: BorderRadius.circular(25),
-          ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.transparent),
-            borderRadius: BorderRadius.circular(25),
-          ),
-          contentPadding: EdgeInsets.all(21),
-          hintStyle: TextStyle(color: textColor)),
+        filled: true,
+        fillColor: Color.fromRGBO(0, 0, 0, 0.1),
+        border: OutlineInputBorder(),
+        hintText: label,
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.transparent),
+          borderRadius: BorderRadius.circular(25),
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.transparent),
+          borderRadius: BorderRadius.circular(25),
+        ),
+        contentPadding: EdgeInsets.all(21),
+        hintStyle: TextStyle(color: textColor),
+      ),
       keyboardType: emailField == true ? TextInputType.emailAddress : null,
       obscureText: passwordField ?? false,
       maxLength: passwordField == true ? 60 : null,
-      autocorrect: usernameField != true,
+      autocorrect: usernameField != true && emailField != true,
       controller: controller,
       onChanged: onChanged,
       onEditingComplete: onEditingComplete,
