@@ -53,6 +53,7 @@ class MainTextField extends StatelessWidget {
       onSubmitted: onSubmitted,
       cursorColor: Color.fromRGBO(0, 0, 0, 0.1),
       style: TextStyle(color: textColor),
+      textInputAction: onEditingComplete != null ? TextInputAction.next : null,
     );
   }
 }
