@@ -8,6 +8,7 @@ import 'package:auth/src/common/widgets/circles_background.dart';
 import 'package:auth/src/common/widgets/go_back.dart';
 import 'package:auth/src/common/widgets/main_text_field.dart';
 import 'package:auth/src/common/widgets/next_button.dart';
+import 'package:auth/src/common/widgets/scroll_close_keyboard.dart';
 import 'package:auth/src/common/widgets/underlined_button.dart';
 import 'package:auth/src/screens/home_screen.dart';
 import 'package:auth/src/screens/login_screen.dart';
@@ -44,94 +45,96 @@ class _RecoverScreenState extends State<RecoverScreen> {
 
     final node = FocusScope.of(context);
 
-    return Scaffold(
-      body: CirclesBackground(
-        backgroundColor: Colors.white,
-        topSmallCircleColor: theme.accentColor,
-        topMediumCircleColor: theme.primaryColor,
-        topRightCircleColor: theme.highlightColor,
-        bottomRightCircleColor: Colors.white,
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 40),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GoBack(),
-                SizedBox(
-                  height: 40,
-                ),
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 200),
-                  child: Text(
-                    'Forgot Password',
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+    return ScrollCloseKeyboard(
+      child: Scaffold(
+        body: CirclesBackground(
+          backgroundColor: Colors.white,
+          topSmallCircleColor: theme.accentColor,
+          topMediumCircleColor: theme.primaryColor,
+          topRightCircleColor: theme.highlightColor,
+          bottomRightCircleColor: Colors.white,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 40),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GoBack(),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 200),
+                    child: Text(
+                      'Forgot Password',
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-                Spacer(),
-                SizedBox(
-                  height: 20,
-                ),
-                MainTextField(
-                  label: 'Email',
-                  controller: _emailController,
-                  emailField: true,
-                  onSubmitted: (_) {
-                    node.unfocus();
+                  Spacer(),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  MainTextField(
+                    label: 'Email',
+                    controller: _emailController,
+                    emailField: true,
+                    onSubmitted: (_) {
+                      node.unfocus();
 
-                    _recover(context);
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      'Recover',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
+                      _recover(context);
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        'Recover',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                        ),
                       ),
-                    ),
-                    Spacer(),
-                    NextButton(
-                      onPressed: () => _recover(context),
-                      loading: _loading,
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Spacer(),
-                Row(
-                  children: [
-                    UnderlinedButton(
-                      onPressed: () => Navigator.pushNamed(
-                        context,
-                        LoginScreen.routeName,
+                      Spacer(),
+                      NextButton(
+                        onPressed: () => _recover(context),
+                        loading: _loading,
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Spacer(),
+                  Row(
+                    children: [
+                      UnderlinedButton(
+                        onPressed: () => Navigator.pushNamed(
+                          context,
+                          LoginScreen.routeName,
+                        ),
+                        child: Text('Sign In'),
+                        color: theme.highlightColor,
                       ),
-                      child: Text('Sign In'),
-                      color: theme.highlightColor,
-                    ),
-                    Spacer(),
-                    UnderlinedButton(
-                      onPressed: () => Navigator.pushNamed(
-                        context,
-                        RegisterScreen.routeName,
-                      ),
-                      child: Text('Sign Up'),
-                      color: theme.accentColor,
-                    )
-                  ],
-                ),
-              ],
+                      Spacer(),
+                      UnderlinedButton(
+                        onPressed: () => Navigator.pushNamed(
+                          context,
+                          RegisterScreen.routeName,
+                        ),
+                        child: Text('Sign Up'),
+                        color: theme.accentColor,
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

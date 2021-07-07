@@ -6,6 +6,7 @@ import 'package:auth/src/common/widgets/circles_background.dart';
 import 'package:auth/src/common/widgets/go_back.dart';
 import 'package:auth/src/common/widgets/main_text_field.dart';
 import 'package:auth/src/common/widgets/next_button.dart';
+import 'package:auth/src/common/widgets/scroll_close_keyboard.dart';
 import 'package:auth/src/common/widgets/underlined_button.dart';
 import 'package:auth/src/screens/home_screen.dart';
 import 'package:auth/src/screens/login_screen.dart';
@@ -44,108 +45,110 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     final node = FocusScope.of(context);
 
-    return Scaffold(
-      body: CirclesBackground(
-        backgroundColor: theme.highlightColor,
-        topSmallCircleColor: theme.primaryColor,
-        topMediumCircleColor: theme.primaryColor,
-        topRightCircleColor: theme.highlightColor,
-        bottomRightCircleColor: Colors.white,
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 40),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GoBack(),
-                SizedBox(
-                  height: 40,
-                ),
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 200),
-                  child: Text(
-                    'Create Account',
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+    return ScrollCloseKeyboard(
+      child: Scaffold(
+        body: CirclesBackground(
+          backgroundColor: theme.highlightColor,
+          topSmallCircleColor: theme.primaryColor,
+          topMediumCircleColor: theme.primaryColor,
+          topRightCircleColor: theme.highlightColor,
+          bottomRightCircleColor: Colors.white,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 40),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GoBack(),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 200),
+                    child: Text(
+                      'Create Account',
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-                Spacer(),
-                MainTextField(
-                  label: 'Username',
-                  usernameField: true,
-                  textColor: Colors.white,
-                  onChanged: (value) => setState(() {
-                    _username = value;
-                  }),
-                  onEditingComplete: () => node.nextFocus(),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                MainTextField(
-                  label: 'Email',
-                  onChanged: (value) => setState(() {
-                    _email = value;
-                  }),
-                  emailField: true,
-                  textColor: Colors.white,
-                  onEditingComplete: () => node.nextFocus(),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                MainTextField(
-                  label: 'Password',
-                  controller: _passwordController,
-                  passwordField: true,
-                  textColor: Colors.white,
-                  onSubmitted: (_) {
-                    node.unfocus();
+                  Spacer(),
+                  MainTextField(
+                    label: 'Username',
+                    usernameField: true,
+                    textColor: Colors.white,
+                    onChanged: (value) => setState(() {
+                      _username = value;
+                    }),
+                    onEditingComplete: () => node.nextFocus(),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  MainTextField(
+                    label: 'Email',
+                    onChanged: (value) => setState(() {
+                      _email = value;
+                    }),
+                    emailField: true,
+                    textColor: Colors.white,
+                    onEditingComplete: () => node.nextFocus(),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  MainTextField(
+                    label: 'Password',
+                    controller: _passwordController,
+                    passwordField: true,
+                    textColor: Colors.white,
+                    onSubmitted: (_) {
+                      node.unfocus();
 
-                    _register(context);
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
+                      _register(context);
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                        ),
                       ),
-                    ),
-                    Spacer(),
-                    NextButton(
-                      onPressed: () => _register(context),
-                      loading: _loading,
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                Spacer(),
-                Row(
-                  children: [
-                    Spacer(),
-                    UnderlinedButton(
-                      onPressed: () => Navigator.pushNamed(
-                        context,
-                        LoginScreen.routeName,
-                      ),
-                      child: Text('Sign In'),
-                      color: theme.highlightColor,
-                    )
-                  ],
-                ),
-              ],
+                      Spacer(),
+                      NextButton(
+                        onPressed: () => _register(context),
+                        loading: _loading,
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Spacer(),
+                  Row(
+                    children: [
+                      Spacer(),
+                      UnderlinedButton(
+                        onPressed: () => Navigator.pushNamed(
+                          context,
+                          LoginScreen.routeName,
+                        ),
+                        child: Text('Sign In'),
+                        color: theme.highlightColor,
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
