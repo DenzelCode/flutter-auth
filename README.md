@@ -5,6 +5,7 @@ To use this client, get the [server](https://github.com/DenzelCode/nest-auth) up
 Try it out now! [Demo](https://nest-auth.ubbly.club/)
 
 App Store: https://apps.apple.com/us/app/codeauth/id1575457893
+
 Google Play: https://play.google.com/store/apps/details?id=com.code.auth
 
 Images:
