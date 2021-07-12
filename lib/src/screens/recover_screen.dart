@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:auth/main.dart';
 import 'package:auth/src/auth/providers/auth_provider.dart';
 import 'package:auth/src/common/exceptions/http_exception.dart';
 import 'package:auth/src/common/widgets/alert_widget.dart';
@@ -10,7 +7,6 @@ import 'package:auth/src/common/widgets/main_text_field.dart';
 import 'package:auth/src/common/widgets/next_button.dart';
 import 'package:auth/src/common/widgets/scroll_close_keyboard.dart';
 import 'package:auth/src/common/widgets/underlined_button.dart';
-import 'package:auth/src/screens/home_screen.dart';
 import 'package:auth/src/screens/login_screen.dart';
 import 'package:auth/src/screens/register_screen.dart';
 import 'package:flutter/material.dart';

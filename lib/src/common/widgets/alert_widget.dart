@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class AlertWidget extends StatelessWidget {
   final String title;
   final dynamic description;
-  String? closeText;
+  final String? closeText;
 
   AlertWidget({
     Key? key,
-    this.closeText,
     required this.title,
     required this.description,
+    this.closeText,
   }) : super(key: key);
 
   @override

@@ -1,4 +1,3 @@
-import 'package:auth/src/common/widgets/circles_background.dart';
 import 'package:auth/src/screens/home_screen.dart';
 import 'package:auth/src/screens/login_screen.dart';
 import 'package:auth/src/screens/recover_screen.dart';

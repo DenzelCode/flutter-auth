@@ -46,6 +46,5 @@ class UnderlinedButton extends StatelessWidget {
         ),
       ),
     );
-    ;
   }
 }

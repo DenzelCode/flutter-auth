@@ -1,4 +1,3 @@
-import 'package:auth/main.dart';
 import 'package:auth/src/auth/providers/auth_provider.dart';
 import 'package:auth/src/common/exceptions/http_exception.dart';
 import 'package:auth/src/common/widgets/alert_widget.dart';
@@ -11,7 +10,6 @@ import 'package:auth/src/common/widgets/underlined_button.dart';
 import 'package:auth/src/screens/home_screen.dart';
 import 'package:auth/src/screens/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {

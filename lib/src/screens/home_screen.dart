@@ -1,11 +1,6 @@
-import 'package:auth/main.dart';
 import 'package:auth/src/auth/models/user.dart';
 import 'package:auth/src/auth/providers/auth_provider.dart';
-import 'package:auth/src/common/widgets/circles_background.dart';
-import 'package:auth/src/common/widgets/underlined_button.dart';
 import 'package:auth/src/screens/authenticated_home.dart';
-import 'package:auth/src/screens/login_screen.dart';
-import 'package:auth/src/screens/register_screen.dart';
 import 'package:auth/src/screens/non_authenticated_home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

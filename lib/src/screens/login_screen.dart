@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:auth/main.dart';
 import 'package:auth/src/auth/providers/auth_provider.dart';
 import 'package:auth/src/common/exceptions/http_exception.dart';
 import 'package:auth/src/common/widgets/alert_widget.dart';
