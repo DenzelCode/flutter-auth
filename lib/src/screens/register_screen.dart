@@ -176,20 +176,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
         HomeScreen.routeName,
         (_) => false,
       );
-    } on HttpException catch (e) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertWidget(
-          title: e.error ?? e.message,
-          description: e.message,
-        ),
-      );
-
-      _passwordController.text = '';
+    } finally {
+      setState(() {
+        _loading = false;
+      });
     }
-
-    setState(() {
-      _loading = false;
-    });
   }
 }

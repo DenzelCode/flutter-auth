@@ -5,9 +5,12 @@ import 'package:auth/src/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
+  static GlobalKey<NavigatorState> materialKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: MyApp.materialKey,
       debugShowCheckedModeBanner: false,
       initialRoute: HomeScreen.routeName,
       routes: {

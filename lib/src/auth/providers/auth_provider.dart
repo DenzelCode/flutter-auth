@@ -1,131 +1,117 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:auth/src/auth/models/access_token.dart';
+import 'package:auth/src/auth/models/tokens.dart';
 import 'package:auth/src/auth/models/user.dart';
-import 'package:auth/src/common/exceptions/http_exception.dart';
+import 'package:auth/src/common/http/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
 
 class AuthProvider extends ChangeNotifier {
   User? user;
 
   final storage = new FlutterSecureStorage();
 
-  final _url = 'nest-auth.ubbly.club';
-
-  Future<AccessToken> authenticate(String username, String password) async {
-    final uri = Uri.https(_url, 'api/auth/login');
-
-    final response = await http.post(
-      uri,
-      headers: {
-        HttpHeaders.contentTypeHeader: 'application/json',
-      },
-      body: json.encode({
+  Future<Tokens?> authenticate(String username, String password) async {
+    final response = await api.post(
+      '/auth/login',
+      data: {
         'username': username,
         'password': password,
-      }),
+      },
     );
 
-    return _handleAuthenticateResponse(response);
+    final tokens = Tokens.fromJson(response.data);
+
+    await setTokens(tokens);
+
+    return tokens;
   }
 
-  Future<AccessToken> register(
-      String username, String email, String password) async {
-    final uri = Uri.https(_url, 'api/auth/register');
-
-    final response = await http.post(
-      uri,
-      headers: {
-        HttpHeaders.contentTypeHeader: 'application/json',
-      },
-      body: json.encode({
+  Future<Tokens> register(
+    String username,
+    String email,
+    String password,
+  ) async {
+    final response = await api.post(
+      '/auth/register',
+      data: {
         'username': username,
         'password': password,
         'email': email,
-      }),
+      },
     );
 
-    return _handleAuthenticateResponse(response);
+    final tokens = Tokens.fromJson(response.data);
+
+    await setTokens(tokens);
+
+    return tokens;
   }
 
   Future<void> recover(String email) async {
-    final uri = Uri.https(_url, 'api/recover');
-
-    final response = await http.post(
-      uri,
-      headers: {
-        HttpHeaders.contentTypeHeader: 'application/json',
-      },
-      body: json.encode({
+    await api.post(
+      '/recover',
+      data: {
         'email': email,
-      }),
+      },
     );
-
-    if (response.statusCode != 201) {
-      final decoded = json.decode(response.body);
-
-      throw HttpException.fromJson(decoded);
-    }
   }
 
-  Future<void> logout() async {
-    await storage.delete(key: 'token');
+  Future<void> logout([bool notify = true]) async {
+    await storage.delete(key: 'accessToken');
+    await storage.delete(key: 'refreshToken');
 
     user = null;
 
-    notifyListeners();
+    if (notify) {
+      notifyListeners();
+    }
   }
 
-  Future<User> getProfile() async {
-    final uri = Uri.https(_url, 'api/auth/me');
-
-    final token = await getToken();
-
-    final response = await http.get(
-      uri,
-      headers: {
-        HttpHeaders.authorizationHeader: 'Bearer $token',
-      },
-    );
-
-    final decoded = json.decode(response.body);
-
-    if (response.statusCode != 200) {
-      return Future.error(HttpException.fromJson(decoded));
+  Future<User?> getProfile() async {
+    if (await getAccessToken() == null && await getRefreshToken() == null) {
+      return null;
     }
 
-    final user = User.fromJson(decoded);
+    try {
+      final response = await api.get('/auth/me');
 
-    this.user = user;
+      final user = User.fromJson(response.data);
 
-    return user;
-  }
+      this.user = user;
 
-  Future<String?> getToken() {
-    return storage.read(key: 'token');
-  }
+      return user;
+    } catch (e) {
+      logout(false);
 
-  Future<void> setToken(String token) {
-    return storage.write(key: 'token', value: token);
-  }
-
-  Future<AccessToken> _handleAuthenticateResponse(
-      http.Response response) async {
-    final decoded = json.decode(response.body);
-
-    if (response.statusCode != 201) {
-      throw HttpException.fromJson(decoded);
+      return null;
     }
+  }
 
-    final token = AccessToken.fromJson(decoded);
+  Future<String?> getAccessToken() {
+    return storage.read(key: 'accessToken');
+  }
 
-    await setToken(token.accessToken);
+  Future<void> setAccessToken(String token) {
+    return storage.write(key: 'accessToken', value: token);
+  }
 
-    await getProfile();
+  Future<void> deleteAccessToken(String token) {
+    return storage.delete(key: 'accessToken');
+  }
 
-    return token;
+  Future<String?> getRefreshToken() {
+    return storage.read(key: 'refreshToken');
+  }
+
+  Future<void> setRefreshToken(String token) {
+    return storage.write(key: 'refreshToken', value: token);
+  }
+
+  Future<void> deleteRefreshToken(String token) {
+    return storage.delete(key: 'refreshToken');
+  }
+
+  Future<void> setTokens(Tokens tokens) async {
+    await setAccessToken(tokens.accessToken);
+    await setRefreshToken(tokens.refreshToken);
   }
 }

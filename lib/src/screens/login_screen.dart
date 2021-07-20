@@ -1,6 +1,4 @@
 import 'package:auth/src/auth/providers/auth_provider.dart';
-import 'package:auth/src/common/exceptions/http_exception.dart';
-import 'package:auth/src/common/widgets/alert_widget.dart';
 import 'package:auth/src/common/widgets/circles_background.dart';
 import 'package:auth/src/common/widgets/go_back.dart';
 import 'package:auth/src/common/widgets/main_text_field.dart';
@@ -169,20 +167,10 @@ class _LoginScreenState extends State<LoginScreen> {
         HomeScreen.routeName,
         (_) => false,
       );
-    } on HttpException catch (e) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertWidget(
-          title: e.error ?? e.message,
-          description: e.message,
-        ),
-      );
-
-      _passwordController.text = '';
+    } finally {
+      setState(() {
+        _loading = false;
+      });
     }
-
-    setState(() {
-      _loading = false;
-    });
   }
 }

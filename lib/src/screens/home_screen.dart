@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: FutureBuilder(
         future: provider.getProfile(),
-        builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             final user = provider.user;
 

@@ -163,18 +163,10 @@ class _RecoverScreenState extends State<RecoverScreen> {
           description: 'Check your email and change your password!',
         ),
       );
-    } on HttpException catch (e) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertWidget(
-          title: e.error ?? e.message,
-          description: e.message,
-        ),
-      );
+    } finally {
+      setState(() {
+        _loading = false;
+      });
     }
-
-    setState(() {
-      _loading = false;
-    });
   }
 }
