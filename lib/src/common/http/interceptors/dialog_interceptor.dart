@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class DialogInterceptor extends Interceptor {
+  static const skipHeader = 'skipDialog';
+
   @override
   onError(DioError err, ErrorInterceptorHandler handler) async {
     final context = MyApp.materialKey.currentContext;
@@ -18,7 +20,7 @@ class DialogInterceptor extends Interceptor {
       return super.onError(err, handler);
     }
 
-    if (!err.requestOptions.headers.containsKey('skipDialog')) {
+    if (!err.requestOptions.headers.containsKey(skipHeader)) {
       showDialog(
         context: context,
         builder: (context) => AlertWidget(

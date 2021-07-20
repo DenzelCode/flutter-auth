@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AuthInterceptor extends Interceptor {
+  static const skipHeader = 'skipRefreshToken';
+
   Dio api;
 
   AuthInterceptor(this.api);
@@ -61,7 +63,7 @@ class AuthInterceptor extends Interceptor {
   ) async {
     final requestOptions = err.requestOptions;
 
-    if (requestOptions.headers.containsKey('skipRefreshToken')) {
+    if (requestOptions.headers.containsKey(skipHeader)) {
       return super.onError(err, handler);
     }
 
@@ -75,7 +77,7 @@ class AuthInterceptor extends Interceptor {
         },
         options: Options(
           headers: {
-            'skipRefreshToken': true,
+            skipHeader: true,
           },
         ),
       );
@@ -87,7 +89,7 @@ class AuthInterceptor extends Interceptor {
       try {
         final headers = requestOptions.headers;
 
-        headers['skipRefreshToken'] = true;
+        headers[skipHeader] = true;
 
         final finalResponse = await api.request(
           requestOptions.path,

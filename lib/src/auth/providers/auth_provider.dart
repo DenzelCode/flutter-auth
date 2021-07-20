@@ -1,6 +1,7 @@
 import 'package:auth/src/auth/models/tokens.dart';
 import 'package:auth/src/auth/models/user.dart';
 import 'package:auth/src/common/http/api.dart';
+import 'package:auth/src/common/http/interceptors/dialog_interceptor.dart';
 import 'package:auth/src/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as store;
@@ -77,7 +78,7 @@ class AuthProvider extends ChangeNotifier {
       final response = await api.get(
         '/auth/me',
         options: Options(
-          headers: {'skipDialog': true},
+          headers: {DialogInterceptor.skipHeader: true},
         ),
       );
 
