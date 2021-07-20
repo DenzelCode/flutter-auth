@@ -58,14 +58,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   GoBack(),
                   SizedBox(
-                    height: 40,
+                    height: 65,
                   ),
                   ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 200),
+                    constraints: BoxConstraints(maxWidth: 250),
                     child: Text(
                       'Welcome Back',
                       style: TextStyle(
-                        fontSize: 40,
+                        fontSize: 46,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),

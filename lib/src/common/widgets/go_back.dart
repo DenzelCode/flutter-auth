@@ -5,12 +5,18 @@ class GoBack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () => Navigator.pop(context),
-      icon: Icon(
-        Icons.chevron_left_sharp,
-        color: Colors.white,
-        size: 40,
+    return GestureDetector(
+      onTap: () => Navigator.pop(context),
+      child: Column(
+        children: [
+          Transform.scale(
+            scale: 2,
+            child: Icon(
+              Icons.chevron_left_sharp,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
     );
   }

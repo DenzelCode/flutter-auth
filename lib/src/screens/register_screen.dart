@@ -58,14 +58,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                   GoBack(),
                   SizedBox(
-                    height: 40,
+                    height: 65,
                   ),
                   ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 200),
+                    constraints: BoxConstraints(maxWidth: 250),
                     child: Text(
                       'Create Account',
                       style: TextStyle(
-                        fontSize: 40,
+                        fontSize: 46,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
