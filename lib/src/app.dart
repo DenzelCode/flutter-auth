@@ -19,6 +19,10 @@ class MyApp extends StatelessWidget {
         RegisterScreen.routeName: (context) => RegisterScreen(),
         RecoverScreen.routeName: (context) => RecoverScreen(),
       },
+      onGenerateRoute: (settings) => MaterialPageRoute(
+        settings: settings,
+        builder: (context) => HomeScreen(),
+      ),
       theme: ThemeData(
         primaryColor: Color(0xff4C525C),
         accentColor: Color(0xffFFAE48),

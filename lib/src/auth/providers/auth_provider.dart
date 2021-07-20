@@ -1,6 +1,7 @@
 import 'package:auth/src/auth/models/tokens.dart';
 import 'package:auth/src/auth/models/user.dart';
 import 'package:auth/src/common/http/api.dart';
+import 'package:auth/src/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as store;
 
@@ -55,15 +56,16 @@ class AuthProvider extends ChangeNotifier {
     );
   }
 
-  Future<void> logout([bool notify = true]) async {
+  Future<void> logout(BuildContext context) async {
     await deleteAccessToken();
     await deleteRefreshToken();
 
     user = null;
 
-    if (notify) {
-      notifyListeners();
-    }
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      LoginScreen.routeName,
+      (_) => false,
+    );
   }
 
   Future<User?> getProfile() async {

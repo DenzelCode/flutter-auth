@@ -2,6 +2,7 @@ import 'package:auth/src/app.dart';
 import 'package:auth/src/auth/models/tokens.dart';
 import 'package:auth/src/auth/providers/auth_provider.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AuthInterceptor extends Interceptor {
@@ -46,13 +47,14 @@ class AuthInterceptor extends Interceptor {
 
     if (err.response?.statusCode == 401 &&
         await authProvider.getRefreshToken() != null) {
-      return _handlerRefreshToken(authProvider, err, handler);
+      return _handlerRefreshToken(context, authProvider, err, handler);
     }
 
     return super.onError(err, handler);
   }
 
   _handlerRefreshToken(
+    BuildContext context,
     AuthProvider authProvider,
     DioError err,
     ErrorInterceptorHandler handler,
@@ -107,7 +109,7 @@ class AuthInterceptor extends Interceptor {
         return super.onError(err, handler);
       }
     } catch (e) {
-      authProvider.logout(false);
+      authProvider.logout(context);
     }
   }
 }

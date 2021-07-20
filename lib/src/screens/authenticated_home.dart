@@ -73,7 +73,7 @@ class AuthenticatedHome extends StatelessWidget {
                 UnderlinedButton(
                   child: Text('Logout'),
                   color: theme.accentColor,
-                  onPressed: () => provider.logout(),
+                  onPressed: () => provider.logout(context),
                 )
               ],
             ),
@@ -84,7 +84,7 @@ class AuthenticatedHome extends StatelessWidget {
                 UnderlinedButton(
                   child: Text('Logout'),
                   color: theme.highlightColor,
-                  onPressed: () => provider.logout(),
+                  onPressed: () => provider.logout(context),
                 ),
               ],
             ),

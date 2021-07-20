@@ -1,3 +1,4 @@
+import 'package:auth/src/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class GoBack extends StatelessWidget {
@@ -5,8 +6,17 @@ class GoBack extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final onTap = () async {
+      if (!await Navigator.maybePop(context)) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          HomeScreen.routeName,
+          (_) => false,
+        );
+      }
+    };
+
     return GestureDetector(
-      onTap: () => Navigator.pop(context),
+      onTap: onTap,
       child: Column(
         children: [
           Transform.scale(
