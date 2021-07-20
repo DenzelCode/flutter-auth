@@ -99,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     children: [
                       Text(
-                        'Sign in',
+                        'Sign In',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 30,
