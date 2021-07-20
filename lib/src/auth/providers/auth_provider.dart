@@ -2,12 +2,12 @@ import 'package:auth/src/auth/models/tokens.dart';
 import 'package:auth/src/auth/models/user.dart';
 import 'package:auth/src/common/http/api.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart' as store;
 
 class AuthProvider extends ChangeNotifier {
   User? user;
 
-  final storage = new FlutterSecureStorage();
+  final storage = new store.FlutterSecureStorage();
 
   Future<Tokens?> authenticate(String username, String password) async {
     final response = await api.post(
@@ -56,8 +56,8 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> logout([bool notify = true]) async {
-    await storage.delete(key: 'accessToken');
-    await storage.delete(key: 'refreshToken');
+    await deleteAccessToken();
+    await deleteRefreshToken();
 
     user = null;
 
@@ -72,7 +72,12 @@ class AuthProvider extends ChangeNotifier {
     }
 
     try {
-      final response = await api.get('/auth/me');
+      final response = await api.get(
+        '/auth/me',
+        options: Options(
+          headers: {'skipDialog': true},
+        ),
+      );
 
       final user = User.fromJson(response.data);
 
@@ -80,8 +85,6 @@ class AuthProvider extends ChangeNotifier {
 
       return user;
     } catch (e) {
-      logout(false);
-
       return null;
     }
   }
@@ -94,7 +97,7 @@ class AuthProvider extends ChangeNotifier {
     return storage.write(key: 'accessToken', value: token);
   }
 
-  Future<void> deleteAccessToken(String token) {
+  Future<void> deleteAccessToken() {
     return storage.delete(key: 'accessToken');
   }
 
@@ -106,7 +109,7 @@ class AuthProvider extends ChangeNotifier {
     return storage.write(key: 'refreshToken', value: token);
   }
 
-  Future<void> deleteRefreshToken(String token) {
+  Future<void> deleteRefreshToken() {
     return storage.delete(key: 'refreshToken');
   }
 

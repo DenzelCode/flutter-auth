@@ -1,15 +1,23 @@
-import 'package:auth/src/common/http/custom_interceptor.dart';
+import 'package:auth/src/common/http/auth_interceptor.dart';
+import 'package:auth/src/common/http/dialog_interceptor.dart';
 import 'package:auth/src/constants/environments.dart';
 import 'package:dio/dio.dart';
 
+export 'package:dio/dio.dart';
+
 Dio _createHttpClient() {
-  return new Dio(
+  final api = new Dio(
     new BaseOptions(
       baseUrl: environments.api,
       contentType: Headers.jsonContentType,
       responseType: ResponseType.json,
     ),
-  )..interceptors.add(new CustomInterceptor());
+  );
+
+  api.interceptors.add(new DialogInterceptor());
+  api.interceptors.add(new AuthInterceptor(api));
+
+  return api;
 }
 
 final api = _createHttpClient();

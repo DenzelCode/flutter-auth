@@ -163,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordController.text,
       );
 
-      await Navigator.of(context).pushNamedAndRemoveUntil(
+      Navigator.of(context).pushNamedAndRemoveUntil(
         HomeScreen.routeName,
         (_) => false,
       );
