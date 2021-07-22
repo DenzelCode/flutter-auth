@@ -118,8 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     height: 30,
                   ),
-                  SizedBox(
-                    width: double.infinity,
+                  Center(
                     child: SignInButton(
                       Buttons.Facebook,
                       text: "Sign in with Facebook",
@@ -127,7 +126,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   SizedBox(
-                    width: double.infinity,
+                    height: 10,
+                  ),
+                  Center(
                     child: SignInButton(
                       Buttons.Google,
                       text: "Sign in with Google",
