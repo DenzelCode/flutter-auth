@@ -78,7 +78,9 @@ class AuthProvider extends ChangeNotifier {
       final response = await api.get(
         '/auth/me',
         options: Options(
-          headers: {DialogInterceptor.skipHeader: true},
+          headers: {
+            DialogInterceptor.skipHeader: true,
+          },
         ),
       );
 
