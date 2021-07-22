@@ -9,6 +9,8 @@ import 'package:auth/src/screens/home_screen.dart';
 import 'package:auth/src/screens/recover_screen.dart';
 import 'package:auth/src/screens/register_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -115,6 +117,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     height: 30,
                   ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: SignInButton(
+                      Buttons.Facebook,
+                      text: "Sign in with Facebook",
+                      onPressed: () => _loginWithFacebook(context),
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: SignInButton(
+                      Buttons.Google,
+                      text: "Sign in with Google",
+                      onPressed: () => _loginWithGoogle(context),
+                    ),
+                  ),
                   Spacer(),
                   Row(
                     children: [
@@ -162,6 +180,48 @@ class _LoginScreenState extends State<LoginScreen> {
         _username,
         _passwordController.text,
       );
+
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        HomeScreen.routeName,
+        (_) => false,
+      );
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  _loginWithFacebook(BuildContext context) async {
+    final provider = Provider.of<AuthProvider>(context, listen: false);
+
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      await provider.loginWithFacebook(context);
+
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        HomeScreen.routeName,
+        (_) => false,
+      );
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  _loginWithGoogle(BuildContext context) async {
+    final provider = Provider.of<AuthProvider>(context, listen: false);
+
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      await provider.loginWithGoogle(context);
 
       Navigator.of(context).pushNamedAndRemoveUntil(
         HomeScreen.routeName,

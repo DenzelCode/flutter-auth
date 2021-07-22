@@ -31,6 +31,9 @@ dependencies:
   provider: ^5.0.0
   flutter_launcher_icons: ^0.9.0
   dio: ^4.0.0
+  flutter_facebook_auth: ^3.5.0
+  flutter_signin_button: ^2.0.0
+  google_sign_in: ^5.0.5
 
 flutter_icons:
   android: true

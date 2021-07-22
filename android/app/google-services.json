@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "331672215174",
+    "project_id": "codeauth-320604",
+    "storage_bucket": "codeauth-320604.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:331672215174:android:8f306094623f21c4fabb07",
+        "android_client_info": {
+          "package_name": "com.code.auth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "331672215174-0hlpm8fhjphiou05ovsd82vglor401ct.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBUUMHX_e-NZU50Mtmqd0hE_Yzijk8-v4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "331672215174-0hlpm8fhjphiou05ovsd82vglor401ct.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

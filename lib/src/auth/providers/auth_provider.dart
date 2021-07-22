@@ -2,14 +2,21 @@ import 'package:auth/src/auth/models/tokens.dart';
 import 'package:auth/src/auth/models/user.dart';
 import 'package:auth/src/common/http/api.dart';
 import 'package:auth/src/common/http/interceptors/dialog_interceptor.dart';
+import 'package:auth/src/common/widgets/alert_widget.dart';
 import 'package:auth/src/screens/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as store;
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthProvider extends ChangeNotifier {
   User? user;
 
-  final storage = new store.FlutterSecureStorage();
+  late final storage = new store.FlutterSecureStorage();
+
+  late final _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'profile'],
+  );
 
   Future<Tokens?> authenticate(String username, String password) async {
     final response = await api.post(
@@ -92,6 +99,67 @@ class AuthProvider extends ChangeNotifier {
     } catch (e) {
       return null;
     }
+  }
+
+  Future<void> loginWithFacebook(BuildContext context) async {
+    final result = await FacebookAuth.instance.login();
+
+    await _googleSignIn.signOut();
+
+    if (result.status == LoginStatus.success) {
+      await _socialLogin('facebook', result.accessToken?.token);
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertWidget(
+          title: 'Error',
+          description: result.message,
+        ),
+      );
+
+      throw Exception(result.message);
+    }
+  }
+
+  Future<void> loginWithGoogle(BuildContext context) async {
+    try {
+      await _googleSignIn.signOut();
+
+      final result = await _googleSignIn.signIn();
+
+      if (result == null) {
+        throw Exception();
+      }
+
+      final authentication = await result.authentication;
+
+      await _socialLogin('google', authentication.accessToken);
+    } catch (e) {
+      if (!(e is DioError)) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertWidget(
+            title: 'Error',
+            description: 'An error occurred authenticating with Google',
+          ),
+        );
+      }
+
+      throw Exception(e);
+    }
+  }
+
+  Future<void> _socialLogin(String provider, String? accessToken) async {
+    final response = await api.post(
+      '/auth/$provider-login',
+      data: {
+        'accessToken': accessToken,
+      },
+    );
+
+    final tokens = Tokens.fromJson(response.data);
+
+    await setTokens(tokens);
   }
 
   Future<String?> getAccessToken() {
