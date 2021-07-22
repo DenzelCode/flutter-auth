@@ -45,6 +45,7 @@ android {
         applicationId "com.code.auth"
         minSdkVersion 18
         targetSdkVersion 30
+        multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
@@ -75,4 +76,5 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-analytics-ktx'
 
+    implementation 'androidx.multidex:multidex:2.0.1'
 }
