@@ -102,9 +102,9 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> loginWithFacebook(BuildContext context) async {
-    final result = await FacebookAuth.instance.login();
-
     await FacebookAuth.instance.logOut();
+
+    final result = await FacebookAuth.instance.login();
 
     if (result.status == LoginStatus.success) {
       await _socialLogin('facebook', result.accessToken?.token);

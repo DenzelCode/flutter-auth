@@ -34,6 +34,7 @@ dependencies:
   flutter_facebook_auth: ^3.5.0
   flutter_signin_button: ^2.0.0
   google_sign_in: ^5.0.5
+  sign_in_with_apple: ^3.0.0
 
 flutter_icons:
   android: true
