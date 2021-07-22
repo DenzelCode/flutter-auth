@@ -45,6 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return ScrollCloseKeyboard(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: CirclesBackground(
           backgroundColor: Colors.white,
           topSmallCircleColor: theme.accentColor,

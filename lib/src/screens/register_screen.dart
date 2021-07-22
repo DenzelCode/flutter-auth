@@ -44,6 +44,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     return ScrollCloseKeyboard(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: CirclesBackground(
           backgroundColor: theme.highlightColor,
           topSmallCircleColor: theme.primaryColor,
@@ -111,22 +112,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(
                     height: 20,
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: SignInButton(
-                      Buttons.Facebook,
-                      text: "Sign up with Facebook",
-                      onPressed: () => _registerWithFacebook(context),
-                    ),
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: SignInButton(
-                      Buttons.Google,
-                      text: "Sign up with Google",
-                      onPressed: () => _registerWithGoogle(context),
-                    ),
-                  ),
                   Row(
                     children: [
                       Text(
@@ -144,7 +129,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ],
                   ),
                   SizedBox(
-                    height: 50,
+                    height: 30,
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: SignInButton(
+                      Buttons.Facebook,
+                      text: "Sign up with Facebook",
+                      onPressed: () => _registerWithFacebook(context),
+                    ),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: SignInButton(
+                      Buttons.Google,
+                      text: "Sign up with Google",
+                      onPressed: () => _registerWithGoogle(context),
+                    ),
                   ),
                   Spacer(),
                   Row(
