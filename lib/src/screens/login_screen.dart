@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auth/src/auth/providers/auth_provider.dart';
 import 'package:auth/src/common/widgets/circles_background.dart';
 import 'package:auth/src/common/widgets/go_back.dart';
@@ -118,11 +120,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     height: 30,
                   ),
-                  SignInButton(
-                    Buttons.AppleDark,
-                    text: "Sign up with Apple",
-                    onPressed: () => _loginWithApple(context),
-                  ),
+                  if (Platform.isIOS)
+                    SignInButton(
+                      Buttons.AppleDark,
+                      text: "Sign up with Apple",
+                      onPressed: () => _loginWithApple(context),
+                    ),
                   SizedBox(
                     height: 10,
                   ),

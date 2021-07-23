@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:auth/src/auth/providers/auth_provider.dart';
 import 'package:auth/src/common/widgets/circles_background.dart';
 import 'package:auth/src/common/widgets/go_back.dart';
@@ -131,11 +133,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(
                     height: 30,
                   ),
-                  SignInButton(
-                    Buttons.AppleDark,
-                    text: "Sign up with Apple",
-                    onPressed: () => _registerWithApple(context),
-                  ),
+                  if (Platform.isIOS)
+                    SignInButton(
+                      Buttons.AppleDark,
+                      text: "Sign up with Apple",
+                      onPressed: () => _registerWithApple(context),
+                    ),
                   SizedBox(
                     height: 10,
                   ),
