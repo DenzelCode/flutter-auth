@@ -108,7 +108,10 @@ class AuthProvider extends ChangeNotifier {
     final result = await FacebookAuth.instance.login();
 
     if (result.status == LoginStatus.success) {
-      await _socialLogin('facebook', result.accessToken?.token);
+      await _socialLogin(
+        provider: 'facebook',
+        accessToken: result.accessToken?.token,
+      );
     } else {
       showDialog(
         context: context,
@@ -131,7 +134,11 @@ class AuthProvider extends ChangeNotifier {
         ],
       );
 
-      await _socialLogin('apple', result.authorizationCode);
+      await _socialLogin(
+        provider: 'apple',
+        accessToken: result.authorizationCode,
+        name: '${result.givenName} ${result.familyName}',
+      );
     } catch (e) {
       if (!(e is DioError)) {
         showDialog(
@@ -159,7 +166,10 @@ class AuthProvider extends ChangeNotifier {
 
       final authentication = await result.authentication;
 
-      await _socialLogin('google', authentication.accessToken);
+      await _socialLogin(
+        provider: 'google',
+        accessToken: authentication.accessToken,
+      );
     } catch (e) {
       if (!(e is DioError)) {
         showDialog(
@@ -175,11 +185,16 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> _socialLogin(String provider, String? accessToken) async {
+  Future<void> _socialLogin({
+    required String provider,
+    required String? accessToken,
+    String? name,
+  }) async {
     final response = await api.post(
       '/auth/$provider-login',
       data: {
         'accessToken': accessToken,
+        'name': name,
       },
     );
 
