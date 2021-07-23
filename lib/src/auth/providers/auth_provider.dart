@@ -137,6 +137,7 @@ class AuthProvider extends ChangeNotifier {
       await _socialLogin(
         provider: 'apple',
         accessToken: result.identityToken,
+        authorizationCode: result.authorizationCode,
         name: '${result.givenName} ${result.familyName}',
       );
     } catch (e) {
@@ -188,13 +189,15 @@ class AuthProvider extends ChangeNotifier {
   Future<void> _socialLogin({
     required String provider,
     required String? accessToken,
+    String? authorizationCode,
     String? name,
   }) async {
     final response = await api.post(
       '/auth/$provider-login',
       data: {
-        'accessToken': accessToken,
         'name': name,
+        'accessToken': accessToken,
+        'authorizationCode': authorizationCode,
       },
     );
 
