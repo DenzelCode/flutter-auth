@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as store;
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthProvider extends ChangeNotifier {
   User? user;
@@ -118,6 +119,31 @@ class AuthProvider extends ChangeNotifier {
       );
 
       throw Exception(result.message);
+    }
+  }
+
+  Future<void> loginWithApple(BuildContext context) async {
+    try {
+      final result = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      await _socialLogin('apple', result.authorizationCode);
+    } catch (e) {
+      if (!(e is DioError)) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertWidget(
+            title: 'Error',
+            description: 'An error occurred authenticating with Apple',
+          ),
+        );
+      }
+
+      throw Exception(e);
     }
   }
 

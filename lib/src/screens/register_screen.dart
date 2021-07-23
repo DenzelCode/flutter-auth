@@ -131,21 +131,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(
                     height: 30,
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: SignInButton(
-                      Buttons.Facebook,
-                      text: "Sign up with Facebook",
-                      onPressed: () => _registerWithFacebook(context),
-                    ),
+                  SignInButton(
+                    Buttons.AppleDark,
+                    text: "Sign up with Apple",
+                    onPressed: () => _registerWithApple(context),
                   ),
                   SizedBox(
-                    width: double.infinity,
-                    child: SignInButton(
-                      Buttons.Google,
-                      text: "Sign up with Google",
-                      onPressed: () => _registerWithGoogle(context),
-                    ),
+                    height: 10,
+                  ),
+                  SignInButton(
+                    Buttons.Facebook,
+                    text: "Sign up with Facebook",
+                    onPressed: () => _registerWithFacebook(context),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  SignInButton(
+                    Buttons.Google,
+                    text: "Sign up with Google",
+                    onPressed: () => _registerWithGoogle(context),
                   ),
                   Spacer(),
                   Row(
@@ -229,6 +234,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     try {
       await provider.loginWithGoogle(context);
+
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        HomeScreen.routeName,
+        (_) => false,
+      );
+    } finally {
+      setState(() {
+        _loading = false;
+      });
+    }
+  }
+
+  _registerWithApple(BuildContext context) async {
+    final provider = Provider.of<AuthProvider>(context, listen: false);
+
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      await provider.loginWithApple(context);
 
       Navigator.of(context).pushNamedAndRemoveUntil(
         HomeScreen.routeName,
