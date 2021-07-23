@@ -136,7 +136,7 @@ class AuthProvider extends ChangeNotifier {
 
       await _socialLogin(
         provider: 'apple',
-        accessToken: result.authorizationCode,
+        accessToken: result.identityToken,
         name: '${result.givenName} ${result.familyName}',
       );
     } catch (e) {
