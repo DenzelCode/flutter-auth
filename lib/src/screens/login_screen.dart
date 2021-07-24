@@ -44,6 +44,9 @@ class _LoginScreenState extends State<LoginScreen> {
     final theme = Theme.of(context);
 
     final node = FocusScope.of(context);
+    final size = MediaQuery.of(context).size;
+
+    print(size);
 
     return ScrollCloseKeyboard(
       child: Scaffold(
@@ -54,119 +57,126 @@ class _LoginScreenState extends State<LoginScreen> {
           topMediumCircleColor: theme.primaryColor,
           topRightCircleColor: theme.highlightColor,
           bottomRightCircleColor: Colors.white,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 40),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GoBack(),
-                  SizedBox(
-                    height: 65,
-                  ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 250),
-                    child: Text(
-                      'Welcome Back',
-                      style: TextStyle(
-                        fontSize: 46,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  MainTextField(
-                    label: 'Username',
-                    usernameField: true,
-                    onChanged: (value) => setState(() {
-                      _username = value;
-                    }),
-                    onEditingComplete: () => node.nextFocus(),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  MainTextField(
-                    label: 'Password',
-                    controller: _passwordController,
-                    passwordField: true,
-                    onSubmitted: (_) {
-                      node.unfocus();
-
-                      _login(context);
-                    },
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Sign In',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
-                        ),
-                      ),
-                      Spacer(),
-                      NextButton(
-                        onPressed: () => _login(context),
-                        loading: _loading,
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  if (Platform.isIOS)
-                    SignInButton(
-                      Buttons.AppleDark,
-                      text: "Sign up with Apple",
-                      onPressed: () => _loginWithApple(context),
-                    ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SignInButton(
-                    Buttons.Facebook,
-                    text: "Sign in with Facebook",
-                    onPressed: () => _loginWithFacebook(context),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SignInButton(
-                    Buttons.GoogleDark,
-                    text: "Sign in with Google",
-                    onPressed: () => _loginWithGoogle(context),
-                  ),
-                  Spacer(),
-                  Row(
-                    children: [
-                      UnderlinedButton(
-                        onPressed: () => Navigator.pushNamed(
-                          context,
-                          RegisterScreen.routeName,
-                        ),
-                        child: Text('Sign Up'),
-                        color: theme.highlightColor,
-                      ),
-                      Spacer(),
-                      UnderlinedButton(
-                        onPressed: () => Navigator.pushNamed(
-                          context,
-                          RecoverScreen.routeName,
-                        ),
-                        child: Text('Forgot Password'),
-                        color: theme.accentColor,
-                      )
-                    ],
-                  ),
-                ],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GoBack(),
+              SizedBox(
+                height: 50,
               ),
-            ),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ConstrainedBox(
+                          constraints: BoxConstraints(maxWidth: 250),
+                          child: Text(
+                            'Welcome Back',
+                            style: TextStyle(
+                              fontSize: 46,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        Spacer(),
+                        MainTextField(
+                          label: 'Username',
+                          usernameField: true,
+                          onChanged: (value) => setState(() {
+                            _username = value;
+                          }),
+                          onEditingComplete: () => node.nextFocus(),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        MainTextField(
+                          label: 'Password',
+                          controller: _passwordController,
+                          passwordField: true,
+                          onSubmitted: (_) {
+                            node.unfocus();
+
+                            _login(context);
+                          },
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              'Sign In',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30,
+                              ),
+                            ),
+                            Spacer(),
+                            NextButton(
+                              onPressed: () => _login(context),
+                              loading: _loading,
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        if (Platform.isIOS)
+                          SignInButton(
+                            Buttons.AppleDark,
+                            text: "Sign up with Apple",
+                            onPressed: () => _loginWithApple(context),
+                          ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        SignInButton(
+                          Buttons.Facebook,
+                          text: "Sign in with Facebook",
+                          onPressed: () => _loginWithFacebook(context),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        SignInButton(
+                          Buttons.GoogleDark,
+                          text: "Sign in with Google",
+                          onPressed: () => _loginWithGoogle(context),
+                        ),
+                        Spacer(),
+                        Row(
+                          children: [
+                            UnderlinedButton(
+                              onPressed: () => Navigator.pushNamed(
+                                context,
+                                RegisterScreen.routeName,
+                              ),
+                              child: Text('Sign Up'),
+                              color: theme.highlightColor,
+                            ),
+                            Spacer(),
+                            UnderlinedButton(
+                              onPressed: () => Navigator.pushNamed(
+                                context,
+                                RecoverScreen.routeName,
+                              ),
+                              child: Text('Forgot Password'),
+                              color: theme.accentColor,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

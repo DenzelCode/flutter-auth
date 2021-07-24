@@ -53,125 +53,132 @@ class _RegisterScreenState extends State<RegisterScreen> {
           topMediumCircleColor: theme.primaryColor,
           topRightCircleColor: theme.highlightColor,
           bottomRightCircleColor: Colors.white,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 40),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GoBack(),
-                  SizedBox(
-                    height: 65,
-                  ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 250),
-                    child: Text(
-                      'Create Account',
-                      style: TextStyle(
-                        fontSize: 46,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  MainTextField(
-                    label: 'Username',
-                    usernameField: true,
-                    textColor: Colors.white,
-                    onChanged: (value) => setState(() {
-                      _username = value;
-                    }),
-                    onEditingComplete: () => node.nextFocus(),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  MainTextField(
-                    label: 'Email',
-                    onChanged: (value) => setState(() {
-                      _email = value;
-                    }),
-                    emailField: true,
-                    textColor: Colors.white,
-                    onEditingComplete: () => node.nextFocus(),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  MainTextField(
-                    label: 'Password',
-                    controller: _passwordController,
-                    passwordField: true,
-                    textColor: Colors.white,
-                    onSubmitted: (_) {
-                      node.unfocus();
-
-                      _registerWithAccount(context);
-                    },
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
-                        ),
-                      ),
-                      Spacer(),
-                      NextButton(
-                        onPressed: () => _registerWithAccount(context),
-                        loading: _loading,
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  if (Platform.isIOS)
-                    SignInButton(
-                      Buttons.AppleDark,
-                      text: "Sign up with Apple",
-                      onPressed: () => _registerWithApple(context),
-                    ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SignInButton(
-                    Buttons.Facebook,
-                    text: "Sign up with Facebook",
-                    onPressed: () => _registerWithFacebook(context),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  SignInButton(
-                    Buttons.Google,
-                    text: "Sign up with Google",
-                    onPressed: () => _registerWithGoogle(context),
-                  ),
-                  Spacer(),
-                  Row(
-                    children: [
-                      Spacer(),
-                      UnderlinedButton(
-                        onPressed: () => Navigator.pushNamed(
-                          context,
-                          LoginScreen.routeName,
-                        ),
-                        child: Text('Sign In'),
-                        color: theme.highlightColor,
-                      )
-                    ],
-                  ),
-                ],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GoBack(),
+              SizedBox(
+                height: 50,
               ),
-            ),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ConstrainedBox(
+                          constraints: BoxConstraints(maxWidth: 250),
+                          child: Text(
+                            'Create Account',
+                            style: TextStyle(
+                              fontSize: 46,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        Spacer(),
+                        MainTextField(
+                          label: 'Username',
+                          usernameField: true,
+                          textColor: Colors.white,
+                          onChanged: (value) => setState(() {
+                            _username = value;
+                          }),
+                          onEditingComplete: () => node.nextFocus(),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        MainTextField(
+                          label: 'Email',
+                          onChanged: (value) => setState(() {
+                            _email = value;
+                          }),
+                          emailField: true,
+                          textColor: Colors.white,
+                          onEditingComplete: () => node.nextFocus(),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        MainTextField(
+                          label: 'Password',
+                          controller: _passwordController,
+                          passwordField: true,
+                          textColor: Colors.white,
+                          onSubmitted: (_) {
+                            node.unfocus();
+
+                            _registerWithAccount(context);
+                          },
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30,
+                              ),
+                            ),
+                            Spacer(),
+                            NextButton(
+                              onPressed: () => _registerWithAccount(context),
+                              loading: _loading,
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 30,
+                        ),
+                        if (Platform.isIOS)
+                          SignInButton(
+                            Buttons.AppleDark,
+                            text: "Sign up with Apple",
+                            onPressed: () => _registerWithApple(context),
+                          ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        SignInButton(
+                          Buttons.Facebook,
+                          text: "Sign up with Facebook",
+                          onPressed: () => _registerWithFacebook(context),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        SignInButton(
+                          Buttons.Google,
+                          text: "Sign up with Google",
+                          onPressed: () => _registerWithGoogle(context),
+                        ),
+                        Spacer(),
+                        Row(
+                          children: [
+                            Spacer(),
+                            UnderlinedButton(
+                              onPressed: () => Navigator.pushNamed(
+                                context,
+                                LoginScreen.routeName,
+                              ),
+                              child: Text('Sign In'),
+                              color: theme.highlightColor,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

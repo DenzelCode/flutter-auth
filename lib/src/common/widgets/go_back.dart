@@ -17,16 +17,19 @@ class GoBack extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: Column(
-        children: [
-          Transform.scale(
-            scale: 2,
-            child: Icon(
-              Icons.chevron_left_sharp,
-              color: Colors.white,
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          children: [
+            Transform.scale(
+              scale: 2,
+              child: Icon(
+                Icons.chevron_left_sharp,
+                color: Colors.white,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
