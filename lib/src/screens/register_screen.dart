@@ -108,7 +108,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onSubmitted: (_) {
                       node.unfocus();
 
-                      _register(context);
+                      _registerWithAccount(context);
                     },
                   ),
                   SizedBox(
@@ -125,7 +125,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       Spacer(),
                       NextButton(
-                        onPressed: () => _register(context),
+                        onPressed: () => _registerWithAccount(context),
                         loading: _loading,
                       )
                     ],
@@ -178,86 +178,47 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  _register(BuildContext context) async {
-    if (_loading || !_formKey.currentState!.validate()) {
-      return;
-    }
-
+  _registerWithAccount(BuildContext context) async {
     final provider = Provider.of<AuthProvider>(context, listen: false);
 
-    setState(() {
-      _loading = true;
-    });
-
-    try {
-      await provider.register(
+    return _registerWith(context, () {
+      return provider.register(
         _username,
         _email,
         _passwordController.text,
       );
-
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        HomeScreen.routeName,
-        (_) => false,
-      );
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
+    });
   }
 
-  _registerWithFacebook(BuildContext context) async {
+  _registerWithFacebook(BuildContext context) {
     final provider = Provider.of<AuthProvider>(context, listen: false);
+
+    return _registerWith(context, () => provider.loginWithFacebook(context));
+  }
+
+  _registerWithGoogle(BuildContext context) {
+    final provider = Provider.of<AuthProvider>(context, listen: false);
+
+    return _registerWith(context, () => provider.loginWithGoogle(context));
+  }
+
+  _registerWithApple(BuildContext context) {
+    final provider = Provider.of<AuthProvider>(context, listen: false);
+
+    return _registerWith(context, () => provider.loginWithApple(context));
+  }
+
+  _registerWith(BuildContext context, Future<void> Function() method) async {
+    if (_loading) {
+      return;
+    }
 
     setState(() {
       _loading = true;
     });
 
     try {
-      await provider.loginWithFacebook(context);
-
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        HomeScreen.routeName,
-        (_) => false,
-      );
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
-  }
-
-  _registerWithGoogle(BuildContext context) async {
-    final provider = Provider.of<AuthProvider>(context, listen: false);
-
-    setState(() {
-      _loading = true;
-    });
-
-    try {
-      await provider.loginWithGoogle(context);
-
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        HomeScreen.routeName,
-        (_) => false,
-      );
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
-  }
-
-  _registerWithApple(BuildContext context) async {
-    final provider = Provider.of<AuthProvider>(context, listen: false);
-
-    setState(() {
-      _loading = true;
-    });
-
-    try {
-      await provider.loginWithApple(context);
+      await method();
 
       Navigator.of(context).pushNamedAndRemoveUntil(
         HomeScreen.routeName,

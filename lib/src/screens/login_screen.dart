@@ -173,85 +173,46 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  _login(BuildContext context) async {
-    if (_loading || !_formKey.currentState!.validate()) {
-      return;
-    }
-
+  _login(BuildContext context) {
     final provider = Provider.of<AuthProvider>(context, listen: false);
 
-    setState(() {
-      _loading = true;
-    });
-
-    try {
-      await provider.authenticate(
+    return _loginWith(context, () {
+      return provider.authenticate(
         _username,
         _passwordController.text,
       );
-
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        HomeScreen.routeName,
-        (_) => false,
-      );
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
+    });
   }
 
-  _loginWithFacebook(BuildContext context) async {
+  _loginWithFacebook(BuildContext context) {
     final provider = Provider.of<AuthProvider>(context, listen: false);
+
+    return _loginWith(context, () => provider.loginWithFacebook(context));
+  }
+
+  _loginWithGoogle(BuildContext context) {
+    final provider = Provider.of<AuthProvider>(context, listen: false);
+
+    return _loginWith(context, () => provider.loginWithGoogle(context));
+  }
+
+  _loginWithApple(BuildContext context) {
+    final provider = Provider.of<AuthProvider>(context, listen: false);
+
+    return _loginWith(context, () => provider.loginWithApple(context));
+  }
+
+  _loginWith(BuildContext context, Future<void> Function() method) async {
+    if (_loading) {
+      return;
+    }
 
     setState(() {
       _loading = true;
     });
 
     try {
-      await provider.loginWithFacebook(context);
-
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        HomeScreen.routeName,
-        (_) => false,
-      );
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
-  }
-
-  _loginWithGoogle(BuildContext context) async {
-    final provider = Provider.of<AuthProvider>(context, listen: false);
-
-    setState(() {
-      _loading = true;
-    });
-
-    try {
-      await provider.loginWithGoogle(context);
-
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        HomeScreen.routeName,
-        (_) => false,
-      );
-    } finally {
-      setState(() {
-        _loading = false;
-      });
-    }
-  }
-
-  _loginWithApple(BuildContext context) async {
-    final provider = Provider.of<AuthProvider>(context, listen: false);
-
-    setState(() {
-      _loading = true;
-    });
-
-    try {
-      await provider.loginWithApple(context);
+      await method();
 
       Navigator.of(context).pushNamedAndRemoveUntil(
         HomeScreen.routeName,
