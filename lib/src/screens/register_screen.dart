@@ -5,7 +5,7 @@ import 'package:auth/src/common/widgets/circles_background.dart';
 import 'package:auth/src/common/widgets/go_back.dart';
 import 'package:auth/src/common/widgets/main_text_field.dart';
 import 'package:auth/src/common/widgets/next_button.dart';
-import 'package:auth/src/common/widgets/scroll_close_keyboard.dart';
+import 'package:auth/src/common/widgets/scrollable_form.dart';
 import 'package:auth/src/common/widgets/underlined_button.dart';
 import 'package:auth/src/screens/home_screen.dart';
 import 'package:auth/src/screens/login_screen.dart';
@@ -43,29 +43,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final theme = Theme.of(context);
 
     final node = FocusScope.of(context);
+    final size = MediaQuery.of(context).size;
 
-    return ScrollCloseKeyboard(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: CirclesBackground(
-          backgroundColor: theme.highlightColor,
-          topSmallCircleColor: theme.primaryColor,
-          topMediumCircleColor: theme.primaryColor,
-          topRightCircleColor: theme.highlightColor,
-          bottomRightCircleColor: Colors.white,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GoBack(),
-              SizedBox(
-                height: 50,
-              ),
-              Expanded(
-                child: Container(
+    return Scaffold(
+      body: CirclesBackground(
+        backgroundColor: theme.highlightColor,
+        topSmallCircleColor: theme.primaryColor,
+        topMediumCircleColor: theme.primaryColor,
+        topRightCircleColor: theme.highlightColor,
+        bottomRightCircleColor: Colors.white,
+        child: Stack(
+          children: [
+            GoBack(),
+            Column(
+              children: [
+                ScrollableForm(
                   padding: EdgeInsets.symmetric(horizontal: 40),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
+                  children: [
+                    SizedBox(
+                      height: 90,
+                    ),
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ConstrainedBox(
@@ -79,109 +77,112 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                         ),
-                        Spacer(),
-                        MainTextField(
-                          label: 'Username',
-                          usernameField: true,
-                          textColor: Colors.white,
-                          onChanged: (value) => setState(() {
-                            _username = value;
-                          }),
-                          onEditingComplete: () => node.nextFocus(),
-                        ),
                         SizedBox(
-                          height: 20,
+                          height: 70,
                         ),
-                        MainTextField(
-                          label: 'Email',
-                          onChanged: (value) => setState(() {
-                            _email = value;
-                          }),
-                          emailField: true,
-                          textColor: Colors.white,
-                          onEditingComplete: () => node.nextFocus(),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        MainTextField(
-                          label: 'Password',
-                          controller: _passwordController,
-                          passwordField: true,
-                          textColor: Colors.white,
-                          onSubmitted: (_) {
-                            node.unfocus();
-
-                            _registerWithAccount(context);
-                          },
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              'Sign Up',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 30,
-                              ),
-                            ),
-                            Spacer(),
-                            NextButton(
-                              onPressed: () => _registerWithAccount(context),
-                              loading: _loading,
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        if (Platform.isIOS)
-                          SignInButton(
-                            Buttons.AppleDark,
-                            text: "Sign up with Apple",
-                            onPressed: () => _registerWithApple(context),
-                          ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        SignInButton(
-                          Buttons.Facebook,
-                          text: "Sign up with Facebook",
-                          onPressed: () => _registerWithFacebook(context),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        SignInButton(
-                          Buttons.Google,
-                          text: "Sign up with Google",
-                          onPressed: () => _registerWithGoogle(context),
-                        ),
-                        Spacer(),
-                        Row(
-                          children: [
-                            Spacer(),
-                            UnderlinedButton(
-                              onPressed: () => Navigator.pushNamed(
-                                context,
-                                LoginScreen.routeName,
-                              ),
-                              child: Text('Sign In'),
-                              color: theme.highlightColor,
-                            )
-                          ],
-                        ),
+                        _form(node, context),
+                        _thirdPartySignInButtons(context),
                       ],
                     ),
-                  ),
+                  ],
                 ),
-              ),
-            ],
-          ),
+                _FooterButtons(),
+              ],
+            ),
+          ],
         ),
       ),
+    );
+  }
+
+  Widget _form(FocusScopeNode node, BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        MainTextField(
+          label: 'Username',
+          usernameField: true,
+          onChanged: (value) => setState(() {
+            _username = value;
+          }),
+          onEditingComplete: () => node.nextFocus(),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        MainTextField(
+          label: 'Email',
+          emailField: true,
+          onChanged: (value) => setState(() {
+            _email = value;
+          }),
+          onEditingComplete: () => node.nextFocus(),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        MainTextField(
+          label: 'Password',
+          controller: _passwordController,
+          passwordField: true,
+          onSubmitted: (_) {
+            node.unfocus();
+
+            _registerWithAccount(context);
+          },
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Row(
+          children: [
+            Text(
+              'Sign Up',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+              ),
+            ),
+            Spacer(),
+            NextButton(
+              onPressed: () => _registerWithAccount(context),
+              loading: _loading,
+            )
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _thirdPartySignInButtons(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 30,
+        ),
+        if (Platform.isIOS)
+          SignInButton(
+            Buttons.AppleDark,
+            text: "Sign up with Apple",
+            onPressed: () => _registerWithApple(context),
+          ),
+        SizedBox(
+          height: 10,
+        ),
+        SignInButton(
+          Buttons.Facebook,
+          text: "Sign up with Facebook",
+          onPressed: () => _registerWithFacebook(context),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        SignInButton(
+          Buttons.GoogleDark,
+          text: "Sign up with Google",
+          onPressed: () => _registerWithGoogle(context),
+        )
+      ],
     );
   }
 
@@ -236,5 +237,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _loading = false;
       });
     }
+  }
+}
+
+class _FooterButtons extends StatelessWidget {
+  const _FooterButtons({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 40),
+      child: Row(
+        children: [
+          Spacer(),
+          UnderlinedButton(
+            onPressed: () => Navigator.pushNamed(
+              context,
+              LoginScreen.routeName,
+            ),
+            child: Text('Sign In'),
+            color: theme.highlightColor,
+          ),
+        ],
+      ),
+    );
   }
 }

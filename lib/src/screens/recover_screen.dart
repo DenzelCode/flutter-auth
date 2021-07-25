@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:auth/src/auth/providers/auth_provider.dart';
 import 'package:auth/src/common/widgets/alert_widget.dart';
 import 'package:auth/src/common/widgets/circles_background.dart';
 import 'package:auth/src/common/widgets/go_back.dart';
 import 'package:auth/src/common/widgets/main_text_field.dart';
 import 'package:auth/src/common/widgets/next_button.dart';
-import 'package:auth/src/common/widgets/scroll_close_keyboard.dart';
+import 'package:auth/src/common/widgets/scrollable_form.dart';
 import 'package:auth/src/common/widgets/underlined_button.dart';
 import 'package:auth/src/screens/login_screen.dart';
 import 'package:auth/src/screens/register_screen.dart';
@@ -23,8 +25,6 @@ class RecoverScreen extends StatefulWidget {
 class _RecoverScreenState extends State<RecoverScreen> {
   final _emailController = TextEditingController();
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   bool _loading = false;
 
   @override
@@ -40,105 +40,89 @@ class _RecoverScreenState extends State<RecoverScreen> {
 
     final node = FocusScope.of(context);
 
-    return ScrollCloseKeyboard(
-      child: Scaffold(
-        body: CirclesBackground(
-          backgroundColor: Colors.white,
-          topSmallCircleColor: theme.accentColor,
-          topMediumCircleColor: theme.primaryColor,
-          topRightCircleColor: theme.highlightColor,
-          bottomRightCircleColor: Colors.white,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 40),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GoBack(),
-                  SizedBox(
-                    height: 65,
-                  ),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 250),
-                    child: Text(
-                      'Forgot Password',
-                      style: TextStyle(
-                        fontSize: 46,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+    return Scaffold(
+      body: CirclesBackground(
+        backgroundColor: Colors.white,
+        topSmallCircleColor: theme.accentColor,
+        topMediumCircleColor: theme.primaryColor,
+        topRightCircleColor: theme.highlightColor,
+        bottomRightCircleColor: Colors.white,
+        child: Stack(
+          children: [
+            GoBack(),
+            Column(
+              children: [
+                ScrollableForm(
+                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  children: [
+                    SizedBox(
+                      height: 90,
+                    ),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: 250),
+                      child: Text(
+                        'Forgot Password',
+                        style: TextStyle(
+                          fontSize: 46,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
-                  ),
-                  Spacer(),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  MainTextField(
-                    label: 'Email',
-                    controller: _emailController,
-                    emailField: true,
-                    onSubmitted: (_) {
-                      node.unfocus();
-
-                      _recover(context);
-                    },
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Recover',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
-                        ),
-                      ),
-                      Spacer(),
-                      NextButton(
-                        onPressed: () => _recover(context),
-                        loading: _loading,
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Spacer(),
-                  Row(
-                    children: [
-                      UnderlinedButton(
-                        onPressed: () => Navigator.pushNamed(
-                          context,
-                          LoginScreen.routeName,
-                        ),
-                        child: Text('Sign In'),
-                        color: theme.highlightColor,
-                      ),
-                      Spacer(),
-                      UnderlinedButton(
-                        onPressed: () => Navigator.pushNamed(
-                          context,
-                          RegisterScreen.routeName,
-                        ),
-                        child: Text('Sign Up'),
-                        color: theme.accentColor,
-                      )
-                    ],
-                  ),
-                ],
-              ),
+                    SizedBox(
+                      height: 70,
+                    ),
+                    _form(node, context),
+                  ],
+                ),
+                _FooterButtons(),
+              ],
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 
+  Widget _form(FocusScopeNode node, BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        MainTextField(
+          label: 'Email',
+          controller: _emailController,
+          emailField: true,
+          onSubmitted: (_) {
+            node.unfocus();
+
+            _recover(context);
+          },
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Row(
+          children: [
+            Text(
+              'Recover',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+              ),
+            ),
+            Spacer(),
+            NextButton(
+              onPressed: () => _recover(context),
+              loading: _loading,
+            )
+          ],
+        ),
+      ],
+    );
+  }
+
   _recover(BuildContext context) async {
-    if (_loading || !_formKey.currentState!.validate()) {
+    if (_loading) {
       return;
     }
 
@@ -167,5 +151,39 @@ class _RecoverScreenState extends State<RecoverScreen> {
         _loading = false;
       });
     }
+  }
+}
+
+class _FooterButtons extends StatelessWidget {
+  const _FooterButtons({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 40),
+      child: Row(
+        children: [
+          UnderlinedButton(
+            child: Text('Sign In'),
+            color: theme.accentColor,
+            onPressed: () => Navigator.pushNamed(
+              context,
+              LoginScreen.routeName,
+            ),
+          ),
+          Spacer(),
+          UnderlinedButton(
+            child: Text('Sign Up'),
+            color: theme.highlightColor,
+            onPressed: () => Navigator.pushNamed(
+              context,
+              RegisterScreen.routeName,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
