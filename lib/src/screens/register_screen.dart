@@ -25,8 +25,6 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _passwordController = TextEditingController();
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   String _username = '';
   String _email = '';
   bool _loading = false;
@@ -43,7 +41,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final theme = Theme.of(context);
 
     final node = FocusScope.of(context);
-    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: CirclesBackground(
