@@ -157,12 +157,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         SizedBox(
           height: 30,
         ),
-        if (Platform.isIOS)
-          SignInButton(
-            Buttons.AppleDark,
-            text: "Sign up with Apple",
-            onPressed: () => _registerWithApple(context),
-          ),
+        SignInButton(
+          Buttons.AppleDark,
+          text: "Sign up with Apple",
+          onPressed: () => _registerWithApple(context),
+        ),
         SizedBox(
           height: 10,
         ),
