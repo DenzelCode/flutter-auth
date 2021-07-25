@@ -147,12 +147,12 @@ class _LoginScreenState extends State<LoginScreen> {
         SizedBox(
           height: 30,
         ),
-        if (Platform.isIOS)
-          SignInButton(
-            Buttons.AppleDark,
-            text: "Sign in with Apple",
-            onPressed: () => _loginWithApple(context),
-          ),
+        // if (Platform.isIOS)
+        SignInButton(
+          Buttons.AppleDark,
+          text: "Sign in with Apple",
+          onPressed: () => _loginWithApple(context),
+        ),
         SizedBox(
           height: 10,
         ),

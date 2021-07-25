@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:auth/src/auth/models/tokens.dart';
 import 'package:auth/src/auth/models/user.dart';
 import 'package:auth/src/common/http/api.dart';
 import 'package:auth/src/common/http/interceptors/dialog_interceptor.dart';
 import 'package:auth/src/common/widgets/alert_widget.dart';
+import 'package:auth/src/constants/environments.dart';
 import 'package:auth/src/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -127,11 +130,27 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> loginWithApple(BuildContext context) async {
     try {
+      if (!await SignInWithApple.isAvailable()) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertWidget(
+            title: 'Error',
+            description: 'Sign in with apple is not available on this device',
+          ),
+        );
+
+        return;
+      }
+
       final result = await SignInWithApple.getAppleIDCredential(
         scopes: [
           AppleIDAuthorizationScopes.email,
           AppleIDAuthorizationScopes.fullName,
         ],
+        webAuthenticationOptions: WebAuthenticationOptions(
+          clientId: environments.appleSignInClientId,
+          redirectUri: environments.appleSignInRedirectUri,
+        ),
       );
 
       await _socialLogin(
@@ -192,12 +211,19 @@ class AuthProvider extends ChangeNotifier {
     String? authorizationCode,
     String? name,
   }) async {
+    final type = Platform.isIOS
+        ? 'ios'
+        : Platform.isAndroid
+            ? 'android'
+            : 'web';
+
     final response = await api.post(
       '/auth/$provider-login',
       data: {
         'name': name,
         'accessToken': accessToken,
         'authorizationCode': authorizationCode,
+        'type': type,
       },
     );
 
