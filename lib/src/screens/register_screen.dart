@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:auth/src/auth/providers/auth_provider.dart';
 import 'package:auth/src/common/widgets/circles_background.dart';
 import 'package:auth/src/common/widgets/go_back.dart';
