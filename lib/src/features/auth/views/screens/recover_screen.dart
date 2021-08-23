@@ -1,5 +1,4 @@
 import 'package:auth/src/features/auth/logic/repository/auth_repository.dart';
-import 'package:auth/src/features/auth/providers/auth_provider.dart';
 import 'package:auth/src/features/auth/views/screens/login_screen.dart';
 import 'package:auth/src/features/auth/views/screens/register_screen.dart';
 import 'package:auth/src/shared/views/widgets/alert_widget.dart';

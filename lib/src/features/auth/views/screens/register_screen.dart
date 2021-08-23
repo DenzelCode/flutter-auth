@@ -1,5 +1,4 @@
 import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
-import 'package:auth/src/features/auth/providers/auth_provider.dart';
 import 'package:auth/src/features/auth/views/screens/login_screen.dart';
 import 'package:auth/src/features/home/home_screen.dart';
 import 'package:auth/src/shared/views/widgets/circles_background.dart';

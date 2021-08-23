@@ -1,6 +1,7 @@
 import 'package:auth/src/app.dart';
+import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:auth/src/features/auth/logic/models/tokens.dart';
-import 'package:auth/src/features/auth/providers/auth_provider.dart';
+import 'package:auth/src/features/auth/logic/repository/auth_repository.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,9 +21,9 @@ class AuthInterceptor extends Interceptor {
       return;
     }
 
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final repository = context.read<AuthRepository>();
 
-    final accessToken = await authProvider.getAccessToken();
+    final accessToken = await repository.getAccessToken();
 
     if (accessToken != null) {
       options.headers['Authorization'] = 'Bearer $accessToken';
@@ -45,11 +46,11 @@ class AuthInterceptor extends Interceptor {
       return super.onError(err, handler);
     }
 
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final repository = context.read<AuthRepository>();
 
     if (err.response?.statusCode == 401 &&
-        await authProvider.getRefreshToken() != null) {
-      return _handlerRefreshToken(context, authProvider, err, handler);
+        await repository.getRefreshToken() != null) {
+      return _handlerRefreshToken(context, repository, err, handler);
     }
 
     return super.onError(err, handler);
@@ -57,7 +58,7 @@ class AuthInterceptor extends Interceptor {
 
   _handlerRefreshToken(
     BuildContext context,
-    AuthProvider authProvider,
+    AuthRepository repository,
     DioError err,
     ErrorInterceptorHandler handler,
   ) async {
@@ -67,7 +68,7 @@ class AuthInterceptor extends Interceptor {
       return super.onError(err, handler);
     }
 
-    final refreshToken = await authProvider.getRefreshToken();
+    final refreshToken = await repository.getRefreshToken();
 
     try {
       final response = await api.post(
@@ -84,7 +85,7 @@ class AuthInterceptor extends Interceptor {
 
       final tokens = Tokens.fromJson(response.data);
 
-      await authProvider.setTokens(tokens);
+      await repository.setTokens(tokens);
 
       try {
         final headers = requestOptions.headers;
@@ -111,7 +112,7 @@ class AuthInterceptor extends Interceptor {
         return super.onError(err, handler);
       }
     } catch (e) {
-      authProvider.logout(context);
+      context.read<AuthCubit>().logout();
     }
   }
 }
