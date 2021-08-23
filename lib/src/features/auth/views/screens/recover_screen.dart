@@ -1,3 +1,4 @@
+import 'package:auth/src/features/auth/logic/repository/auth_repository.dart';
 import 'package:auth/src/features/auth/providers/auth_provider.dart';
 import 'package:auth/src/features/auth/views/screens/login_screen.dart';
 import 'package:auth/src/features/auth/views/screens/register_screen.dart';
@@ -124,14 +125,14 @@ class _RecoverScreenState extends State<RecoverScreen> {
       return;
     }
 
-    final provider = Provider.of<AuthProvider>(context, listen: false);
+    final repository = context.read<AuthRepository>();
 
     setState(() {
       _loading = true;
     });
 
     try {
-      await provider.recover(
+      await repository.recover(
         _emailController.text,
       );
 

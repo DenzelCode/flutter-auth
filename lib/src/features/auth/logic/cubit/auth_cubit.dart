@@ -13,6 +13,30 @@ class AuthCubit extends Cubit<User?> {
     await updateProfile();
   }
 
+  Future<void> register(String username, String password, String email) async {
+    await authRepository.register(username, password, email);
+
+    await updateProfile();
+  }
+
+  Future<void> loginWithFacebook() async {
+    await authRepository.loginWithFacebook();
+
+    await updateProfile();
+  }
+
+  Future<void> loginWithGoogle() async {
+    await authRepository.loginWithGoogle();
+
+    await updateProfile();
+  }
+
+  Future<void> loginWithApple() async {
+    await authRepository.loginWithApple();
+
+    await updateProfile();
+  }
+
   Future<void> logout() async {
     await authRepository.logout();
 

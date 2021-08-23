@@ -186,21 +186,21 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _loginWithFacebook(BuildContext context) {
-    final provider = Provider.of<AuthProvider>(context, listen: false);
+    final bloc = context.read<AuthCubit>();
 
-    return _loginWith(context, () => provider.loginWithFacebook(context));
+    _loginWith(context, () => bloc.loginWithFacebook());
   }
 
   _loginWithGoogle(BuildContext context) {
-    final provider = Provider.of<AuthProvider>(context, listen: false);
+    final bloc = context.read<AuthCubit>();
 
-    return _loginWith(context, () => provider.loginWithGoogle(context));
+    _loginWith(context, () => bloc.loginWithGoogle());
   }
 
   _loginWithApple(BuildContext context) {
-    final provider = Provider.of<AuthProvider>(context, listen: false);
+    final bloc = context.read<AuthCubit>();
 
-    return _loginWith(context, () => provider.loginWithApple(context));
+    _loginWith(context, () => bloc.loginWithApple());
   }
 
   _loginWith(BuildContext context, Future<void> Function() method) async {

@@ -57,7 +57,13 @@ class AuthRepository {
     );
   }
 
-  Future<void> loginWithFacebook(BuildContext context) async {
+  Future<void> register(String username, String password, String email) async {
+    return setTokens(
+      await _provider.register(username, password, email),
+    );
+  }
+
+  Future<void> loginWithFacebook() async {
     await FacebookAuth.instance.logOut();
 
     final result = await FacebookAuth.instance.login();
@@ -71,7 +77,7 @@ class AuthRepository {
     }
   }
 
-  Future<void> loginWithApple(BuildContext context) async {
+  Future<void> loginWithApple() async {
     if (!await SignInWithApple.isAvailable()) {
       throw new Exception('Apple login is not available');
     }
@@ -97,7 +103,7 @@ class AuthRepository {
     );
   }
 
-  Future<void> loginWithGoogle(BuildContext context) async {
+  Future<void> loginWithGoogle() async {
     await _googleSignIn.signOut();
 
     final result = await _googleSignIn.signIn();
@@ -111,6 +117,10 @@ class AuthRepository {
     return setTokens(
       await _provider.loginWithGoogle(authentication.accessToken),
     );
+  }
+
+  Future<void> recover(String email) {
+    return _provider.recover(email);
   }
 
   Future<String?> getAccessToken() {

@@ -1,3 +1,4 @@
+import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:auth/src/features/auth/providers/auth_provider.dart';
 import 'package:auth/src/features/auth/views/screens/login_screen.dart';
 import 'package:auth/src/features/home/home_screen.dart';
@@ -181,33 +182,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   _registerWithAccount(BuildContext context) async {
-    final provider = Provider.of<AuthProvider>(context, listen: false);
+    final bloc = context.read<AuthCubit>();
 
     return _registerWith(context, () {
-      return provider.register(
+      return bloc.register(
         _username,
-        _email,
         _passwordController.text,
+        _email,
       );
     });
   }
 
   _registerWithFacebook(BuildContext context) {
-    final provider = Provider.of<AuthProvider>(context, listen: false);
+    final bloc = context.read<AuthCubit>();
 
-    return _registerWith(context, () => provider.loginWithFacebook(context));
+    return _registerWith(context, () => bloc.loginWithFacebook());
   }
 
   _registerWithGoogle(BuildContext context) {
-    final provider = Provider.of<AuthProvider>(context, listen: false);
+    final bloc = context.read<AuthCubit>();
 
-    return _registerWith(context, () => provider.loginWithGoogle(context));
+    return _registerWith(context, () => bloc.loginWithGoogle());
   }
 
   _registerWithApple(BuildContext context) {
-    final provider = Provider.of<AuthProvider>(context, listen: false);
+    final bloc = context.read<AuthCubit>();
 
-    return _registerWith(context, () => provider.loginWithApple(context));
+    return _registerWith(context, () => bloc.loginWithApple());
   }
 
   _registerWith(BuildContext context, Future<void> Function() method) async {
@@ -222,7 +223,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     try {
       await method();
 
-      Navigator.of(context).pushAndRemoveUntil(
+      Navigator.pushAndRemoveUntil(
+        context,
         HomeScreen.route,
         (route) => false,
       );
