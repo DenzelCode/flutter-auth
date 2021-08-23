@@ -1,6 +1,6 @@
-import 'package:auth/src/shared/http/interceptors/auth_interceptor.dart';
-import 'package:auth/src/shared/http/interceptors/dialog_interceptor.dart';
 import 'package:auth/src/constants/environments.dart';
+import 'package:auth/src/shared/logic/http/interceptors/auth_interceptor.dart';
+import 'package:auth/src/shared/logic/http/interceptors/dialog_interceptor.dart';
 import 'package:dio/dio.dart';
 
 export 'package:dio/dio.dart';

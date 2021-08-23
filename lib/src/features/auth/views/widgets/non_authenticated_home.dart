@@ -1,23 +1,15 @@
-import 'package:auth/src/features/auth/providers/auth_provider.dart';
-import 'package:auth/src/shared/widgets/circles_background.dart';
-import 'package:auth/src/shared/widgets/underlined_button.dart';
+import 'package:auth/src/features/auth/views/screens/login_screen.dart';
+import 'package:auth/src/features/auth/views/screens/register_screen.dart';
+import 'package:auth/src/shared/views/widgets/circles_background.dart';
+import 'package:auth/src/shared/views/widgets/underlined_button.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class AuthenticatedHome extends StatelessWidget {
-  const AuthenticatedHome({Key? key}) : super(key: key);
+class NonAuthenticatedHome extends StatelessWidget {
+  const NonAuthenticatedHome({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<AuthProvider>(context);
-
-    final user = provider.user;
-
     final theme = Theme.of(context);
-
-    if (user == null) {
-      return Container();
-    }
 
     return CirclesBackground(
       backgroundColor: Colors.white,
@@ -45,46 +37,44 @@ class AuthenticatedHome extends StatelessWidget {
               ),
             ),
             Spacer(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
                 Text(
-                  'Authenticated as ',
+                  'by ',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 30,
                   ),
                 ),
                 Text(
-                  user.username,
+                  'Denzel Code',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: theme.highlightColor,
                     fontSize: 30,
                   ),
-                ),
-                Text(
-                  ' (${user.email})',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: theme.highlightColor,
-                  ),
-                ),
-                UnderlinedButton(
-                  child: Text('Logout'),
-                  color: theme.accentColor,
-                  onPressed: () => provider.logout(context),
                 )
               ],
             ),
             Spacer(),
             Row(
               children: [
+                UnderlinedButton(
+                  child: Text('Sign In'),
+                  color: theme.accentColor,
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    LoginScreen.routeName,
+                  ),
+                ),
                 Spacer(),
                 UnderlinedButton(
-                  child: Text('Logout'),
+                  child: Text('Sign Up'),
                   color: theme.highlightColor,
-                  onPressed: () => provider.logout(context),
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    RegisterScreen.routeName,
+                  ),
                 ),
               ],
             ),

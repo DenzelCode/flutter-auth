@@ -1,5 +1,5 @@
 import 'package:auth/src/app.dart';
-import 'package:auth/src/features/auth/models/tokens.dart';
+import 'package:auth/src/features/auth/logic/models/tokens.dart';
 import 'package:auth/src/features/auth/providers/auth_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';

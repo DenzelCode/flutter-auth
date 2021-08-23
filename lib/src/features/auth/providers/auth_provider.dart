@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:auth/src/features/auth/models/tokens.dart';
-import 'package:auth/src/features/auth/models/user.dart';
-import 'package:auth/src/features/auth/screens/login_screen.dart';
-import 'package:auth/src/shared/http/api.dart';
-import 'package:auth/src/shared/http/interceptors/dialog_interceptor.dart';
-import 'package:auth/src/shared/widgets/alert_widget.dart';
+import 'package:auth/src/features/auth/logic/models/tokens.dart';
+import 'package:auth/src/features/auth/logic/models/user.dart';
+import 'package:auth/src/features/auth/views/screens/login_screen.dart';
 import 'package:auth/src/constants/environments.dart';
+import 'package:auth/src/shared/logic/http/api.dart';
+import 'package:auth/src/shared/logic/http/interceptors/dialog_interceptor.dart';
+import 'package:auth/src/shared/views/widgets/alert_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as store;

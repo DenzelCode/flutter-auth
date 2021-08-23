@@ -1,13 +1,13 @@
 import 'package:auth/src/features/auth/providers/auth_provider.dart';
-import 'package:auth/src/features/auth/screens/login_screen.dart';
-import 'package:auth/src/features/auth/screens/register_screen.dart';
-import 'package:auth/src/shared/widgets/alert_widget.dart';
-import 'package:auth/src/shared/widgets/circles_background.dart';
-import 'package:auth/src/shared/widgets/go_back.dart';
-import 'package:auth/src/shared/widgets/main_text_field.dart';
-import 'package:auth/src/shared/widgets/next_button.dart';
-import 'package:auth/src/shared/widgets/scrollable_form.dart';
-import 'package:auth/src/shared/widgets/underlined_button.dart';
+import 'package:auth/src/features/auth/views/screens/login_screen.dart';
+import 'package:auth/src/features/auth/views/screens/register_screen.dart';
+import 'package:auth/src/shared/views/widgets/alert_widget.dart';
+import 'package:auth/src/shared/views/widgets/circles_background.dart';
+import 'package:auth/src/shared/views/widgets/go_back.dart';
+import 'package:auth/src/shared/views/widgets/main_text_field.dart';
+import 'package:auth/src/shared/views/widgets/next_button.dart';
+import 'package:auth/src/shared/views/widgets/scrollable_form.dart';
+import 'package:auth/src/shared/views/widgets/underlined_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
