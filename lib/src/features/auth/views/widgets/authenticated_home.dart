@@ -1,23 +1,21 @@
-import 'package:auth/src/features/auth/providers/auth_provider.dart';
+import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
+import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/shared/views/widgets/circles_background.dart';
 import 'package:auth/src/shared/views/widgets/underlined_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AuthenticatedHome extends StatelessWidget {
-  const AuthenticatedHome({Key? key}) : super(key: key);
+  final User user;
+
+  AuthenticatedHome({
+    Key? key,
+    required this.user,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<AuthProvider>(context);
-
-    final user = provider.user;
-
     final theme = Theme.of(context);
-
-    if (user == null) {
-      return Container();
-    }
 
     return CirclesBackground(
       backgroundColor: Colors.white,
@@ -73,7 +71,7 @@ class AuthenticatedHome extends StatelessWidget {
                 UnderlinedButton(
                   child: Text('Logout'),
                   color: theme.accentColor,
-                  onPressed: () => provider.logout(context),
+                  onPressed: () => context.read<AuthCubit>().logout(),
                 )
               ],
             ),
@@ -84,7 +82,7 @@ class AuthenticatedHome extends StatelessWidget {
                 UnderlinedButton(
                   child: Text('Logout'),
                   color: theme.highlightColor,
-                  onPressed: () => provider.logout(context),
+                  onPressed: () => context.read<AuthCubit>().logout(),
                 ),
               ],
             ),

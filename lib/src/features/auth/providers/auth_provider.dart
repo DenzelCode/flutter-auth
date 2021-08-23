@@ -74,8 +74,8 @@ class AuthProvider extends ChangeNotifier {
 
     user = null;
 
-    Navigator.of(context).pushNamedAndRemoveUntil(
-      LoginScreen.routeName,
+    Navigator.of(context).pushAndRemoveUntil(
+      LoginScreen.route,
       (_) => false,
     );
   }

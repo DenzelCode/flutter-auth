@@ -1,3 +1,4 @@
+import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:auth/src/features/auth/providers/auth_provider.dart';
 import 'package:auth/src/features/auth/views/screens/recover_screen.dart';
 import 'package:auth/src/features/auth/views/screens/register_screen.dart';
@@ -9,12 +10,13 @@ import 'package:auth/src/shared/views/widgets/next_button.dart';
 import 'package:auth/src/shared/views/widgets/scrollable_form.dart';
 import 'package:auth/src/shared/views/widgets/underlined_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
-  static const routeName = '/login';
+  static get route => MaterialPageRoute(builder: (_) => LoginScreen());
 
   LoginScreen({Key? key}) : super(key: key);
 
@@ -172,14 +174,15 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _login(BuildContext context) {
-    final provider = Provider.of<AuthProvider>(context, listen: false);
+    final bloc = context.read<AuthCubit>();
 
-    return _loginWith(context, () {
-      return provider.authenticate(
+    _loginWith(
+      context,
+      () => bloc.authenticate(
         _username,
         _passwordController.text,
-      );
-    });
+      ),
+    );
   }
 
   _loginWithFacebook(BuildContext context) {
@@ -212,9 +215,9 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await method();
 
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        HomeScreen.routeName,
-        (_) => false,
+      Navigator.of(context).pushAndRemoveUntil(
+        HomeScreen.route,
+        (route) => false,
       );
     } finally {
       setState(() {
@@ -236,18 +239,18 @@ class _FooterButtons extends StatelessWidget {
       child: Row(
         children: [
           UnderlinedButton(
-            onPressed: () => Navigator.pushNamed(
+            onPressed: () => Navigator.push(
               context,
-              RegisterScreen.routeName,
+              RegisterScreen.route,
             ),
             child: Text('Sign Up'),
             color: theme.highlightColor,
           ),
           Spacer(),
           UnderlinedButton(
-            onPressed: () => Navigator.pushNamed(
+            onPressed: () => Navigator.push(
               context,
-              RecoverScreen.routeName,
+              RecoverScreen.route,
             ),
             child: Text('Forgot Password'),
             color: theme.accentColor,

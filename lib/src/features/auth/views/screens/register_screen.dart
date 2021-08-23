@@ -12,7 +12,7 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:provider/provider.dart';
 
 class RegisterScreen extends StatefulWidget {
-  static const routeName = '/register';
+  static get route => MaterialPageRoute(builder: (_) => RegisterScreen());
 
   RegisterScreen({Key? key}) : super(key: key);
 
@@ -222,9 +222,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     try {
       await method();
 
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        HomeScreen.routeName,
-        (_) => false,
+      Navigator.of(context).pushAndRemoveUntil(
+        HomeScreen.route,
+        (route) => false,
       );
     } finally {
       setState(() {
@@ -247,9 +247,9 @@ class _FooterButtons extends StatelessWidget {
         children: [
           Spacer(),
           UnderlinedButton(
-            onPressed: () => Navigator.pushNamed(
+            onPressed: () => Navigator.push(
               context,
-              LoginScreen.routeName,
+              LoginScreen.route,
             ),
             child: Text('Sign In'),
             color: theme.highlightColor,

@@ -1,6 +1,8 @@
-import 'package:auth/src/app_router.dart';
+import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
+import 'package:auth/src/features/auth/logic/repository/auth_repository.dart';
 import 'package:auth/src/features/home/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MyApp extends StatefulWidget {
   static GlobalKey<NavigatorState> materialKey = GlobalKey();
@@ -12,27 +14,25 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _appRouter = AppRouter();
-
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: MyApp.materialKey,
-      debugShowCheckedModeBanner: false,
-      initialRoute: HomeScreen.routeName,
-      onGenerateRoute: _appRouter.onGenerateRoute,
-      theme: ThemeData(
-        primaryColor: Color(0xff4C525C),
-        accentColor: Color(0xffFFAE48),
-        highlightColor: Color(0xff58BFE6),
+    return RepositoryProvider(
+      create: (context) => AuthRepository(),
+      child: BlocProvider(
+        create: (context) => AuthCubit(
+          authRepository: context.read<AuthRepository>(),
+        ),
+        child: MaterialApp(
+          navigatorKey: MyApp.materialKey,
+          debugShowCheckedModeBanner: false,
+          onGenerateRoute: (settings) => HomeScreen.route,
+          theme: ThemeData(
+            primaryColor: Color(0xff4C525C),
+            accentColor: Color(0xffFFAE48),
+            highlightColor: Color(0xff58BFE6),
+          ),
+        ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    _appRouter.dispose();
   }
 }

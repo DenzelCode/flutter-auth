@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class RecoverScreen extends StatefulWidget {
-  static const routeName = '/recover';
+  static get route => MaterialPageRoute(builder: (_) => RecoverScreen());
 
   RecoverScreen({Key? key}) : super(key: key);
 
@@ -166,18 +166,18 @@ class _FooterButtons extends StatelessWidget {
           UnderlinedButton(
             child: Text('Sign In'),
             color: theme.accentColor,
-            onPressed: () => Navigator.pushNamed(
+            onPressed: () => Navigator.push(
               context,
-              LoginScreen.routeName,
+              LoginScreen.route,
             ),
           ),
           Spacer(),
           UnderlinedButton(
             child: Text('Sign Up'),
             color: theme.highlightColor,
-            onPressed: () => Navigator.pushNamed(
+            onPressed: () => Navigator.push(
               context,
-              RegisterScreen.routeName,
+              RegisterScreen.route,
             ),
           ),
         ],

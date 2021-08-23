@@ -8,8 +8,8 @@ class GoBack extends StatelessWidget {
   Widget build(BuildContext context) {
     final onTap = () async {
       if (!await Navigator.maybePop(context)) {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          HomeScreen.routeName,
+        Navigator.of(context).pushAndRemoveUntil(
+          HomeScreen.route,
           (_) => false,
         );
       }
