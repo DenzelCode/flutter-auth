@@ -78,11 +78,13 @@ class AuthAPIProvider {
     required String authorizationCode,
     String? givenName,
     String? familyName,
+    String? type,
   }) {
     return _socialLogin(
       provider: 'apple',
       accessToken: identityToken,
       authorizationCode: authorizationCode,
+      type: type,
       name: '$givenName $familyName',
     );
   }

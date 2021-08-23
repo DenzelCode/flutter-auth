@@ -8,33 +8,29 @@ class AuthCubit extends Cubit<User?> {
   AuthCubit({required this.authRepository}) : super(null);
 
   Future<void> authenticate(String username, String password) async {
-    await authRepository.authenticate(username, password);
-
-    await updateProfile();
+    _loginWith(() => authRepository.authenticate(username, password));
   }
 
   Future<void> register(String username, String password, String email) async {
-    await authRepository.register(username, password, email);
-
-    await updateProfile();
+    _loginWith(() => authRepository.register(username, password, email));
   }
 
   Future<void> loginWithFacebook() async {
-    await authRepository.loginWithFacebook();
-
-    await updateProfile();
+    _loginWith(() => authRepository.loginWithFacebook());
   }
 
   Future<void> loginWithGoogle() async {
-    await authRepository.loginWithGoogle();
-
-    await updateProfile();
+    _loginWith(() => authRepository.loginWithGoogle());
   }
 
   Future<void> loginWithApple() async {
-    await authRepository.loginWithApple();
+    _loginWith(() => authRepository.loginWithApple());
+  }
 
-    await updateProfile();
+  Future<void> _loginWith(Function method) async {
+    await method();
+
+    return updateProfile();
   }
 
   Future<void> logout() async {

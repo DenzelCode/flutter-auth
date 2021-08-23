@@ -24,9 +24,11 @@ class HomeScreen extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.done) {
             return BlocBuilder<AuthCubit, User?>(
               buildWhen: (prev, curr) => prev?.id != curr?.id,
-              builder: (context, user) => user != null
-                  ? AuthenticatedHome(user: user)
-                  : NonAuthenticatedHome(),
+              builder: (context, user) {
+                return user != null
+                    ? AuthenticatedHome(user: user)
+                    : NonAuthenticatedHome();
+              },
             );
           }
 

@@ -20,7 +20,7 @@ class AuthRepository {
     scopes: ['email', 'profile'],
   );
 
-  String getDeviceName() {
+  String getDeviceType() {
     String type = 'web';
 
     if (Platform.isIOS) {
@@ -99,6 +99,7 @@ class AuthRepository {
         authorizationCode: result.authorizationCode,
         givenName: result.givenName,
         familyName: result.familyName,
+        type: getDeviceType(),
       ),
     );
   }
