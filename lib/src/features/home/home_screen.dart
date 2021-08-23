@@ -1,7 +1,7 @@
-import 'package:auth/src/auth/models/user.dart';
-import 'package:auth/src/auth/providers/auth_provider.dart';
-import 'package:auth/src/screens/authenticated_home.dart';
-import 'package:auth/src/screens/non_authenticated_home.dart';
+import 'package:auth/src/features/auth/models/user.dart';
+import 'package:auth/src/features/auth/providers/auth_provider.dart';
+import 'package:auth/src/features/auth/widgets/authenticated_home.dart';
+import 'package:auth/src/features/auth/widgets/non_authenticated_home.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

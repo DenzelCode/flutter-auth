@@ -1,5 +1,5 @@
-import 'package:auth/src/common/http/interceptors/auth_interceptor.dart';
-import 'package:auth/src/common/http/interceptors/dialog_interceptor.dart';
+import 'package:auth/src/shared/http/interceptors/auth_interceptor.dart';
+import 'package:auth/src/shared/http/interceptors/dialog_interceptor.dart';
 import 'package:auth/src/constants/environments.dart';
 import 'package:dio/dio.dart';
 

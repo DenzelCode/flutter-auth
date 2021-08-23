@@ -1,7 +1,7 @@
-import 'package:auth/src/common/widgets/circles_background.dart';
-import 'package:auth/src/common/widgets/underlined_button.dart';
-import 'package:auth/src/screens/login_screen.dart';
-import 'package:auth/src/screens/register_screen.dart';
+import 'package:auth/src/features/auth/screens/login_screen.dart';
+import 'package:auth/src/features/auth/screens/register_screen.dart';
+import 'package:auth/src/shared/widgets/circles_background.dart';
+import 'package:auth/src/shared/widgets/underlined_button.dart';
 import 'package:flutter/material.dart';
 
 class NonAuthenticatedHome extends StatelessWidget {

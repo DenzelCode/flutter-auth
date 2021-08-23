@@ -1,30 +1,31 @@
-import 'package:auth/src/auth/providers/auth_provider.dart';
-import 'package:auth/src/common/widgets/circles_background.dart';
-import 'package:auth/src/common/widgets/go_back.dart';
-import 'package:auth/src/common/widgets/main_text_field.dart';
-import 'package:auth/src/common/widgets/next_button.dart';
-import 'package:auth/src/common/widgets/scrollable_form.dart';
-import 'package:auth/src/common/widgets/underlined_button.dart';
-import 'package:auth/src/screens/home_screen.dart';
-import 'package:auth/src/screens/login_screen.dart';
+import 'package:auth/src/features/auth/providers/auth_provider.dart';
+import 'package:auth/src/features/home/home_screen.dart';
+import 'package:auth/src/features/auth/screens/recover_screen.dart';
+import 'package:auth/src/features/auth/screens/register_screen.dart';
+import 'package:auth/src/shared/widgets/circles_background.dart';
+import 'package:auth/src/shared/widgets/go_back.dart';
+import 'package:auth/src/shared/widgets/main_text_field.dart';
+import 'package:auth/src/shared/widgets/next_button.dart';
+import 'package:auth/src/shared/widgets/scrollable_form.dart';
+import 'package:auth/src/shared/widgets/underlined_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
 
-class RegisterScreen extends StatefulWidget {
-  static const routeName = '/register';
+class LoginScreen extends StatefulWidget {
+  static const routeName = '/login';
 
-  RegisterScreen({Key? key}) : super(key: key);
+  LoginScreen({Key? key}) : super(key: key);
 
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
 
   String _username = '';
-  String _email = '';
   bool _loading = false;
 
   @override
@@ -42,8 +43,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     return Scaffold(
       body: CirclesBackground(
-        backgroundColor: theme.highlightColor,
-        topSmallCircleColor: theme.primaryColor,
+        backgroundColor: Colors.white,
+        topSmallCircleColor: theme.accentColor,
         topMediumCircleColor: theme.primaryColor,
         topRightCircleColor: theme.highlightColor,
         bottomRightCircleColor: Colors.white,
@@ -64,7 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ConstrainedBox(
                           constraints: BoxConstraints(maxWidth: 250),
                           child: Text(
-                            'Create Account',
+                            'Welcome Back',
                             style: TextStyle(
                               fontSize: 46,
                               fontWeight: FontWeight.bold,
@@ -106,24 +107,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
           height: 20,
         ),
         MainTextField(
-          label: 'Email',
-          emailField: true,
-          onChanged: (value) => setState(() {
-            _email = value;
-          }),
-          onEditingComplete: () => node.nextFocus(),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        MainTextField(
           label: 'Password',
           controller: _passwordController,
           passwordField: true,
           onSubmitted: (_) {
             node.unfocus();
 
-            _registerWithAccount(context);
+            _login(context);
           },
         ),
         SizedBox(
@@ -132,7 +122,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Row(
           children: [
             Text(
-              'Sign Up',
+              'Sign In',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 30,
@@ -140,7 +130,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             ),
             Spacer(),
             NextButton(
-              onPressed: () => _registerWithAccount(context),
+              onPressed: () => _login(context),
               loading: _loading,
             )
           ],
@@ -155,62 +145,62 @@ class _RegisterScreenState extends State<RegisterScreen> {
         SizedBox(
           height: 30,
         ),
+        // if (Platform.isIOS)
         SignInButton(
           Buttons.AppleDark,
-          text: "Sign up with Apple",
-          onPressed: () => _registerWithApple(context),
+          text: "Sign in with Apple",
+          onPressed: () => _loginWithApple(context),
         ),
         SizedBox(
           height: 10,
         ),
         SignInButton(
           Buttons.Facebook,
-          text: "Sign up with Facebook",
-          onPressed: () => _registerWithFacebook(context),
+          text: "Sign in with Facebook",
+          onPressed: () => _loginWithFacebook(context),
         ),
         SizedBox(
           height: 10,
         ),
         SignInButton(
           Buttons.GoogleDark,
-          text: "Sign up with Google",
-          onPressed: () => _registerWithGoogle(context),
+          text: "Sign in with Google",
+          onPressed: () => _loginWithGoogle(context),
         )
       ],
     );
   }
 
-  _registerWithAccount(BuildContext context) async {
+  _login(BuildContext context) {
     final provider = Provider.of<AuthProvider>(context, listen: false);
 
-    return _registerWith(context, () {
-      return provider.register(
+    return _loginWith(context, () {
+      return provider.authenticate(
         _username,
-        _email,
         _passwordController.text,
       );
     });
   }
 
-  _registerWithFacebook(BuildContext context) {
+  _loginWithFacebook(BuildContext context) {
     final provider = Provider.of<AuthProvider>(context, listen: false);
 
-    return _registerWith(context, () => provider.loginWithFacebook(context));
+    return _loginWith(context, () => provider.loginWithFacebook(context));
   }
 
-  _registerWithGoogle(BuildContext context) {
+  _loginWithGoogle(BuildContext context) {
     final provider = Provider.of<AuthProvider>(context, listen: false);
 
-    return _registerWith(context, () => provider.loginWithGoogle(context));
+    return _loginWith(context, () => provider.loginWithGoogle(context));
   }
 
-  _registerWithApple(BuildContext context) {
+  _loginWithApple(BuildContext context) {
     final provider = Provider.of<AuthProvider>(context, listen: false);
 
-    return _registerWith(context, () => provider.loginWithApple(context));
+    return _loginWith(context, () => provider.loginWithApple(context));
   }
 
-  _registerWith(BuildContext context, Future<void> Function() method) async {
+  _loginWith(BuildContext context, Future<void> Function() method) async {
     if (_loading) {
       return;
     }
@@ -245,15 +235,23 @@ class _FooterButtons extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 40),
       child: Row(
         children: [
+          UnderlinedButton(
+            onPressed: () => Navigator.pushNamed(
+              context,
+              RegisterScreen.routeName,
+            ),
+            child: Text('Sign Up'),
+            color: theme.highlightColor,
+          ),
           Spacer(),
           UnderlinedButton(
             onPressed: () => Navigator.pushNamed(
               context,
-              LoginScreen.routeName,
+              RecoverScreen.routeName,
             ),
-            child: Text('Sign In'),
-            color: theme.highlightColor,
-          ),
+            child: Text('Forgot Password'),
+            color: theme.accentColor,
+          )
         ],
       ),
     );

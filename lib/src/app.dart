@@ -1,7 +1,7 @@
-import 'package:auth/src/screens/home_screen.dart';
-import 'package:auth/src/screens/login_screen.dart';
-import 'package:auth/src/screens/recover_screen.dart';
-import 'package:auth/src/screens/register_screen.dart';
+import 'package:auth/src/features/home/home_screen.dart';
+import 'package:auth/src/features/auth/screens/login_screen.dart';
+import 'package:auth/src/features/auth/screens/recover_screen.dart';
+import 'package:auth/src/features/auth/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
