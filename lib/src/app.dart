@@ -17,6 +17,28 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    return InitProviders(
+      child: MaterialApp(
+        navigatorKey: MyApp.materialKey,
+        debugShowCheckedModeBanner: false,
+        onGenerateRoute: (settings) => HomeScreen.route,
+        theme: ThemeData(
+          primaryColor: Color(0xff4C525C),
+          accentColor: Color(0xffFFAE48),
+          highlightColor: Color(0xff58BFE6),
+        ),
+      ),
+    );
+  }
+}
+
+class InitProviders extends StatelessWidget {
+  final Widget child;
+
+  const InitProviders({Key? key, required this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return RepositoryProvider(
       create: (context) => AuthRepository(),
       child: BlocProvider(
@@ -34,16 +56,7 @@ class _MyAppState extends State<MyApp> {
               );
             }
           },
-          child: MaterialApp(
-            navigatorKey: MyApp.materialKey,
-            debugShowCheckedModeBanner: false,
-            onGenerateRoute: (settings) => HomeScreen.route,
-            theme: ThemeData(
-              primaryColor: Color(0xff4C525C),
-              accentColor: Color(0xffFFAE48),
-              highlightColor: Color(0xff58BFE6),
-            ),
-          ),
+          child: child,
         ),
       ),
     );
