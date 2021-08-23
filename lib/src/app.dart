@@ -17,7 +17,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return InitProviders(
+    return _InitProviders(
       child: MaterialApp(
         navigatorKey: MyApp.materialKey,
         debugShowCheckedModeBanner: false,
@@ -32,10 +32,10 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class InitProviders extends StatelessWidget {
+class _InitProviders extends StatelessWidget {
   final Widget child;
 
-  const InitProviders({Key? key, required this.child}) : super(key: key);
+  const _InitProviders({Key? key, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
