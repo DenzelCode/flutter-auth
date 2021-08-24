@@ -11,9 +11,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthRepository {
-  late final _storage = new store.FlutterSecureStorage();
 
   final _provider = AuthAPIProvider();
+  late final _storage = new store.FlutterSecureStorage();
 
   late final _googleSignIn = GoogleSignIn(
     scopes: ['email', 'profile'],

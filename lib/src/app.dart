@@ -24,6 +24,7 @@ class _MyAppState extends State<MyApp> {
       child: MaterialApp(
         navigatorKey: MyApp.materialKey,
         debugShowCheckedModeBanner: false,
+        initialRoute: HomeScreen.routeName,
         onGenerateRoute: appRouter.onGenerateRoute,
         theme: ThemeData(
           primaryColor: Color(0xff4C525C),
