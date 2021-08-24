@@ -6,12 +6,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class AuthInterceptor extends Interceptor {
-  static const skipHeader = 'skipRefreshToken';
+class AuthTokenInterceptor extends Interceptor {
+  static const skipHeader = 'skipAuthToken';
 
   Dio api;
 
-  AuthInterceptor(this.api);
+  AuthTokenInterceptor(this.api);
 
   @override
   onRequest(RequestOptions options, RequestInterceptorHandler handler) async {

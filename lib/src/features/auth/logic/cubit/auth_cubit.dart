@@ -8,23 +8,23 @@ class AuthCubit extends Cubit<User?> {
   AuthCubit({required this.authRepository}) : super(null);
 
   Future<void> authenticate(String username, String password) async {
-    _loginWith(() => authRepository.authenticate(username, password));
+    return _loginWith(() => authRepository.authenticate(username, password));
   }
 
   Future<void> register(String username, String password, String email) async {
-    _loginWith(() => authRepository.register(username, password, email));
+    return _loginWith(() => authRepository.register(username, password, email));
   }
 
   Future<void> loginWithFacebook() async {
-    _loginWith(() => authRepository.loginWithFacebook());
+    return _loginWith(() => authRepository.loginWithFacebook());
   }
 
   Future<void> loginWithGoogle() async {
-    _loginWith(() => authRepository.loginWithGoogle());
+    return _loginWith(() => authRepository.loginWithGoogle());
   }
 
   Future<void> loginWithApple() async {
-    _loginWith(() => authRepository.loginWithApple());
+    return _loginWith(() => authRepository.loginWithApple());
   }
 
   Future<void> _loginWith(Function method) async {

@@ -231,6 +231,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() {
         _loading = false;
       });
+
+      _passwordController.text = '';
     }
   }
 }

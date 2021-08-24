@@ -222,6 +222,8 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {
         _loading = false;
       });
+
+      _passwordController.text = '';
     }
   }
 }
