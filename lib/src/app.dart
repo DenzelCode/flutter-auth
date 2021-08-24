@@ -51,7 +51,9 @@ class _InitProviders extends StatelessWidget {
         child: BlocListener<AuthCubit, User?>(
           listenWhen: (prev, curr) => prev != null && curr == null,
           listener: (context, user) {
-            if (user == null) {
+            final route = ModalRoute.of(context)?.settings.name;
+
+            if (user == null && route != HomeScreen.routeName) {
               Navigator.pushNamedAndRemoveUntil(
                 context,
                 HomeScreen.routeName,

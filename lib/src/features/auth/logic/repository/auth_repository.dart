@@ -5,7 +5,6 @@ import 'package:auth/src/constants/environments.dart';
 import 'package:auth/src/features/auth/logic/models/tokens.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/auth/logic/provider/auth_api_provider.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as store;
 import 'package:google_sign_in/google_sign_in.dart';
