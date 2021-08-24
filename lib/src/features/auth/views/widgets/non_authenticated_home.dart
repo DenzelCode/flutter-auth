@@ -62,18 +62,18 @@ class NonAuthenticatedHome extends StatelessWidget {
                 UnderlinedButton(
                   child: Text('Sign In'),
                   color: theme.accentColor,
-                  onPressed: () => Navigator.push(
+                  onPressed: () => Navigator.pushNamed(
                     context,
-                    LoginScreen.route,
+                    LoginScreen.routeName,
                   ),
                 ),
                 Spacer(),
                 UnderlinedButton(
                   child: Text('Sign Up'),
                   color: theme.highlightColor,
-                  onPressed: () => Navigator.push(
+                  onPressed: () => Navigator.pushNamed(
                     context,
-                    RegisterScreen.route,
+                    RegisterScreen.routeName,
                   ),
                 ),
               ],

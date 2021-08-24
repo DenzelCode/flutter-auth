@@ -15,7 +15,9 @@ import 'package:flutter_signin_button/button_view.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
-  static get route => MaterialPageRoute(builder: (_) => LoginScreen());
+  static const routeName = '/login';
+
+  static route() => MaterialPageRoute(builder: (_) => LoginScreen());
 
   LoginScreen({Key? key}) : super(key: key);
 
@@ -214,8 +216,8 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await method();
 
-      Navigator.of(context).pushAndRemoveUntil(
-        HomeScreen.route,
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        HomeScreen.routeName,
         (route) => false,
       );
     } finally {
@@ -240,18 +242,18 @@ class _FooterButtons extends StatelessWidget {
       child: Row(
         children: [
           UnderlinedButton(
-            onPressed: () => Navigator.push(
+            onPressed: () => Navigator.pushNamed(
               context,
-              RegisterScreen.route,
+              RegisterScreen.routeName,
             ),
             child: Text('Sign Up'),
             color: theme.highlightColor,
           ),
           Spacer(),
           UnderlinedButton(
-            onPressed: () => Navigator.push(
+            onPressed: () => Navigator.pushNamed(
               context,
-              RecoverScreen.route,
+              RecoverScreen.routeName,
             ),
             child: Text('Forgot Password'),
             color: theme.accentColor,

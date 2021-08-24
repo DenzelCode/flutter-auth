@@ -1,3 +1,4 @@
+import 'package:auth/src/app_router.dart';
 import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/auth/logic/repository/auth_repository.dart';
@@ -15,13 +16,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final appRouter = AppRouter();
+
   @override
   Widget build(BuildContext context) {
     return _InitProviders(
       child: MaterialApp(
         navigatorKey: MyApp.materialKey,
         debugShowCheckedModeBanner: false,
-        onGenerateRoute: (settings) => HomeScreen.route,
+        onGenerateRoute: appRouter.onGenerateRoute,
         theme: ThemeData(
           primaryColor: Color(0xff4C525C),
           accentColor: Color(0xffFFAE48),
@@ -49,9 +52,9 @@ class _InitProviders extends StatelessWidget {
           listenWhen: (prev, curr) => prev != null && curr == null,
           listener: (context, user) {
             if (user == null) {
-              Navigator.pushAndRemoveUntil(
+              Navigator.pushNamedAndRemoveUntil(
                 context,
-                HomeScreen.route,
+                HomeScreen.routeName,
                 (route) => false,
               );
             }

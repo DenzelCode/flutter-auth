@@ -7,7 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
-  static get route => MaterialPageRoute(builder: (_) => HomeScreen());
+  static const routeName = '/';
+
+  static route() => MaterialPageRoute(builder: (_) => HomeScreen());
 
   HomeScreen({Key? key}) : super(key: key);
 

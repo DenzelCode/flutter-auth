@@ -27,9 +27,7 @@ class AlertWidget extends StatelessWidget {
         actions: <Widget>[
           TextButton(
             child: Text(closeText ?? 'Close'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+            onPressed: () => Navigator.of(context).pop(),
           ),
         ],
       ),
