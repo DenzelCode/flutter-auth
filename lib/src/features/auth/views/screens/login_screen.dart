@@ -3,7 +3,7 @@ import 'package:auth/src/features/auth/views/screens/recover_screen.dart';
 import 'package:auth/src/features/auth/views/screens/register_screen.dart';
 import 'package:auth/src/features/home/home_screen.dart';
 import 'package:auth/src/shared/views/widgets/circles_background.dart';
-import 'package:auth/src/shared/views/widgets/go_back.dart';
+import 'package:auth/src/shared/views/widgets/go_back_button.dart';
 import 'package:auth/src/shared/views/widgets/main_text_field.dart';
 import 'package:auth/src/shared/views/widgets/next_button.dart';
 import 'package:auth/src/shared/views/widgets/scrollable_form.dart';
