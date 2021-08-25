@@ -1,5 +1,5 @@
 import 'package:auth/src/constants/environments.dart';
-import 'package:auth/src/shared/logic/http/interceptors/auth_token_interceptor.dart';
+import 'package:auth/src/features/auth/logic/interceptors/auth_token_interceptor.dart';
 import 'package:auth/src/shared/logic/http/interceptors/dialog_interceptor.dart';
 import 'package:dio/dio.dart';
 
