@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class AlertWidget extends StatelessWidget {
+class AlertDialogWidget extends StatelessWidget {
   final String title;
   final dynamic description;
   final String? closeText;
 
-  AlertWidget({
+  AlertDialogWidget({
     Key? key,
     required this.title,
     required this.description,

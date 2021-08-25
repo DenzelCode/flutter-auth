@@ -1,8 +1,8 @@
 import 'package:auth/src/features/home/home_screen.dart';
 import 'package:flutter/material.dart';
 
-class GoBack extends StatelessWidget {
-  const GoBack({Key? key}) : super(key: key);
+class GoBackButton extends StatelessWidget {
+  const GoBackButton({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

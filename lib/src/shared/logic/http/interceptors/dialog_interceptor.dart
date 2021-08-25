@@ -23,7 +23,7 @@ class DialogInterceptor extends Interceptor {
     if (!err.requestOptions.headers.containsKey(skipHeader)) {
       showDialog(
         context: context,
-        builder: (context) => AlertWidget(
+        builder: (context) => AlertDialogWidget(
           title: response['error'] ?? response['message'],
           description: response['message'],
         ),

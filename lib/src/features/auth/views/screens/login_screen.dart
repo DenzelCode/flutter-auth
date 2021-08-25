@@ -53,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
         bottomRightCircleColor: Colors.white,
         child: Stack(
           children: [
-            GoBack(),
+            GoBackButton(),
             Column(
               children: [
                 ScrollableForm(

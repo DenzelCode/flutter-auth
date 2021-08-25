@@ -49,7 +49,7 @@ class _RecoverScreenState extends State<RecoverScreen> {
         bottomRightCircleColor: Colors.white,
         child: Stack(
           children: [
-            GoBack(),
+            GoBackButton(),
             Column(
               children: [
                 ScrollableForm(
@@ -141,7 +141,7 @@ class _RecoverScreenState extends State<RecoverScreen> {
 
       showDialog(
         context: context,
-        builder: (context) => AlertWidget(
+        builder: (context) => AlertDialogWidget(
           title: 'Success',
           description: 'Check your email and change your password!',
         ),

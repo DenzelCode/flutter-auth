@@ -51,7 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         bottomRightCircleColor: Colors.white,
         child: Stack(
           children: [
-            GoBack(),
+            GoBackButton(),
             Column(
               children: [
                 ScrollableForm(
