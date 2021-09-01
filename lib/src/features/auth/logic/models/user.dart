@@ -1,8 +1,8 @@
 class User {
-  late String id;
-  late String username;
-  late String email;
-  late bool online;
+  late final String id;
+  late final String username;
+  late final String email;
+  late final bool online;
 
   User({
     required this.id,

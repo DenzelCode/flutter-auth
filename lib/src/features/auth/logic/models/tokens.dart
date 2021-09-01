@@ -1,6 +1,6 @@
 class Tokens {
-  late String accessToken;
-  late String refreshToken;
+  late final String accessToken;
+  late final String refreshToken;
 
   Tokens({required this.accessToken});
 
