@@ -1,7 +1,7 @@
 import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
-import 'package:auth/src/features/auth/views/widgets/authenticated_home.dart';
-import 'package:auth/src/features/auth/views/widgets/non_authenticated_home.dart';
+import 'package:auth/src/features/home/views/widgets/authenticated_home.dart';
+import 'package:auth/src/features/home/views/widgets/non_authenticated_home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';

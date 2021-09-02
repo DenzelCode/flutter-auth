@@ -1,4 +1,4 @@
-import 'package:auth/src/features/home/home_screen.dart';
+import 'package:auth/src/features/home/views/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class GoBackButton extends StatelessWidget {

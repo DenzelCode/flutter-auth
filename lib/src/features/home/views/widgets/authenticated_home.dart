@@ -1,5 +1,6 @@
 import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
+import 'package:auth/src/features/room/views/screens/rooms_screen.dart';
 import 'package:auth/src/shared/views/widgets/circles_background.dart';
 import 'package:auth/src/shared/views/widgets/underlined_button.dart';
 import 'package:flutter/material.dart';
@@ -62,17 +63,29 @@ class AuthenticatedHome extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  ' (${user.email})',
+                  '(${user.email})',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: theme.highlightColor,
                   ),
                 ),
-                UnderlinedButton(
-                  child: Text('Logout'),
-                  color: theme.accentColor,
-                  onPressed: () => context.read<AuthCubit>().logout(),
-                )
+                Row(
+                  children: [
+                    UnderlinedButton(
+                      child: Text('Logout'),
+                      color: theme.accentColor,
+                      onPressed: () => context.read<AuthCubit>().logout(),
+                    ),
+                    UnderlinedButton(
+                      child: Text('Rooms'),
+                      color: theme.highlightColor,
+                      onPressed: () => Navigator.pushNamed(
+                        context,
+                        RoomsScreen.routeName,
+                      ),
+                    )
+                  ],
+                ),
               ],
             ),
             Spacer(),

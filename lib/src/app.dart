@@ -2,7 +2,7 @@ import 'package:auth/src/app_router.dart';
 import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/auth/logic/repository/auth_repository.dart';
-import 'package:auth/src/features/home/home_screen.dart';
+import 'package:auth/src/features/home/views/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
