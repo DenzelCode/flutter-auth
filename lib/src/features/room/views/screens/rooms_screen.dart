@@ -1,37 +1,53 @@
+import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
+import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/room/views/widgets/room_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RoomsScreen extends StatelessWidget {
+class RoomsScreen extends StatefulWidget {
   static const String routeName = '/rooms';
 
   static route() => MaterialPageRoute(builder: (context) => RoomsScreen());
 
-  const RoomsScreen({Key? key}) : super(key: key);
+  RoomsScreen({Key? key}) : super(key: key);
 
+  @override
+  RoomsScreenState createState() => RoomsScreenState();
+}
+
+class RoomsScreenState extends State<RoomsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Rooms'),
-      ),
-      body: ListView(
-        padding: EdgeInsets.all(20),
-        children: [
-          _RoomsActions(
-            theme: theme,
+    return BlocBuilder<AuthCubit, User?>(
+      builder: (context, user) {
+        if (user == null) {
+          return Container();
+        }
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Rooms'),
           ),
-          SizedBox(
-            height: 16,
+          body: ListView(
+            padding: EdgeInsets.all(20),
+            children: [
+              _RoomsActions(
+                theme: theme,
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Text(
+                'Your rooms',
+                style: theme.textTheme.bodyText1,
+              ),
+              Divider(),
+            ],
           ),
-          Text(
-            'Your rooms',
-            style: theme.textTheme.bodyText1,
-          ),
-          RoomTile(),
-        ],
-      ),
+        );
+      },
     );
   }
 }

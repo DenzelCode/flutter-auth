@@ -1,8 +1,15 @@
+import 'package:auth/src/features/auth/logic/models/user.dart';
+import 'package:auth/src/features/room/logic/models/room.dart';
 import 'package:flutter/material.dart';
 
 class RoomTile extends StatelessWidget {
+  // final Room room;
+  final User user;
+
   const RoomTile({
     Key? key,
+    // required this.room,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -37,7 +44,7 @@ class RoomTile extends StatelessWidget {
             TextButton(
               onPressed: () => {},
               child: Text(
-                'Delete',
+                'Edit',
                 style: TextStyle(
                   color: Colors.black,
                 ),
@@ -46,7 +53,7 @@ class RoomTile extends StatelessWidget {
             TextButton(
               onPressed: () => {},
               child: Text(
-                'Copy',
+                'Delete',
                 style: TextStyle(
                   color: Colors.black,
                 ),
@@ -54,7 +61,6 @@ class RoomTile extends StatelessWidget {
             ),
           ],
         ),
-        Divider()
       ],
     );
   }
