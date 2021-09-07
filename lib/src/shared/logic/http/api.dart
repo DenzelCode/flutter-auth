@@ -14,8 +14,9 @@ Dio _createHttpClient() {
     ),
   );
 
-  api.interceptors.add(new DialogInterceptor());
-  api.interceptors.add(new AuthTokenInterceptor(api));
+  api
+    ..interceptors.add(new DialogInterceptor())
+    ..interceptors.add(new AuthTokenInterceptor(api));
 
   return api;
 }

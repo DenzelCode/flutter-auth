@@ -3,7 +3,7 @@ class User {
   late final String username;
   late final String? email;
   late final bool online;
-  late final bool isSocial;
+  late final bool? isSocial;
 
   User({
     required this.id,
@@ -19,5 +19,9 @@ class User {
     email = json['email'];
     online = json['online'];
     isSocial = json['isSocial'];
+  }
+
+  static List<User> fromList(List<dynamic> list) {
+    return list.map((e) => User.fromJson(e)).toList();
   }
 }

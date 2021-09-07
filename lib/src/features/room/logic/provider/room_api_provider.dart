@@ -1,33 +1,32 @@
-import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/room/logic/models/room.dart';
 import 'package:auth/src/shared/logic/http/api.dart';
 
 class RoomAPIProvider {
-  Future<Room<User, User>> getRoom(String roomId) async {
+  Future<Room> getRoom(String roomId) async {
     final response = await api.get('/room/id/$roomId');
 
     return Room.fromJson(response.data);
   }
 
-  Future<List<Room<String, User>>> getPublicRooms() async {
+  Future<List<Room>> getPublicRooms() async {
     final response = await api.get('/room/public');
 
     return Room.fromList(response.data);
   }
 
-  Future<List<Room<String, User>>> getRoomsByMember() async {
+  Future<List<Room>> getRoomsByMember() async {
     final response = await api.get('/room/member');
 
     return Room.fromList(response.data);
   }
 
-  Future<List<Room<String, String>>> getUserRooms() async {
+  Future<List<Room>> getUserRooms() async {
     final response = await api.get('/room');
 
     return Room.fromList(response.data);
   }
 
-  Future<Room<String, String>> createRoom({
+  Future<Room> createRoom({
     required String title,
     required bool isPublic,
   }) async {
@@ -46,7 +45,7 @@ class RoomAPIProvider {
     return api.delete('/room/delete/$roomId');
   }
 
-  Future<Room<String, User>> updateRoom(
+  Future<Room> updateRoom(
     String roomId, {
     required String title,
     required bool isPublic,
@@ -62,7 +61,7 @@ class RoomAPIProvider {
     return Room.fromJson(response.data);
   }
 
-  Future<Room<User, User>> joinRoom(String roomId) async {
+  Future<Room> joinRoom(String roomId) async {
     final response = await api.post(
       '/room/join',
       data: {
@@ -73,7 +72,7 @@ class RoomAPIProvider {
     return Room.fromJson(response.data);
   }
 
-  Future<Room<User, User>> leaveRoom(String roomId) async {
+  Future<Room> leaveRoom(String roomId) async {
     final response = await api.post('/room/leave/$roomId');
 
     return Room.fromJson(response.data);

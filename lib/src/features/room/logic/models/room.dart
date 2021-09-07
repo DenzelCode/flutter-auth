@@ -1,11 +1,11 @@
 import 'package:auth/src/features/auth/logic/models/user.dart';
 
-class Room<M, O> {
+class Room {
   late final String id;
   late final String title;
   late final bool isPublic;
-  late final List<M> members;
-  late final O owner;
+  late final List<dynamic> members;
+  late final dynamic owner;
 
   Room({
     required this.id,
@@ -19,21 +19,14 @@ class Room<M, O> {
     id = json['_id'];
     title = json['title'];
     isPublic = json['isPublic'];
-
-    if (M.runtimeType == User) {
-      members = (json['members'] as List<dynamic>)
-          .map((e) => User.fromJson(e))
-          .toList() as List<M>;
-
-      owner = json['owner'];
-    } else {
-      members = json['members'];
-
-      owner = json['owner'];
-    }
+    members = json['members'][0] is String
+        ? json['members']
+        : User.fromList(json['members']);
+    owner =
+        json['owner'] is String ? json['owner'] : User.fromJson(json['owner']);
   }
 
-  static List<Room<M, O>> fromList<M, O>(List<Map<String, dynamic>> list) {
-    return list.map((e) => Room.fromJson(e) as Room<M, O>).toList();
+  static List<Room> fromList(List<dynamic> list) {
+    return list.map((e) => Room.fromJson(e)).toList();
   }
 }

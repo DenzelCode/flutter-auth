@@ -1,21 +1,27 @@
 import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
+import 'package:auth/src/features/room/logic/bloc/rooms_bloc.dart';
+import 'package:auth/src/features/room/logic/repository/room_repository.dart';
 import 'package:auth/src/features/room/views/widgets/room_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RoomsScreen extends StatefulWidget {
+class RoomsScreen extends StatelessWidget {
   static const String routeName = '/rooms';
 
-  static route() => MaterialPageRoute(builder: (context) => RoomsScreen());
+  static route() {
+    return MaterialPageRoute(
+      builder: (context) => BlocProvider(
+        create: (context) => RoomsBloc(
+          repository: RoomRepository(),
+        )..add(RoomsLoaded()),
+        child: RoomsScreen(),
+      ),
+    );
+  }
 
   RoomsScreen({Key? key}) : super(key: key);
 
-  @override
-  RoomsScreenState createState() => RoomsScreenState();
-}
-
-class RoomsScreenState extends State<RoomsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -30,21 +36,80 @@ class RoomsScreenState extends State<RoomsScreen> {
           appBar: AppBar(
             title: Text('Rooms'),
           ),
-          body: ListView(
-            padding: EdgeInsets.all(20),
-            children: [
-              _RoomsActions(
-                theme: theme,
-              ),
-              SizedBox(
-                height: 16,
-              ),
-              Text(
-                'Your rooms',
-                style: theme.textTheme.bodyText1,
-              ),
-              Divider(),
-            ],
+          body: RefreshIndicator(
+            onRefresh: () async => context.read<RoomsBloc>().add(RoomsLoaded()),
+            child: ListView(
+              padding: EdgeInsets.all(20),
+              children: [
+                _RoomsActions(
+                  theme: theme,
+                ),
+                SizedBox(
+                  height: 16,
+                ),
+                BlocBuilder<RoomsBloc, RoomsState>(
+                  builder: (context, state) {
+                    if (state is RoomsLoadInProgress) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+
+                    if (!(state is RoomsLoadSuccess)) {
+                      return Container();
+                    }
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Your Rooms',
+                          style: theme.textTheme.bodyText1,
+                        ),
+                        ...state.userRooms.map(
+                          (room) => Column(
+                            children: [
+                              RoomTile(user: user, room: room),
+                              Divider(),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          'Joined Rooms',
+                          style: theme.textTheme.bodyText1,
+                        ),
+                        ...state.memberRooms.map(
+                          (room) => Column(
+                            children: [
+                              RoomTile(user: user, room: room),
+                              Divider(),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          'Public Rooms',
+                          style: theme.textTheme.bodyText1,
+                        ),
+                        ...state.publicRooms.map(
+                          (room) => Column(
+                            children: [
+                              RoomTile(user: user, room: room),
+                              Divider(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },
