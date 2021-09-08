@@ -52,7 +52,9 @@ class RoomsScreen extends StatelessWidget {
                   builder: (context, state) {
                     if (state is RoomsLoadInProgress) {
                       return Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularProgressIndicator(
+                          color: theme.primaryColor,
+                        ),
                       );
                     }
 
