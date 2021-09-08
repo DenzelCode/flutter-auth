@@ -19,9 +19,13 @@ class Room {
     id = json['_id'];
     title = json['title'];
     isPublic = json['isPublic'];
-    members = json['members'][0] is String
-        ? json['members']
-        : User.fromList(json['members']);
+
+    if (json['members'].length > 0) {
+      members = json['members'][0] is String
+          ? json['members']
+          : User.fromList(json['members']);
+    }
+
     owner =
         json['owner'] is String ? json['owner'] : User.fromJson(json['owner']);
   }

@@ -3,6 +3,7 @@ import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/room/logic/bloc/rooms_bloc.dart';
 import 'package:auth/src/features/room/logic/repository/room_repository.dart';
 import 'package:auth/src/features/room/views/widgets/room_tile.dart';
+import 'package:auth/src/features/room/views/widgets/upsert_room_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -124,43 +125,54 @@ class _RoomsActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Rooms',
-              style: theme.textTheme.headline5?.apply(
-                fontWeightDelta: 2,
-              ),
-            ),
-            Row(
+    return BlocBuilder<RoomsBloc, RoomsState>(
+      builder: (context, state) {
+        return Card(
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextButton(
-                  onPressed: () => {},
-                  child: Text(
-                    'Create Room',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
+                Text(
+                  'Rooms',
+                  style: theme.textTheme.headline5?.apply(
+                    fontWeightDelta: 2,
                   ),
                 ),
-                TextButton(
-                  onPressed: () => {},
-                  child: Text(
-                    'Join Room',
-                    style: TextStyle(
-                      color: Colors.black,
+                Row(
+                  children: [
+                    TextButton(
+                      onPressed: () => _showCreateDialog(context),
+                      child: Text(
+                        'Create Room',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
-                  ),
-                )
+                    TextButton(
+                      onPressed: () => {},
+                      child: Text(
+                        'Join Room',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
+    );
+  }
+
+  _showCreateDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (_) => UpsertRoomDialog(bloc: context.read<RoomsBloc>()),
     );
   }
 }

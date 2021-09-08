@@ -19,6 +19,8 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
   ) async* {
     if (event is RoomsLoaded) {
       yield* _mapRoomsLoadedToState(event);
+    } else if (event is RoomCreated) {
+      yield* _mapRoomCreatedToState(event);
     }
   }
 
@@ -37,6 +39,23 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
       );
     } catch (e) {
       yield RoomsLoadFailure();
+    }
+  }
+
+  Stream<RoomsState> _mapRoomCreatedToState(RoomCreated event) async* {
+    if (state is RoomsLoadSuccess) {
+      final data = state as RoomsLoadSuccess;
+
+      final room = await repository.createRoom(
+        title: event.title,
+        isPublic: event.isPublic,
+      );
+
+      yield RoomsLoadSuccess(
+        memberRooms: data.memberRooms,
+        publicRooms: data.publicRooms,
+        userRooms: List.from(data.userRooms)..add(room),
+      );
     }
   }
 }

@@ -8,3 +8,13 @@ abstract class RoomsEvent extends Equatable {
 }
 
 class RoomsLoaded extends RoomsEvent {}
+
+class RoomCreated extends RoomsEvent {
+  String title;
+  bool isPublic;
+
+  RoomCreated({required this.title, required this.isPublic});
+
+  @override
+  List<Object> get props => [title, isPublic];
+}
