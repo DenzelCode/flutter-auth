@@ -24,6 +24,16 @@ class _UpsertRoomDialogState extends State<UpsertRoomDialog> {
   _UpsertRoomDialogState({this.room, required this.bloc});
 
   @override
+  void initState() {
+    super.initState();
+
+    if (room != null) {
+      _title = room!.title;
+      _isPublic = room!.isPublic;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(room == null ? 'Create Room' : 'Update Room ${room?.title}'),
@@ -46,15 +56,11 @@ class _UpsertRoomDialogState extends State<UpsertRoomDialog> {
                   onChanged: (value) => setState(() => _title = value),
                   autofocus: true,
                 ),
-                Row(
-                  children: [
-                    Switch(
-                      value: _isPublic,
-                      onChanged: (value) => setState(() => _isPublic = value),
-                    ),
-                    Text(_isPublic ? 'Public' : 'Private'),
-                  ],
-                ),
+                SwitchListTile(
+                  title: Text('Public'),
+                  value: _isPublic,
+                  onChanged: (value) => setState(() => _isPublic = value),
+                )
               ],
             );
           },
@@ -74,6 +80,16 @@ class _UpsertRoomDialogState extends State<UpsertRoomDialog> {
   }
 
   _save(BuildContext context) {
-    bloc.add(RoomCreated(title: _title, isPublic: _isPublic));
+    if (room == null) {
+      bloc.add(RoomCreated(title: _title, isPublic: _isPublic));
+
+      return;
+    }
+
+    bloc.add(RoomUpdated(
+      id: room?.id as String,
+      title: _title,
+      isPublic: _isPublic,
+    ));
   }
 }

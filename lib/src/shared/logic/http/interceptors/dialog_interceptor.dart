@@ -1,5 +1,5 @@
 import 'package:auth/src/app.dart';
-import 'package:auth/src/shared/views/widgets/alert_dialog_widget.dart';
+import 'package:auth/src/shared/views/widgets/dialog/alert_dialog_widget.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 

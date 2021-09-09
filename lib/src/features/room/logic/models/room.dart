@@ -24,6 +24,8 @@ class Room {
       members = json['members'][0] is String
           ? json['members']
           : User.fromList(json['members']);
+    } else {
+      members = [];
     }
 
     owner =

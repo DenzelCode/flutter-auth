@@ -18,3 +18,27 @@ class RoomCreated extends RoomsEvent {
   @override
   List<Object> get props => [title, isPublic];
 }
+
+class RoomUpdated extends RoomsEvent {
+  final String id;
+  final String title;
+  final bool isPublic;
+
+  RoomUpdated({
+    required this.id,
+    required this.title,
+    required this.isPublic,
+  });
+
+  @override
+  List<Object> get props => [id, title, isPublic];
+}
+
+class RoomDeleted extends RoomsEvent {
+  final String id;
+
+  RoomDeleted(this.id);
+
+  @override
+  List<Object> get props => [id];
+}

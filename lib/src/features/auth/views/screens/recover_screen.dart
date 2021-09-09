@@ -1,7 +1,7 @@
 import 'package:auth/src/features/auth/logic/repository/auth_repository.dart';
 import 'package:auth/src/features/auth/views/screens/login_screen.dart';
 import 'package:auth/src/features/auth/views/screens/register_screen.dart';
-import 'package:auth/src/shared/views/widgets/alert_dialog_widget.dart';
+import 'package:auth/src/shared/views/widgets/dialog/alert_dialog_widget.dart';
 import 'package:auth/src/shared/views/widgets/circles_background.dart';
 import 'package:auth/src/shared/views/widgets/go_back_button.dart';
 import 'package:auth/src/shared/views/widgets/main_text_field.dart';

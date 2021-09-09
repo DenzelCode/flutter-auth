@@ -21,6 +21,12 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
       yield* _mapRoomsLoadedToState(event);
     } else if (event is RoomCreated) {
       yield* _mapRoomCreatedToState(event);
+    } else if (event is RoomUpdated) {
+      yield* _mapRoomUpdatedToState(event);
+    } else if (event is RoomUpdated) {
+      yield* _mapRoomUpdatedToState(event);
+    } else if (event is RoomDeleted) {
+      yield* _mapRoomDeletedToState(event);
     }
   }
 
@@ -51,10 +57,60 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
         isPublic: event.isPublic,
       );
 
+      final publicRooms = List.from(data.publicRooms) as List<Room>;
+
+      if (event.isPublic) {
+        publicRooms.add(room);
+      }
+
       yield RoomsLoadSuccess(
         memberRooms: data.memberRooms,
-        publicRooms: data.publicRooms,
+        publicRooms: publicRooms,
         userRooms: List.from(data.userRooms)..add(room),
+      );
+    }
+  }
+
+  Stream<RoomsState> _mapRoomUpdatedToState(RoomUpdated event) async* {
+    if (state is RoomsLoadSuccess) {
+      final data = state as RoomsLoadSuccess;
+
+      final response = await repository.updateRoom(
+        event.id,
+        title: event.title,
+        isPublic: event.isPublic,
+      );
+
+      final room = Room(
+        id: event.id,
+        title: event.title,
+        isPublic: event.isPublic,
+        members: response.members,
+        owner: response.owner,
+      );
+
+      final replaceHandler = (Room e) => event.id == e.id ? room : e;
+
+      yield RoomsLoadSuccess(
+        memberRooms: data.memberRooms.map(replaceHandler).toList(),
+        publicRooms: data.publicRooms.map(replaceHandler).toList(),
+        userRooms: data.userRooms.map(replaceHandler).toList(),
+      );
+    }
+  }
+
+  Stream<RoomsState> _mapRoomDeletedToState(RoomDeleted event) async* {
+    if (state is RoomsLoadSuccess) {
+      final data = state as RoomsLoadSuccess;
+
+      await repository.deleteRoom(event.id);
+
+      final deleteHandler = (Room e) => e.id != event.id;
+
+      yield RoomsLoadSuccess(
+        memberRooms: data.memberRooms.where(deleteHandler).toList(),
+        publicRooms: data.publicRooms.where(deleteHandler).toList(),
+        userRooms: data.userRooms.where(deleteHandler).toList(),
       );
     }
   }

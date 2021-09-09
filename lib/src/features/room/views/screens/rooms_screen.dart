@@ -3,7 +3,7 @@ import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/room/logic/bloc/rooms_bloc.dart';
 import 'package:auth/src/features/room/logic/repository/room_repository.dart';
 import 'package:auth/src/features/room/views/widgets/room_tile.dart';
-import 'package:auth/src/features/room/views/widgets/upsert_room_dialog.dart';
+import 'package:auth/src/features/room/views/widgets/dialog/upsert_room_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -72,7 +72,11 @@ class RoomsScreen extends StatelessWidget {
                         ...state.userRooms.map(
                           (room) => Column(
                             children: [
-                              RoomTile(user: user, room: room),
+                              RoomTile(
+                                user: user,
+                                room: room,
+                                memberRooms: state.memberRooms,
+                              ),
                               Divider(),
                             ],
                           ),
@@ -87,7 +91,11 @@ class RoomsScreen extends StatelessWidget {
                         ...state.memberRooms.map(
                           (room) => Column(
                             children: [
-                              RoomTile(user: user, room: room),
+                              RoomTile(
+                                user: user,
+                                room: room,
+                                memberRooms: state.memberRooms,
+                              ),
                               Divider(),
                             ],
                           ),
@@ -102,7 +110,11 @@ class RoomsScreen extends StatelessWidget {
                         ...state.publicRooms.map(
                           (room) => Column(
                             children: [
-                              RoomTile(user: user, room: room),
+                              RoomTile(
+                                user: user,
+                                room: room,
+                                memberRooms: state.memberRooms,
+                              ),
                               Divider(),
                             ],
                           ),
