@@ -57,7 +57,7 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
         isPublic: event.isPublic,
       );
 
-      final publicRooms = List.from(data.publicRooms) as List<Room>;
+      List<Room> publicRooms = List.from(data.publicRooms);
 
       if (event.isPublic) {
         publicRooms.add(room);
@@ -89,11 +89,18 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
         owner: response.owner,
       );
 
+      if (room.isPublic && !data.publicRooms.any((e) => e.id == room.id)) {
+        data.publicRooms.add(room);
+      }
+
       final replaceHandler = (Room e) => event.id == e.id ? room : e;
 
       yield RoomsLoadSuccess(
         memberRooms: data.memberRooms.map(replaceHandler).toList(),
-        publicRooms: data.publicRooms.map(replaceHandler).toList(),
+        publicRooms: data.publicRooms
+            .map(replaceHandler)
+            .where((e) => e.isPublic)
+            .toList(),
         userRooms: data.userRooms.map(replaceHandler).toList(),
       );
     }
