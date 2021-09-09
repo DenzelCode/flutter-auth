@@ -1,5 +1,6 @@
 class _Environments {
   final api = 'https://nest-auth.ubbly.club/api';
+  final web = 'https://nest-auth.ubbly.club';
 
   final appleSignInClientId = 'nest-auth.ubbly.club';
   final appleSignInRedirectUri =

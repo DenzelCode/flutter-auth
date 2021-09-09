@@ -1,9 +1,11 @@
+import 'package:auth/src/constants/environments.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/room/logic/bloc/rooms_bloc.dart';
 import 'package:auth/src/features/room/logic/models/room.dart';
 import 'package:auth/src/features/room/views/widgets/dialog/upsert_room_dialog.dart';
 import 'package:auth/src/shared/views/widgets/dialog/confirm_dialog_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RoomTile extends StatelessWidget {
@@ -45,7 +47,7 @@ class RoomTile extends StatelessWidget {
         Row(
           children: [
             TextButton(
-              onPressed: () => {},
+              onPressed: _copy,
               child: Text(
                 'Copy',
                 style: TextStyle(
@@ -112,5 +114,13 @@ class RoomTile extends StatelessWidget {
 
   _delete(BuildContext context) {
     context.read<RoomsBloc>().add(RoomDeleted(room.id));
+  }
+
+  _copy() {
+    Clipboard.setData(
+      ClipboardData(
+        text: '${environments.web}/room/${room.id}',
+      ),
+    );
   }
 }
