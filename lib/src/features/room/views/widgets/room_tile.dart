@@ -77,7 +77,7 @@ class RoomTile extends StatelessWidget {
               ),
             if (isMember)
               TextButton(
-                onPressed: () => {},
+                onPressed: () => _leave(context),
                 child: Text(
                   'Leave',
                   style: TextStyle(
@@ -116,11 +116,13 @@ class RoomTile extends StatelessWidget {
     context.read<RoomsBloc>().add(RoomDeleted(room.id));
   }
 
+  _leave(BuildContext context) {
+    context.read<RoomsBloc>().add(RoomLeft(room.id));
+  }
+
   _copy() {
     Clipboard.setData(
-      ClipboardData(
-        text: '${environments.web}/room/${room.id}',
-      ),
+      ClipboardData(text: '${environments.web}/room/${room.id}'),
     );
   }
 }

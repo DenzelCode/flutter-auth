@@ -73,7 +73,7 @@ class RoomAPIProvider {
   }
 
   Future<Room> leaveRoom(String roomId) async {
-    final response = await api.post('/room/leave/$roomId');
+    final response = await api.delete('/room/leave/$roomId');
 
     return Room.fromJson(response.data);
   }

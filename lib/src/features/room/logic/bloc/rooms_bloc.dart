@@ -27,6 +27,8 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
       yield* _mapRoomUpdatedToState(event);
     } else if (event is RoomDeleted) {
       yield* _mapRoomDeletedToState(event);
+    } else if (event is RoomLeft) {
+      yield* _mapRoomLeftToState(event);
     }
   }
 
@@ -118,6 +120,21 @@ class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
         memberRooms: data.memberRooms.where(deleteHandler).toList(),
         publicRooms: data.publicRooms.where(deleteHandler).toList(),
         userRooms: data.userRooms.where(deleteHandler).toList(),
+      );
+    }
+  }
+
+  Stream<RoomsState> _mapRoomLeftToState(RoomLeft event) async* {
+    if (state is RoomsLoadSuccess) {
+      final data = state as RoomsLoadSuccess;
+
+      await repository.leaveRoom(event.id);
+
+      yield RoomsLoadSuccess(
+        memberRooms:
+            data.memberRooms.where((room) => room.id != event.id).toList(),
+        publicRooms: data.publicRooms,
+        userRooms: data.userRooms,
       );
     }
   }

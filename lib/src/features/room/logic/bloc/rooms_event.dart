@@ -42,3 +42,12 @@ class RoomDeleted extends RoomsEvent {
   @override
   List<Object> get props => [id];
 }
+
+class RoomLeft extends RoomsEvent {
+  final String id;
+
+  RoomLeft(this.id);
+
+  @override
+  List<Object> get props => [id];
+}
