@@ -77,7 +77,7 @@ class RoomTile extends StatelessWidget {
               ),
             if (isMember)
               TextButton(
-                onPressed: () => _leave(context),
+                onPressed: () => _showConfirmLeaveDialog(context),
                 child: Text(
                   'Leave',
                   style: TextStyle(
@@ -109,6 +109,17 @@ class RoomTile extends StatelessWidget {
 
     if (response != null && response) {
       _delete(context);
+    }
+  }
+
+  _showConfirmLeaveDialog(BuildContext context) async {
+    final response = await showDialog<bool>(
+      context: context,
+      builder: (_) => ConfirmDialogWidget(),
+    );
+
+    if (response != null && response) {
+      _leave(context);
     }
   }
 
