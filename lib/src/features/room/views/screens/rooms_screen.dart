@@ -62,12 +62,12 @@ class RoomsScreen extends StatelessWidget {
                 ),
                 BlocListener<RoomCubit, RoomState>(
                   listenWhen: (_, curr) =>
-                      curr is RoomJoinSuccess && !curr.isDialog,
+                      curr is RoomCheckSuccess && !curr.isDialog,
                   listener: (context, state) {
                     Navigator.pushNamed(
                       context,
                       RoomScreen.routeName,
-                      arguments: (state as RoomJoinSuccess).roomId,
+                      arguments: (state as RoomCheckSuccess).roomId,
                     );
                   },
                   child: Container(),

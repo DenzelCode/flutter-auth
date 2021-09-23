@@ -22,8 +22,6 @@ class _RoomScreenState extends State<RoomScreen> {
   @override
   void initState() {
     super.initState();
-    
-    
   }
 
   @override

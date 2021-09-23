@@ -139,6 +139,6 @@ class RoomTile extends StatelessWidget {
   }
 
   _join(BuildContext context) {
-    context.read<RoomCubit>().joinRoom(room.id);
+    context.read<RoomCubit>().checkRoom(room.id);
   }
 }

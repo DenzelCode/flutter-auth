@@ -28,14 +28,14 @@ class _JoinRoomDialogState extends State<JoinRoomDialog> {
         children: [
           BlocListener(
             listenWhen: (prev, curr) =>
-                prev != curr && curr is RoomJoinSuccess && curr.isDialog,
+                prev != curr && curr is RoomCheckSuccess && curr.isDialog,
             listener: (context, state) {
               Navigator.pop(context);
 
               Navigator.pushNamed(
                 context,
                 RoomScreen.routeName,
-                arguments: (state as RoomJoinSuccess).roomId,
+                arguments: (state as RoomCheckSuccess).roomId,
               );
             },
             bloc: widget.cubit,
@@ -71,6 +71,6 @@ class _JoinRoomDialogState extends State<JoinRoomDialog> {
       return;
     }
 
-    widget.cubit.joinRoom(id.split('/').last, isDialog: true);
+    widget.cubit.checkRoom(id.split('/').last, isDialog: true);
   }
 }

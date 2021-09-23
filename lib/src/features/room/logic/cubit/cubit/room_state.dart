@@ -9,13 +9,14 @@ abstract class RoomState extends Equatable {
 
 class RoomInitial extends RoomState {}
 
-class RoomJoinInProgress extends RoomState {}
+class RoomCheckInProgress extends RoomState {}
 
-class RoomJoinFailure extends RoomState {}
+class RoomCheckFailure extends RoomState {}
 
-class RoomJoinSuccess extends RoomState {
+class RoomCheckSuccess extends RoomState {
   final String roomId;
+  final Room room;
   final bool isDialog;
 
-  RoomJoinSuccess(this.roomId, {this.isDialog = false}) : super();
+  RoomCheckSuccess(this.roomId, this.room, {this.isDialog = false}) : super();
 }
