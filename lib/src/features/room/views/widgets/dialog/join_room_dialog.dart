@@ -35,7 +35,7 @@ class _JoinRoomDialogState extends State<JoinRoomDialog> {
               Navigator.pushNamed(
                 context,
                 RoomScreen.routeName,
-                arguments: (state as RoomCheckSuccess).roomId,
+                arguments: (state as RoomCheckSuccess).room.id,
               );
             },
             bloc: widget.cubit,

@@ -19,12 +19,25 @@ class RoomCubit extends Cubit<RoomState> {
 
     try {
       emit(RoomCheckSuccess(
-        roomId,
-        await repository.joinRoom(roomId),
+        await repository.getRoom(roomId),
         isDialog: isDialog,
       ));
     } catch (e) {
       emit(RoomCheckFailure());
+    }
+  }
+
+  Future<void> joinRoom(String roomId, {bool isDialog = false}) async {
+    if (state is RoomCheckInProgress) {
+      return;
+    }
+
+    emit(RoomJoinInProgress());
+
+    try {
+      emit(RoomJoinSuccess(await repository.joinRoom(roomId)));
+    } catch (e) {
+      emit(RoomJoinFailure());
     }
   }
 }

@@ -1,12 +1,22 @@
+import 'package:auth/src/features/room/logic/cubit/cubit/room_cubit.dart';
+import 'package:auth/src/features/room/logic/models/room.dart';
+import 'package:auth/src/features/room/logic/repository/room_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RoomScreen extends StatefulWidget {
   static const routeName = '/room';
 
   static route(RouteSettings settings) {
+    final roomId = settings.arguments as String;
+
     return MaterialPageRoute(
-      builder: (_) => RoomScreen(roomId: settings.arguments as String),
+      builder: (_) => BlocProvider(
+        create: (_) =>
+            RoomCubit(repository: RoomRepository())..joinRoom(roomId),
+        child: RoomScreen(roomId: roomId),
+      ),
     );
   }
 
@@ -19,6 +29,8 @@ class RoomScreen extends StatefulWidget {
 }
 
 class _RoomScreenState extends State<RoomScreen> {
+  late Room room;
+
   @override
   void initState() {
     super.initState();
@@ -26,11 +38,22 @@ class _RoomScreenState extends State<RoomScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.roomId),
-      ),
-      body: Text('Test'),
+    return BlocConsumer<RoomCubit, RoomState>(
+      listener: (_, state) => Navigator.pop(context),
+      listenWhen: (_, curr) => curr is RoomJoinFailure,
+      builder: (_, state) {
+        if (state is RoomJoinSuccess) {
+          return Scaffold(
+            appBar: AppBar(title: Text(state.room.title)),
+          );
+        }
+
+        return Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
     );
   }
 }
