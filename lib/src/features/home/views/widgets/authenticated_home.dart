@@ -20,7 +20,7 @@ class AuthenticatedHome extends StatelessWidget {
 
     return CirclesBackground(
       backgroundColor: Colors.white,
-      topSmallCircleColor: theme.accentColor,
+      topSmallCircleColor: theme.secondaryHeaderColor,
       topMediumCircleColor: theme.primaryColor,
       topRightCircleColor: Colors.white,
       bottomRightCircleColor: theme.highlightColor,
@@ -73,7 +73,7 @@ class AuthenticatedHome extends StatelessWidget {
                   children: [
                     UnderlinedButton(
                       child: Text('Logout'),
-                      color: theme.accentColor,
+                      color: theme.secondaryHeaderColor,
                       onPressed: () => context.read<AuthCubit>().logout(),
                     ),
                     UnderlinedButton(

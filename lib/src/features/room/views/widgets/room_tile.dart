@@ -1,6 +1,7 @@
 import 'package:auth/src/constants/environments.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/room/logic/bloc/rooms_bloc.dart';
+import 'package:auth/src/features/room/logic/cubit/cubit/room_cubit.dart';
 import 'package:auth/src/features/room/logic/models/room.dart';
 import 'package:auth/src/features/room/views/widgets/dialog/upsert_room_dialog.dart';
 import 'package:auth/src/shared/views/widgets/dialog/confirm_dialog_widget.dart';
@@ -40,7 +41,7 @@ class RoomTile extends StatelessWidget {
                   child: Text((room.owner as User).username),
                 ),
           trailing: TextButton(
-            onPressed: () => {},
+            onPressed: () => _join(context),
             child: Text('Join'),
           ),
         ),
@@ -135,5 +136,9 @@ class RoomTile extends StatelessWidget {
     Clipboard.setData(
       ClipboardData(text: '${environments.web}/room/${room.id}'),
     );
+  }
+
+  _join(BuildContext context) {
+    context.read<RoomCubit>().joinRoom(room.id);
   }
 }

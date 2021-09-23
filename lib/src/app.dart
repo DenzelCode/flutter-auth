@@ -6,17 +6,12 @@ import 'package:auth/src/features/home/views/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   static GlobalKey<NavigatorState> materialKey = GlobalKey();
 
-  MyApp({Key? key}) : super(key: key);
-
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
   final appRouter = AppRouter();
+
+  MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +23,7 @@ class _MyAppState extends State<MyApp> {
         onGenerateRoute: appRouter.onGenerateRoute,
         theme: ThemeData(
           primaryColor: Color(0xff4C525C),
-          accentColor: Color(0xffFFAE48),
+          secondaryHeaderColor: Color(0xffFFAE48),
           highlightColor: Color(0xff58BFE6),
         ),
       ),

@@ -13,7 +13,7 @@ class NonAuthenticatedHome extends StatelessWidget {
 
     return CirclesBackground(
       backgroundColor: Colors.white,
-      topSmallCircleColor: theme.accentColor,
+      topSmallCircleColor: theme.secondaryHeaderColor,
       topMediumCircleColor: theme.primaryColor,
       topRightCircleColor: Colors.white,
       bottomRightCircleColor: theme.highlightColor,
@@ -61,7 +61,7 @@ class NonAuthenticatedHome extends StatelessWidget {
               children: [
                 UnderlinedButton(
                   child: Text('Sign In'),
-                  color: theme.accentColor,
+                  color: theme.secondaryHeaderColor,
                   onPressed: () => Navigator.pushNamed(
                     context,
                     LoginScreen.routeName,

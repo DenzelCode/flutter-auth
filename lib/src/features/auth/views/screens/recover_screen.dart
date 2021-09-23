@@ -43,7 +43,7 @@ class _RecoverScreenState extends State<RecoverScreen> {
     return Scaffold(
       body: CirclesBackground(
         backgroundColor: Colors.white,
-        topSmallCircleColor: theme.accentColor,
+        topSmallCircleColor: theme.secondaryHeaderColor,
         topMediumCircleColor: theme.primaryColor,
         topRightCircleColor: theme.highlightColor,
         bottomRightCircleColor: Colors.white,
@@ -167,7 +167,7 @@ class _FooterButtons extends StatelessWidget {
         children: [
           UnderlinedButton(
             child: Text('Sign In'),
-            color: theme.accentColor,
+            color: theme.secondaryHeaderColor,
             onPressed: () => Navigator.pushNamed(
               context,
               LoginScreen.routeName,

@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: CirclesBackground(
         backgroundColor: Colors.white,
-        topSmallCircleColor: theme.accentColor,
+        topSmallCircleColor: theme.secondaryHeaderColor,
         topMediumCircleColor: theme.primaryColor,
         topRightCircleColor: theme.highlightColor,
         bottomRightCircleColor: Colors.white,
@@ -256,7 +256,7 @@ class _FooterButtons extends StatelessWidget {
               RecoverScreen.routeName,
             ),
             child: Text('Forgot Password'),
-            color: theme.accentColor,
+            color: theme.secondaryHeaderColor,
           )
         ],
       ),

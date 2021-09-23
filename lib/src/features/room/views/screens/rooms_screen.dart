@@ -1,7 +1,10 @@
 import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/room/logic/bloc/rooms_bloc.dart';
+import 'package:auth/src/features/room/logic/cubit/cubit/room_cubit.dart';
 import 'package:auth/src/features/room/logic/repository/room_repository.dart';
+import 'package:auth/src/features/room/views/screens/room_screen.dart';
+import 'package:auth/src/features/room/views/widgets/dialog/join_room_dialog.dart';
 import 'package:auth/src/features/room/views/widgets/room_tile.dart';
 import 'package:auth/src/features/room/views/widgets/dialog/upsert_room_dialog.dart';
 import 'package:flutter/material.dart';
@@ -11,14 +14,23 @@ class RoomsScreen extends StatelessWidget {
   static const String routeName = '/rooms';
 
   static route() {
-    return MaterialPageRoute(
-      builder: (context) => BlocProvider(
-        create: (context) => RoomsBloc(
-          repository: RoomRepository(),
-        )..add(RoomsLoaded()),
+    return MaterialPageRoute(builder: (context) {
+      final repository = RoomRepository();
+
+      return MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (_) => RoomsBloc(
+              repository: repository,
+            )..add(RoomsLoaded()),
+          ),
+          BlocProvider(
+            create: (_) => RoomCubit(repository: repository),
+          )
+        ],
         child: RoomsScreen(),
-      ),
-    );
+      );
+    });
   }
 
   RoomsScreen({Key? key}) : super(key: key);
@@ -47,6 +59,18 @@ class RoomsScreen extends StatelessWidget {
                 ),
                 SizedBox(
                   height: 16,
+                ),
+                BlocListener<RoomCubit, RoomState>(
+                  listenWhen: (_, curr) =>
+                      curr is RoomJoinSuccess && !curr.isDialog,
+                  listener: (context, state) {
+                    Navigator.pushNamed(
+                      context,
+                      RoomScreen.routeName,
+                      arguments: (state as RoomJoinSuccess).roomId,
+                    );
+                  },
+                  child: Container(),
                 ),
                 BlocBuilder<RoomsBloc, RoomsState>(
                   builder: (context, state) {
@@ -165,7 +189,7 @@ class _RoomsActions extends StatelessWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: () => {},
+                      onPressed: () => _showJoinDialog(context),
                       child: Text(
                         'Join Room',
                         style: TextStyle(
@@ -187,6 +211,13 @@ class _RoomsActions extends StatelessWidget {
     return showDialog(
       context: context,
       builder: (_) => UpsertRoomDialog(bloc: context.read<RoomsBloc>()),
+    );
+  }
+
+  _showJoinDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (_) => JoinRoomDialog(cubit: context.read<RoomCubit>()),
     );
   }
 }

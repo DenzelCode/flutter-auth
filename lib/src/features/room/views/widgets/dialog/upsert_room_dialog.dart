@@ -10,42 +10,38 @@ class UpsertRoomDialog extends StatefulWidget {
   UpsertRoomDialog({Key? key, this.room, required this.bloc}) : super(key: key);
 
   @override
-  _UpsertRoomDialogState createState() =>
-      _UpsertRoomDialogState(room: room, bloc: bloc);
+  _UpsertRoomDialogState createState() => _UpsertRoomDialogState();
 }
 
 class _UpsertRoomDialogState extends State<UpsertRoomDialog> {
-  final Room? room;
-  final RoomsBloc bloc;
-
   String _title = '';
   bool _isPublic = false;
-
-  _UpsertRoomDialogState({this.room, required this.bloc});
 
   @override
   void initState() {
     super.initState();
 
-    if (room != null) {
-      _title = room!.title;
-      _isPublic = room!.isPublic;
+    if (widget.room != null) {
+      _title = widget.room!.title;
+      _isPublic = widget.room!.isPublic;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(room == null ? 'Create Room' : 'Update Room ${room?.title}'),
+      title: Text(widget.room == null
+          ? 'Create Room'
+          : 'Update Room ${widget.room?.title}'),
       content: Form(
         child: BlocBuilder(
-          bloc: bloc,
+          bloc: widget.bloc,
           builder: (context, state) {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 BlocListener(
-                  bloc: bloc,
+                  bloc: widget.bloc,
                   listenWhen: (prev, curr) => prev != curr,
                   listener: (context, state) => Navigator.pop(context),
                   child: Container(),
@@ -80,14 +76,14 @@ class _UpsertRoomDialogState extends State<UpsertRoomDialog> {
   }
 
   _save(BuildContext context) {
-    if (room == null) {
-      bloc.add(RoomCreated(title: _title, isPublic: _isPublic));
+    if (widget.room == null) {
+      widget.bloc.add(RoomCreated(title: _title, isPublic: _isPublic));
 
       return;
     }
 
-    bloc.add(RoomUpdated(
-      id: room?.id as String,
+    widget.bloc.add(RoomUpdated(
+      id: widget.room?.id as String,
       title: _title,
       isPublic: _isPublic,
     ));
