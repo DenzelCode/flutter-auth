@@ -1,3 +1,4 @@
+import 'package:auth/src/features/auth/logic/interceptors/auth_token_interceptor.dart';
 import 'package:auth/src/features/auth/logic/models/tokens.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/shared/logic/http/api.dart';
@@ -104,6 +105,16 @@ class AuthAPIProvider {
         'authorizationCode': authorizationCode,
         'type': type,
       },
+    );
+
+    return Tokens.fromJson(response.data);
+  }
+
+  Future<Tokens> loginWithRefreshToken(String? refreshToken) async {
+    final response = await api.post(
+      '/auth/refresh-token',
+      data: {'refreshToken': refreshToken},
+      options: Options(headers: {AuthTokenInterceptor.skipHeader: true}),
     );
 
     return Tokens.fromJson(response.data);

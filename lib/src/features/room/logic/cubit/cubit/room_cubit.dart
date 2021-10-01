@@ -1,3 +1,4 @@
+import 'package:auth/src/core/socket.dart';
 import 'package:auth/src/features/room/logic/models/room.dart';
 import 'package:auth/src/features/room/logic/repository/room_repository.dart';
 import 'package:bloc/bloc.dart';
@@ -39,5 +40,9 @@ class RoomCubit extends Cubit<RoomState> {
     } catch (e) {
       emit(RoomJoinFailure());
     }
+  }
+
+  subscribeRoom(String roomId) {
+    SocketConnection.socket.emit('room:subscribe', roomId);
   }
 }

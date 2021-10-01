@@ -11,7 +11,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthRepository {
-
   final _provider = AuthAPIProvider();
   late final _storage = new store.FlutterSecureStorage();
 
@@ -59,6 +58,12 @@ class AuthRepository {
   Future<void> register(String username, String password, String email) async {
     return setTokens(
       await _provider.register(username, password, email),
+    );
+  }
+
+  Future<void> loginWithRefreshToken() async {
+    return setTokens(
+      await _provider.loginWithRefreshToken(await getRefreshToken()),
     );
   }
 

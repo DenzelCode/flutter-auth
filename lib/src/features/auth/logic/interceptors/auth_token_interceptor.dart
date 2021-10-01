@@ -17,11 +17,11 @@ class AuthTokenInterceptor extends Interceptor {
   onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     final context = MyApp.materialKey.currentContext;
 
-    if (context == null) {
+    final repository = context?.read<AuthRepository>();
+
+    if (repository == null) {
       return;
     }
-
-    final repository = context.read<AuthRepository>();
 
     final accessToken = await repository.getAccessToken();
 
