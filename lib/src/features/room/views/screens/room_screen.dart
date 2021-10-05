@@ -1,6 +1,5 @@
 import 'package:auth/src/core/socket.dart';
 import 'package:auth/src/features/room/logic/cubit/cubit/room_cubit.dart';
-import 'package:auth/src/features/room/logic/models/room.dart';
 import 'package:auth/src/features/room/logic/repository/room_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -33,8 +32,6 @@ class RoomScreen extends StatefulWidget {
 }
 
 class _RoomScreenState extends State<RoomScreen> {
-  late Room room;
-
   @override
   void initState() {
     super.initState();
