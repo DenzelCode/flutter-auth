@@ -28,3 +28,18 @@ class RoomCheckedEvent extends _RoomParamsEvent {
 class RoomJoinedEvent extends _RoomParamsEvent {
   RoomJoinedEvent(String roomId) : super(roomId);
 }
+
+class _RoomObjectParamEvent extends RoomEvent {
+  final Room room;
+
+  _RoomObjectParamEvent(this.room);
+
+  @override
+  List<Object> get props => [room];
+}
+
+class RoomDisconnectedEvent extends RoomEvent {}
+
+class RoomReconnectedEvent extends _RoomObjectParamEvent {
+  RoomReconnectedEvent(Room room) : super(room);
+}

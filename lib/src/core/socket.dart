@@ -72,9 +72,9 @@ class SocketManager {
 
       await repository.loginWithRefreshToken();
 
-      dispose();
-
       init(onConnect);
+
+      dispose();
     });
 
     socket.connect();

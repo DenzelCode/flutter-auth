@@ -11,7 +11,7 @@ class RoomInitialState extends RoomState {}
 
 class RoomCheckInProgressState extends RoomState {}
 
-class RoomCheckFailureStqte extends RoomState {}
+class RoomCheckFailureState extends RoomState {}
 
 class _RoomParamState extends RoomState {
   final Room room;

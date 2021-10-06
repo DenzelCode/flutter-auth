@@ -17,11 +17,38 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
 
   Room? lastRoom;
 
+  int connections = 0;
+
   RoomBloc({required this.repository}) : super(RoomInitialState()) {
     on<RoomCheckedEvent>(_onRoomChecked);
     on<RoomJoinedEvent>(_onRoomJoined);
+    on<RoomDisconnectedEvent>(
+        (event, emit) => emit.call(RoomJoinInProgressState()));
+    on<RoomReconnectedEvent>(
+        (event, emit) => emit.call(RoomJoinSuccessState(event.room)));
+  }
 
-    socket.onDisconnect((data) => this.emit(RoomJoinInProgressState()));
+  void initSocket() {
+    socket.onDisconnect((data) => add(RoomDisconnectedEvent()));
+
+    socket.onReconnect((data) {
+      print('reconectando');
+    });
+
+    socket.onConnect((data) {
+      connections++;
+
+      if (connections > 1) {
+        add(RoomReconnectedEvent(lastRoom as Room));
+      }
+    });
+  }
+
+  @override
+  Future<void> close() {
+    socketManager.dispose();
+
+    return super.close();
   }
 
   FutureOr<void> _onRoomChecked(
@@ -40,7 +67,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
         isDialog: event.isDialog,
       ));
     } catch (e) {
-      emit.call(RoomCheckFailureStqte());
+      emit.call(RoomCheckFailureState());
     }
   }
 
@@ -53,6 +80,8 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     try {
       final room = await repository.joinRoom(event.roomId);
 
+      initSocket();
+
       await socketManager.init(
         () => socket.emit('room:subscribe', event.roomId),
       );
@@ -63,12 +92,5 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     } catch (e) {
       emit.call(RoomJoinFailureState());
     }
-  }
-
-  @override
-  Future<void> close() {
-    socketManager.dispose();
-
-    return super.close();
   }
 }
