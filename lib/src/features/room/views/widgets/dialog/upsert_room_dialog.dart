@@ -77,12 +77,12 @@ class _UpsertRoomDialogState extends State<UpsertRoomDialog> {
 
   _save(BuildContext context) {
     if (widget.room == null) {
-      widget.bloc.add(RoomCreated(title: _title, isPublic: _isPublic));
+      widget.bloc.add(RoomCreatedEvent(title: _title, isPublic: _isPublic));
 
       return;
     }
 
-    widget.bloc.add(RoomUpdated(
+    widget.bloc.add(RoomUpdatedEvent(
       id: widget.room?.id as String,
       title: _title,
       isPublic: _isPublic,

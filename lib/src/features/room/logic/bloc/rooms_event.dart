@@ -7,46 +7,49 @@ abstract class RoomsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class RoomsLoaded extends RoomsEvent {}
+class RoomsLoadedEvent extends RoomsEvent {}
 
-class RoomCreated extends RoomsEvent {
+class _RoomParamsEvent extends RoomsEvent {
   final String title;
   final bool isPublic;
 
-  RoomCreated({required this.title, required this.isPublic});
+  _RoomParamsEvent({required this.title, required this.isPublic});
 
   @override
   List<Object> get props => [title, isPublic];
 }
 
-class RoomUpdated extends RoomsEvent {
-  final String id;
-  final String title;
-  final bool isPublic;
-
-  RoomUpdated({
-    required this.id,
-    required this.title,
-    required this.isPublic,
-  });
-
-  @override
-  List<Object> get props => [id, title, isPublic];
+class RoomCreatedEvent extends _RoomParamsEvent {
+  RoomCreatedEvent({required String title, required bool isPublic})
+      : super(title: title, isPublic: isPublic);
 }
 
-class RoomDeleted extends RoomsEvent {
+class RoomUpdatedEvent extends _RoomParamsEvent {
   final String id;
 
-  RoomDeleted(this.id);
+  RoomUpdatedEvent({
+    required this.id,
+    required String title,
+    required bool isPublic,
+  }) : super(title: title, isPublic: isPublic);
+
+  @override
+  List<Object> get props => [id, ...super.props];
+}
+
+class RoomDeletedEvent extends RoomsEvent {
+  final String id;
+
+  RoomDeletedEvent(this.id);
 
   @override
   List<Object> get props => [id];
 }
 
-class RoomLeft extends RoomsEvent {
+class RoomLeftEvent extends RoomsEvent {
   final String id;
 
-  RoomLeft(this.id);
+  RoomLeftEvent(this.id);
 
   @override
   List<Object> get props => [id];

@@ -1,7 +1,7 @@
 import 'package:auth/src/constants/environments.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
+import 'package:auth/src/features/room/logic/bloc/room_bloc.dart';
 import 'package:auth/src/features/room/logic/bloc/rooms_bloc.dart';
-import 'package:auth/src/features/room/logic/cubit/cubit/room_cubit.dart';
 import 'package:auth/src/features/room/logic/models/room.dart';
 import 'package:auth/src/features/room/views/widgets/dialog/upsert_room_dialog.dart';
 import 'package:auth/src/shared/views/widgets/dialog/confirm_dialog_widget.dart';
@@ -125,11 +125,11 @@ class RoomTile extends StatelessWidget {
   }
 
   _delete(BuildContext context) {
-    context.read<RoomsBloc>().add(RoomDeleted(room.id));
+    context.read<RoomsBloc>().add(RoomDeletedEvent(room.id));
   }
 
   _leave(BuildContext context) {
-    context.read<RoomsBloc>().add(RoomLeft(room.id));
+    context.read<RoomsBloc>().add(RoomLeftEvent(room.id));
   }
 
   _copy() {
@@ -139,6 +139,6 @@ class RoomTile extends StatelessWidget {
   }
 
   _join(BuildContext context) {
-    context.read<RoomCubit>().checkRoom(room.id);
+    context.read<RoomBloc>().add(RoomCheckedEvent(room.id));
   }
 }

@@ -7,16 +7,16 @@ abstract class RoomsState extends Equatable {
   List<Object> get props => [];
 }
 
-class RoomsLoadInProgress extends RoomsState {}
+class RoomsLoadInProgressState extends RoomsState {}
 
-class RoomsLoadFailure extends RoomsState {}
+class RoomsLoadFailureState extends RoomsState {}
 
-class RoomsLoadSuccess extends RoomsState {
+class RoomsLoadSuccessState extends RoomsState {
   final List<Room> userRooms;
   final List<Room> publicRooms;
   final List<Room> memberRooms;
 
-  RoomsLoadSuccess({
+  RoomsLoadSuccessState({
     this.userRooms = const [],
     this.publicRooms = const [],
     this.memberRooms = const [],

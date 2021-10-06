@@ -1,7 +1,7 @@
 import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
+import 'package:auth/src/features/room/logic/bloc/room_bloc.dart';
 import 'package:auth/src/features/room/logic/bloc/rooms_bloc.dart';
-import 'package:auth/src/features/room/logic/cubit/cubit/room_cubit.dart';
 import 'package:auth/src/features/room/logic/repository/room_repository.dart';
 import 'package:auth/src/features/room/views/screens/room_screen.dart';
 import 'package:auth/src/features/room/views/widgets/dialog/join_room_dialog.dart';
@@ -22,10 +22,10 @@ class RoomsScreen extends StatelessWidget {
           BlocProvider(
             create: (_) => RoomsBloc(
               repository: repository,
-            )..add(RoomsLoaded()),
+            )..add(RoomsLoadedEvent()),
           ),
           BlocProvider(
-            create: (_) => RoomCubit(repository: repository),
+            create: (_) => RoomBloc(repository: repository),
           )
         ],
         child: RoomsScreen(),
@@ -50,7 +50,7 @@ class RoomsScreen extends StatelessWidget {
             title: Text('Rooms'),
           ),
           body: RefreshIndicator(
-            onRefresh: () async => context.read<RoomsBloc>().add(RoomsLoaded()),
+            onRefresh: () async => context.read<RoomsBloc>().add(RoomsLoadedEvent()),
             child: ListView(
               padding: EdgeInsets.all(20),
               children: [
@@ -60,21 +60,21 @@ class RoomsScreen extends StatelessWidget {
                 SizedBox(
                   height: 16,
                 ),
-                BlocListener<RoomCubit, RoomState>(
+                BlocListener<RoomBloc, RoomState>(
                   listenWhen: (_, curr) =>
-                      curr is RoomCheckSuccess && !curr.isDialog,
+                      curr is RoomCheckSuccessState && !curr.isDialog,
                   listener: (context, state) {
                     Navigator.pushNamed(
                       context,
                       RoomScreen.routeName,
-                      arguments: (state as RoomCheckSuccess).room.id,
+                      arguments: (state as RoomCheckSuccessState).room.id,
                     );
                   },
                   child: Container(),
                 ),
                 BlocBuilder<RoomsBloc, RoomsState>(
                   builder: (context, state) {
-                    if (state is RoomsLoadInProgress) {
+                    if (state is RoomsLoadInProgressState) {
                       return Center(
                         child: CircularProgressIndicator(
                           color: theme.primaryColor,
@@ -82,7 +82,7 @@ class RoomsScreen extends StatelessWidget {
                       );
                     }
 
-                    if (!(state is RoomsLoadSuccess)) {
+                    if (!(state is RoomsLoadSuccessState)) {
                       return Container();
                     }
 
@@ -217,7 +217,7 @@ class _RoomsActions extends StatelessWidget {
   _showJoinDialog(BuildContext context) {
     return showDialog(
       context: context,
-      builder: (_) => JoinRoomDialog(cubit: context.read<RoomCubit>()),
+      builder: (_) => JoinRoomDialog(bloc: context.read<RoomBloc>()),
     );
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auth/src/app.dart';
 import 'package:auth/src/constants/environments.dart';
 import 'package:auth/src/features/auth/logic/repository/auth_repository.dart';
@@ -6,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SocketConnection {
-  static Socket socket = io(
+class SocketManager {
+  Socket socket = io(
     environments.socket,
     OptionBuilder()
         .setTransports(['websocket'])
@@ -16,7 +18,7 @@ class SocketConnection {
         .build(),
   );
 
-  static Future<Socket> init() async {
+  Future<Socket> init([Function? onConnect]) async {
     if (socket.connected) {
       return socket;
     }
@@ -35,8 +37,6 @@ class SocketConnection {
       'Authorization': 'Bearer $accessToken'
     };
 
-    print('pwewererwefge');
-
     socket.onError((error) {
       if (context == null) {
         return;
@@ -51,7 +51,19 @@ class SocketConnection {
       );
     });
 
-    socket.onConnect((_) => socket.emit('user:subscribe'));
+    final completer = Completer<Socket>();
+
+    socket.onConnect((_) {
+      socket.emit('user:subscribe');
+
+      if (onConnect != null) {
+        onConnect();
+      }
+
+      if (!completer.isCompleted) {
+        completer.complete(socket);
+      }
+    });
 
     socket.onDisconnect((reason) async {
       if (reason != 'io server disconnect') {
@@ -60,13 +72,19 @@ class SocketConnection {
 
       await repository.loginWithRefreshToken();
 
-      init();
+      dispose();
+
+      init(onConnect);
     });
 
-    return socket.connect();
+    socket.connect();
+
+    return completer.future;
   }
 
-  static void dispose() {
+  void dispose() {
     socket.dispose();
   }
 }
+
+SocketManager socketManager = SocketManager();

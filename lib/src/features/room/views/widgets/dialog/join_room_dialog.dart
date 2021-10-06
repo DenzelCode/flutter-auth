@@ -1,15 +1,15 @@
-import 'package:auth/src/features/room/logic/cubit/cubit/room_cubit.dart';
+import 'package:auth/src/features/room/logic/bloc/room_bloc.dart';
 import 'package:auth/src/features/room/views/screens/room_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class JoinRoomDialog extends StatefulWidget {
-  final RoomCubit cubit;
+  final RoomBloc bloc;
 
   JoinRoomDialog({
     Key? key,
-    required this.cubit,
+    required this.bloc,
   }) : super(key: key);
 
   @override
@@ -28,17 +28,17 @@ class _JoinRoomDialogState extends State<JoinRoomDialog> {
         children: [
           BlocListener(
             listenWhen: (prev, curr) =>
-                prev != curr && curr is RoomCheckSuccess && curr.isDialog,
+                prev != curr && curr is RoomCheckSuccessState && curr.isDialog,
             listener: (context, state) {
               Navigator.pop(context);
 
               Navigator.pushNamed(
                 context,
                 RoomScreen.routeName,
-                arguments: (state as RoomCheckSuccess).room.id,
+                arguments: (state as RoomCheckSuccessState).room.id,
               );
             },
-            bloc: widget.cubit,
+            bloc: widget.bloc,
             child: Container(),
           ),
           Form(
@@ -71,6 +71,6 @@ class _JoinRoomDialogState extends State<JoinRoomDialog> {
       return;
     }
 
-    widget.cubit.checkRoom(id.split('/').last, isDialog: true);
+    widget.bloc.add(RoomCheckedEvent(id.split('/').last, isDialog: true));
   }
 }

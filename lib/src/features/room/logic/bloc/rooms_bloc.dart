@@ -11,131 +11,125 @@ part 'rooms_state.dart';
 class RoomsBloc extends Bloc<RoomsEvent, RoomsState> {
   RoomRepository repository;
 
-  RoomsBloc({required this.repository}) : super(RoomsLoadInProgress());
-
-  @override
-  Stream<RoomsState> mapEventToState(
-    RoomsEvent event,
-  ) async* {
-    if (event is RoomsLoaded) {
-      yield* _mapRoomsLoadedToState(event);
-    } else if (event is RoomCreated) {
-      yield* _mapRoomCreatedToState(event);
-    } else if (event is RoomUpdated) {
-      yield* _mapRoomUpdatedToState(event);
-    } else if (event is RoomUpdated) {
-      yield* _mapRoomUpdatedToState(event);
-    } else if (event is RoomDeleted) {
-      yield* _mapRoomDeletedToState(event);
-    } else if (event is RoomLeft) {
-      yield* _mapRoomLeftToState(event);
-    }
+  RoomsBloc({required this.repository}) : super(RoomsLoadInProgressState()) {
+    on<RoomsLoadedEvent>(_onRoomsLoaded);
+    on<RoomCreatedEvent>(_onRoomCreated);
+    on<RoomUpdatedEvent>(_onRoomUpdated);
+    on<RoomDeletedEvent>(_onRoomDeleted);
+    on<RoomLeftEvent>(_onRoomLeft);
   }
 
-  Stream<RoomsState> _mapRoomsLoadedToState(RoomsLoaded event) async* {
-    yield RoomsLoadInProgress();
+  FutureOr<void> _onRoomsLoaded(
+    RoomsLoadedEvent event,
+    Emitter<RoomsState> emit,
+  ) async {
+    emit.call(RoomsLoadInProgressState());
 
     try {
       final userRooms = await repository.getUserRooms();
       final memberRooms = await repository.getRoomsByMember();
       final publicRooms = await repository.getPublicRooms();
 
-      yield RoomsLoadSuccess(
+      emit.call(RoomsLoadSuccessState(
         userRooms: userRooms,
         memberRooms: memberRooms,
         publicRooms: publicRooms,
-      );
+      ));
     } catch (e) {
-      yield RoomsLoadFailure();
+      emit.call(RoomsLoadFailureState());
     }
   }
 
-  Stream<RoomsState> _mapRoomCreatedToState(RoomCreated event) async* {
-    if (state is RoomsLoadSuccess) {
-      final data = state as RoomsLoadSuccess;
+  FutureOr<void> _onRoomCreated(
+    RoomCreatedEvent event,
+    Emitter<RoomsState> emit,
+  ) async {
+    final data = state as RoomsLoadSuccessState;
 
-      final room = await repository.createRoom(
-        title: event.title,
-        isPublic: event.isPublic,
-      );
+    final room = await repository.createRoom(
+      title: event.title,
+      isPublic: event.isPublic,
+    );
 
-      List<Room> publicRooms = List.from(data.publicRooms);
+    List<Room> publicRooms = List.from(data.publicRooms);
 
-      if (event.isPublic) {
-        publicRooms.add(room);
-      }
-
-      yield RoomsLoadSuccess(
-        memberRooms: data.memberRooms,
-        publicRooms: publicRooms,
-        userRooms: List.from(data.userRooms)..add(room),
-      );
+    if (event.isPublic) {
+      publicRooms.add(room);
     }
+
+    emit.call(RoomsLoadSuccessState(
+      memberRooms: data.memberRooms,
+      publicRooms: publicRooms,
+      userRooms: List.from(data.userRooms)..add(room),
+    ));
   }
 
-  Stream<RoomsState> _mapRoomUpdatedToState(RoomUpdated event) async* {
-    if (state is RoomsLoadSuccess) {
-      final data = state as RoomsLoadSuccess;
+  FutureOr<void> _onRoomUpdated(
+    RoomUpdatedEvent event,
+    Emitter<RoomsState> emit,
+  ) async {
+    final data = state as RoomsLoadSuccessState;
 
-      final response = await repository.updateRoom(
-        event.id,
-        title: event.title,
-        isPublic: event.isPublic,
-      );
+    final response = await repository.updateRoom(
+      event.id,
+      title: event.title,
+      isPublic: event.isPublic,
+    );
 
-      final room = Room(
-        id: event.id,
-        title: event.title,
-        isPublic: event.isPublic,
-        members: response.members,
-        owner: response.owner,
-      );
+    final room = Room(
+      id: event.id,
+      title: event.title,
+      isPublic: event.isPublic,
+      members: response.members,
+      owner: response.owner,
+    );
 
-      if (room.isPublic && !data.publicRooms.any((e) => e.id == room.id)) {
-        data.publicRooms.add(room);
-      }
-
-      final replaceHandler = (Room e) => event.id == e.id ? room : e;
-
-      yield RoomsLoadSuccess(
-        memberRooms: data.memberRooms.map(replaceHandler).toList(),
-        publicRooms: data.publicRooms
-            .map(replaceHandler)
-            .where((e) => e.isPublic)
-            .toList(),
-        userRooms: data.userRooms.map(replaceHandler).toList(),
-      );
+    if (room.isPublic && !data.publicRooms.any((e) => e.id == room.id)) {
+      data.publicRooms.add(room);
     }
+
+    final replaceHandler = (Room e) => event.id == e.id ? room : e;
+
+    emit.call(RoomsLoadSuccessState(
+      memberRooms: data.memberRooms.map(replaceHandler).toList(),
+      publicRooms: data.publicRooms
+          .map(replaceHandler)
+          .where((e) => e.isPublic)
+          .toList(),
+      userRooms: data.userRooms.map(replaceHandler).toList(),
+    ));
   }
 
-  Stream<RoomsState> _mapRoomDeletedToState(RoomDeleted event) async* {
-    if (state is RoomsLoadSuccess) {
-      final data = state as RoomsLoadSuccess;
+  FutureOr<void> _onRoomDeleted(
+    RoomDeletedEvent event,
+    Emitter<RoomsState> emit,
+  ) async {
+    final data = state as RoomsLoadSuccessState;
 
-      await repository.deleteRoom(event.id);
+    await repository.deleteRoom(event.id);
 
-      final deleteHandler = (Room e) => e.id != event.id;
+    final deleteHandler = (Room e) => e.id != event.id;
 
-      yield RoomsLoadSuccess(
-        memberRooms: data.memberRooms.where(deleteHandler).toList(),
-        publicRooms: data.publicRooms.where(deleteHandler).toList(),
-        userRooms: data.userRooms.where(deleteHandler).toList(),
-      );
-    }
+    emit.call(RoomsLoadSuccessState(
+      memberRooms: data.memberRooms.where(deleteHandler).toList(),
+      publicRooms: data.publicRooms.where(deleteHandler).toList(),
+      userRooms: data.userRooms.where(deleteHandler).toList(),
+    ));
   }
 
-  Stream<RoomsState> _mapRoomLeftToState(RoomLeft event) async* {
-    if (state is RoomsLoadSuccess) {
-      final data = state as RoomsLoadSuccess;
+  FutureOr<void> _onRoomLeft(
+    RoomLeftEvent event,
+    Emitter<RoomsState> emit,
+  ) async {
+    final data = state as RoomsLoadSuccessState;
 
-      await repository.leaveRoom(event.id);
+    await repository.leaveRoom(event.id);
 
-      yield RoomsLoadSuccess(
-        memberRooms:
-            data.memberRooms.where((room) => room.id != event.id).toList(),
-        publicRooms: data.publicRooms,
-        userRooms: data.userRooms,
-      );
-    }
+    emit.call(RoomsLoadSuccessState(
+      memberRooms:
+          data.memberRooms.where((room) => room.id != event.id).toList(),
+      publicRooms: data.publicRooms,
+      userRooms: data.userRooms,
+    ));
   }
 }

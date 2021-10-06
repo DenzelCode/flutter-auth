@@ -1,5 +1,5 @@
 import 'package:auth/src/core/socket.dart';
-import 'package:auth/src/features/room/logic/cubit/cubit/room_cubit.dart';
+import 'package:auth/src/features/room/logic/bloc/room_bloc.dart';
 import 'package:auth/src/features/room/logic/repository/room_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -12,12 +12,12 @@ class RoomScreen extends StatefulWidget {
     final roomId = settings.arguments as String;
 
     return MaterialPageRoute(builder: (_) {
-      final cubit = RoomCubit(
+      final bloc = RoomBloc(
         repository: RoomRepository(),
       );
 
       return BlocProvider(
-        create: (_) => cubit,
+        create: (_) => bloc,
         child: RoomScreen(roomId: roomId),
       );
     });
@@ -36,41 +36,18 @@ class _RoomScreenState extends State<RoomScreen> {
   void initState() {
     super.initState();
 
-    init();
-  }
+    final bloc = context.read<RoomBloc>();
 
-  Future<void> init() async {
-    final cubit = context.read<RoomCubit>();
-
-    await cubit.joinRoom(widget.roomId);
-
-    final socket = await SocketConnection.init();
-
-    await cubit.subscribeRoom(widget.roomId);
-
-    socket.on('room:join', (data) => print(data));
-
-    socket.on('room:leave', (data) => print(data));
-
-    socket.on('room:update', (data) => print(data));
-
-    socket.on('room:delete', (data) => Navigator.pop(context));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    SocketConnection.dispose();
+    bloc.add(RoomJoinedEvent(widget.roomId));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<RoomCubit, RoomState>(
+    return BlocConsumer<RoomBloc, RoomState>(
       listener: (_, state) => Navigator.pop(context),
-      listenWhen: (_, curr) => curr is RoomJoinFailure,
+      listenWhen: (_, curr) => curr is RoomJoinFailureState,
       builder: (_, state) {
-        if (state is RoomJoinSuccess) {
+        if (state is RoomJoinSuccessState) {
           final room = state.room;
 
           return Scaffold(
