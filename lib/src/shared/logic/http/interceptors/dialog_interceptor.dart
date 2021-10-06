@@ -16,7 +16,7 @@ class DialogInterceptor extends Interceptor {
 
     final response = err.response?.data;
 
-    if (response == null) {
+    if (response == null || !(response is Map)) {
       return super.onError(err, handler);
     }
 

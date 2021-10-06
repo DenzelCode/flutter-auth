@@ -31,10 +31,6 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
   void initSocket() {
     socket.onDisconnect((data) => add(RoomDisconnectedEvent()));
 
-    socket.onReconnect((data) {
-      print('reconectando');
-    });
-
     socket.onConnect((data) {
       connections++;
 
