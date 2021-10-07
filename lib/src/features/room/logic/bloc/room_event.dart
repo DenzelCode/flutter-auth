@@ -43,3 +43,26 @@ class RoomDisconnectedEvent extends RoomEvent {}
 class RoomReconnectedEvent extends _RoomObjectParamEvent {
   RoomReconnectedEvent(Room room) : super(room);
 }
+
+class DirectRoomDeletedEvent extends RoomEvent {}
+
+class _UserEvent extends RoomEvent {
+  final User user;
+
+  _UserEvent(this.user) : super();
+
+  @override
+  List<Object> get props => [user];
+}
+
+class RoomUserJoinEvent extends _UserEvent {
+  RoomUserJoinEvent(User user) : super(user);
+}
+
+class RoomUserLeaveEvent extends _UserEvent {
+  RoomUserLeaveEvent(User user) : super(user);
+}
+
+class DirectRoomUpdatedEvent extends _RoomObjectParamEvent {
+  DirectRoomUpdatedEvent(Room room) : super(room);
+}

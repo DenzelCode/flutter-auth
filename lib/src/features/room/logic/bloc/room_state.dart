@@ -38,3 +38,5 @@ class RoomJoinFailureState extends RoomState {}
 class RoomJoinSuccessState extends _RoomParamState {
   RoomJoinSuccessState(Room room) : super(room);
 }
+
+class DirectRooomDeleteState extends RoomState {}

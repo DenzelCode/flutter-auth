@@ -1,4 +1,5 @@
 import 'package:auth/src/core/socket.dart';
+import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/room/logic/bloc/room_bloc.dart';
 import 'package:auth/src/features/room/logic/repository/room_repository.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,8 @@ class RoomScreen extends StatefulWidget {
 }
 
 class _RoomScreenState extends State<RoomScreen> {
+  bool _showMembers = false;
+
   @override
   void initState() {
     super.initState();
@@ -45,7 +48,8 @@ class _RoomScreenState extends State<RoomScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<RoomBloc, RoomState>(
       listener: (_, state) => Navigator.pop(context),
-      listenWhen: (_, curr) => curr is RoomJoinFailureState,
+      listenWhen: (_, curr) =>
+          curr is RoomJoinFailureState || curr is DirectRooomDeleteState,
       builder: (_, state) {
         if (state is RoomJoinSuccessState) {
           final room = state.room;
@@ -53,7 +57,20 @@ class _RoomScreenState extends State<RoomScreen> {
           return Scaffold(
             appBar: AppBar(
               title: Text(room.title),
+              actions: [
+                IconButton(
+                  onPressed: () => setState(() {
+                    _showMembers = !_showMembers;
+                  }),
+                  icon: Icon(Icons.menu),
+                ),
+              ],
             ),
+            body: _showMembers
+                ? _RoomMembers(
+                    members: room.members as List<User>,
+                  )
+                : Container(),
           );
         }
 
@@ -63,6 +80,49 @@ class _RoomScreenState extends State<RoomScreen> {
           ),
         );
       },
+    );
+  }
+}
+
+class _RoomMembers extends StatefulWidget {
+  List<User> members;
+
+  _RoomMembers({Key? key, required this.members}) : super(key: key);
+
+  @override
+  _RoomMembersState createState() => _RoomMembersState();
+}
+
+class _RoomMembersState extends State<_RoomMembers> {
+  bool _showOnlineUsers = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SwitchListTile(
+          title: Text('Online Users'),
+          value: _showOnlineUsers,
+          onChanged: (value) =>
+              setState(() => _showOnlineUsers = !_showOnlineUsers),
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemBuilder: (_, index) {
+              final member = widget.members[index];
+
+              if (_showOnlineUsers && !member.online) {
+                return Container();
+              }
+
+              return ListTile(
+                title: Text(member.username),
+              );
+            },
+            itemCount: widget.members.length,
+          ),
+        )
+      ],
     );
   }
 }

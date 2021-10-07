@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:auth/src/core/socket.dart';
+import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/room/logic/models/room.dart';
 import 'package:auth/src/features/room/logic/repository/room_repository.dart';
 import 'package:bloc/bloc.dart';
@@ -22,9 +24,14 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
   RoomBloc({required this.repository}) : super(RoomInitialState()) {
     on<RoomCheckedEvent>(_onRoomChecked);
     on<RoomJoinedEvent>(_onRoomJoined);
+    on<RoomUserJoinEvent>(_onRoomUserJoin);
     on<RoomDisconnectedEvent>(
         (event, emit) => emit.call(RoomJoinInProgressState()));
     on<RoomReconnectedEvent>(
+        (event, emit) => emit.call(RoomJoinSuccessState(event.room)));
+    on<DirectRoomDeletedEvent>(
+        (event, emit) => emit.call(DirectRooomDeleteState()));
+    on<DirectRoomUpdatedEvent>(
         (event, emit) => emit.call(RoomJoinSuccessState(event.room)));
   }
 
@@ -38,6 +45,26 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
         add(RoomReconnectedEvent(lastRoom as Room));
       }
     });
+
+    socket.on(
+      'room:join',
+      (data) => add(RoomUserJoinEvent(User.fromJson(data))),
+    );
+
+    socket.on(
+      'room:leave',
+      (data) => (data) => add(RoomUserLeaveEvent(User.fromJson(data))),
+    );
+
+    socket.on(
+      'room:update',
+      (data) => add(DirectRoomUpdatedEvent(Room.fromJson(data))),
+    );
+
+    socket.on(
+      'room:delete',
+      (data) => add(DirectRoomDeletedEvent()),
+    );
   }
 
   @override
@@ -88,5 +115,18 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     } catch (e) {
       emit.call(RoomJoinFailureState());
     }
+  }
+
+  FutureOr<void> _onRoomUserJoin(
+    RoomUserJoinEvent event,
+    Emitter<RoomState> emit,
+  ) {
+    final data = state as RoomJoinSuccessState;
+
+    final room = data.room;
+
+    room.members.add(event.user);
+
+    emit.call(RoomJoinSuccessState(room));
   }
 }
