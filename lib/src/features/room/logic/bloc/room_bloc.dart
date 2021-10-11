@@ -21,10 +21,13 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
 
   int connections = 0;
 
+  Timer? timer;
+
   RoomBloc({required this.repository}) : super(RoomInitialState()) {
     on<RoomCheckedEvent>(_onRoomChecked);
     on<RoomJoinedEvent>(_onRoomJoined);
     on<RoomUserJoinEvent>(_onRoomUserJoin);
+    on<UpdateRoomInfoEvent>(_onRoomInfoUpdated);
     on<RoomDisconnectedEvent>(
         (event, emit) => emit.call(RoomJoinInProgressState()));
     on<RoomReconnectedEvent>(
@@ -33,6 +36,14 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
         (event, emit) => emit.call(DirectRooomDeleteState()));
     on<DirectRoomUpdatedEvent>(
         (event, emit) => emit.call(RoomJoinSuccessState(event.room)));
+
+    timer = Timer(Duration(seconds: 5), () {
+      if (lastRoom == null) {
+        return;
+      }
+
+      add(UpdateRoomInfoEvent(lastRoom as Room));
+    });
   }
 
   void initSocket() {
@@ -70,6 +81,8 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
   @override
   Future<void> close() {
     socketManager.dispose();
+
+    timer?.cancel();
 
     return super.close();
   }
@@ -128,5 +141,22 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     room.members.add(event.user);
 
     emit.call(RoomJoinSuccessState(room));
+  }
+
+  FutureOr<void> _onRoomInfoUpdated(
+    UpdateRoomInfoEvent event,
+    Emitter<RoomState> emit,
+  ) async {
+    if (state is RoomCheckInProgressState) {
+      return;
+    }
+
+    try {
+      emit.call(RoomJoinSuccessState(
+        await repository.getRoom(event.room.id),
+      ));
+    } catch (e) {
+      emit.call(RoomCheckFailureState());
+    }
   }
 }

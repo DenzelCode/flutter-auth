@@ -1,4 +1,3 @@
-import 'package:auth/src/core/socket.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/room/logic/bloc/room_bloc.dart';
 import 'package:auth/src/features/room/logic/repository/room_repository.dart';
@@ -49,7 +48,9 @@ class _RoomScreenState extends State<RoomScreen> {
     return BlocConsumer<RoomBloc, RoomState>(
       listener: (_, state) => Navigator.pop(context),
       listenWhen: (_, curr) =>
-          curr is RoomJoinFailureState || curr is DirectRooomDeleteState,
+          curr is RoomJoinFailureState ||
+          curr is RoomCheckFailureState ||
+          curr is DirectRooomDeleteState,
       builder: (_, state) {
         if (state is RoomJoinSuccessState) {
           final room = state.room;

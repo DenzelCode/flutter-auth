@@ -66,3 +66,7 @@ class RoomUserLeaveEvent extends _UserEvent {
 class DirectRoomUpdatedEvent extends _RoomObjectParamEvent {
   DirectRoomUpdatedEvent(Room room) : super(room);
 }
+
+class UpdateRoomInfoEvent extends _RoomObjectParamEvent {
+  UpdateRoomInfoEvent(Room room) : super(room);
+}
