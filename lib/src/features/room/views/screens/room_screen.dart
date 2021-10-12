@@ -1,4 +1,5 @@
 import 'package:auth/src/features/auth/logic/models/user.dart';
+import 'package:auth/src/features/messages/widgets/messages.dart';
 import 'package:auth/src/features/room/logic/bloc/room_bloc.dart';
 import 'package:auth/src/features/room/logic/repository/room_repository.dart';
 import 'package:flutter/material.dart';
@@ -71,7 +72,10 @@ class _RoomScreenState extends State<RoomScreen> {
                 ? _RoomMembers(
                     members: room.members as List<User>,
                   )
-                : Container(),
+                : Messages(
+                    type: MessageType.room,
+                    room: room,
+                  ),
           );
         }
 
@@ -86,7 +90,7 @@ class _RoomScreenState extends State<RoomScreen> {
 }
 
 class _RoomMembers extends StatefulWidget {
-  List<User> members;
+  final List<User> members;
 
   _RoomMembers({Key? key, required this.members}) : super(key: key);
 
@@ -102,7 +106,7 @@ class _RoomMembersState extends State<_RoomMembers> {
     return Column(
       children: [
         SwitchListTile(
-          title: Text('Online Users'),
+          title: Text(_showOnlineUsers ? 'Online Members' : 'All Members'),
           value: _showOnlineUsers,
           onChanged: (value) =>
               setState(() => _showOnlineUsers = !_showOnlineUsers),

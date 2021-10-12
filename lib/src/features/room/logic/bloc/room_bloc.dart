@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:auth/src/core/socket.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
