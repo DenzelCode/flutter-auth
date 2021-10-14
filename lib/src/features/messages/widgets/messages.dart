@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/room/logic/models/room.dart';
 import 'package:flutter/material.dart';
@@ -29,24 +31,21 @@ class _MessagesState extends State<Messages> {
         Expanded(
           child: ListView.builder(
             itemBuilder: (context, i) {
-              return Column(
-                children: [
-                  if (i == 0)
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (i == 0)
+                      SizedBox(
+                        height: 10,
+                      ),
+                    _Message(),
                     SizedBox(
                       height: 10,
                     ),
-                  Container(
-                    color: Colors.blue,
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    child: Text(
-                      'Testing this shit',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                ],
+                  ],
+                ),
               );
             },
             itemCount: 5,
@@ -70,6 +69,38 @@ class _MessagesState extends State<Messages> {
               ],
             ),
           ),
+        )
+      ],
+    );
+  }
+}
+
+class _Message extends StatelessWidget {
+  const _Message({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        if (Random().nextInt(2) == 0) Spacer(),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('DenzelCode'),
+            Container(
+              color: Colors.blue,
+              padding: EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 10,
+              ),
+              child: Text(
+                'Testing this shit',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
         )
       ],
     );
