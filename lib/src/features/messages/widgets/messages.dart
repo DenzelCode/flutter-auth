@@ -26,14 +26,15 @@ class _MessagesState extends State<Messages> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(
-          height: 10,
-        ),
         Expanded(
           child: ListView.builder(
             itemBuilder: (context, i) {
               return Column(
                 children: [
+                  if (i == 0)
+                    SizedBox(
+                      height: 10,
+                    ),
                   Container(
                     color: Colors.blue,
                     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
