@@ -88,7 +88,13 @@ class _Message extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('DenzelCode'),
+            GestureDetector(
+              onTap: () {},
+              child: Text(
+                'DenzelCode',
+                style: TextStyle(fontSize: 12),
+              ),
+            ),
             Container(
               color: Colors.blue,
               padding: EdgeInsets.symmetric(
