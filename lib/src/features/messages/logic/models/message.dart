@@ -8,6 +8,7 @@ class Message extends Equatable {
   late final String? room;
   late final User from;
   late final String createdAt;
+  late final DateTime createdAtDate;
 
   Message({
     required this.id,
@@ -19,12 +20,13 @@ class Message extends Equatable {
   }) : super();
 
   Message.fromJson(Map<String, dynamic> json) {
-    this.id = json['_id'];
-    this.message = json['message'];
-    this.to = json['to'];
-    this.room = json['room'];
-    this.from = User.fromJson(json['from']);
-    this.createdAt = json['createdAt'];
+    id = json['_id'];
+    message = json['message'];
+    to = json['to'];
+    room = json['room'];
+    from = User.fromJson(json['from']);
+    createdAt = json['createdAt'];
+    createdAtDate = DateTime.parse(createdAt);
   }
 
   static List<Message> fromList(List<dynamic> list) {

@@ -5,12 +5,12 @@ import 'package:auth/src/features/messages/logic/providers/message_api_provider.
 class MessageRepository {
   final provider = MessageAPIProvider();
 
-  Future<List<Message>> getMessages(
-    MessageType type,
-    String id,
-    int limit,
+  Future<List<Message>> getMessages({
+    required MessageType type,
+    required String id,
+    required int limit,
     String? before,
-  ) {
+  }) {
     return provider.getMessages(type, id, limit, before);
   }
 

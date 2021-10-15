@@ -7,6 +7,12 @@ abstract class MessageEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class MessagesLoadedEvent extends MessageEvent {}
+
+class PreviousMessagesLoadedEvent extends MessageEvent {}
+
+class UserTypedEvent extends MessageEvent {}
+
 class MessageSentEvent extends MessageEvent {
   final String message;
 

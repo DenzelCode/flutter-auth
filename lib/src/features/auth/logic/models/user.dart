@@ -1,4 +1,6 @@
-class User implements Comparable {
+import 'package:equatable/equatable.dart';
+
+class User extends Equatable implements Comparable {
   late final String id;
   late final String username;
   late final String? email;
@@ -41,4 +43,7 @@ class User implements Comparable {
 
     return 0;
   }
+
+  @override
+  List<Object?> get props => [id, username, email];
 }

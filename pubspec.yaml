@@ -39,6 +39,7 @@ dependencies:
   flutter_bloc: ^7.3.0
   bloc: ^7.2.0
   socket_io_client: ^2.0.0-beta.3-nullsafety.0
+  intl: ^0.17.0
 
 flutter_icons:
   android: true

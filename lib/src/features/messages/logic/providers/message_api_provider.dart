@@ -12,7 +12,7 @@ class MessageAPIProvider {
   ) async {
     final params = {'limit': limit, 'before': before};
 
-    for (String key in params.keys) {
+    for (String key in [...params.keys]) {
       if (params[key] == null) {
         params.remove(key);
       }
