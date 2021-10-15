@@ -12,7 +12,7 @@ part 'room_event.dart';
 part 'room_state.dart';
 
 class RoomBloc extends Bloc<RoomEvent, RoomState> {
-  final RoomRepository repository;
+  final repository = RoomRepository();
 
   final Socket socket = socketManager.socket;
 
@@ -22,7 +22,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
 
   Timer? timer;
 
-  RoomBloc({required this.repository}) : super(RoomInitialState()) {
+  RoomBloc() : super(RoomInitialState()) {
     initEvents();
   }
 

@@ -18,7 +18,10 @@ class MessageAPIProvider {
       }
     }
 
-    final response = await api.get('/message/${type.name}/$id');
+    final response = await api.get(
+      '/message/${type.name}/$id',
+      queryParameters: params,
+    );
 
     return Message.fromList(response.data);
   }

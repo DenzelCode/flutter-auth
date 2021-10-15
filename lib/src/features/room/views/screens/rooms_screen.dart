@@ -25,7 +25,7 @@ class RoomsScreen extends StatelessWidget {
             )..add(RoomsLoadedEvent()),
           ),
           BlocProvider(
-            create: (_) => RoomBloc(repository: repository),
+            create: (_) => RoomBloc(),
           )
         ],
         child: RoomsScreen(),
@@ -50,7 +50,8 @@ class RoomsScreen extends StatelessWidget {
             title: Text('Rooms'),
           ),
           body: RefreshIndicator(
-            onRefresh: () async => context.read<RoomsBloc>().add(RoomsLoadedEvent()),
+            onRefresh: () async =>
+                context.read<RoomsBloc>().add(RoomsLoadedEvent()),
             child: ListView(
               padding: EdgeInsets.all(20),
               children: [

@@ -31,5 +31,8 @@ class MessageReceiveState extends MessagesState {
 }
 
 class PreviousMessagesLoadState extends MessagesState {
-  PreviousMessagesLoadState(List<Message> messages) : super(messages);
+  final double previousScrollHeight;
+
+  PreviousMessagesLoadState(List<Message> messages, this.previousScrollHeight)
+      : super(messages);
 }

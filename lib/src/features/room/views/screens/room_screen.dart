@@ -1,8 +1,8 @@
 import 'package:auth/src/features/auth/logic/models/user.dart';
+import 'package:auth/src/features/messages/logic/bloc/message_bloc.dart';
 import 'package:auth/src/features/messages/logic/enum/message_type.dart';
 import 'package:auth/src/features/messages/views/widgets/messages.dart';
 import 'package:auth/src/features/room/logic/bloc/room_bloc.dart';
-import 'package:auth/src/features/room/logic/repository/room_repository.dart';
 import 'package:auth/src/shared/views/widgets/user_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -15,12 +15,16 @@ class RoomScreen extends StatefulWidget {
     final roomId = settings.arguments as String;
 
     return MaterialPageRoute(builder: (_) {
-      final bloc = RoomBloc(
-        repository: RoomRepository(),
-      );
-
-      return BlocProvider(
-        create: (_) => bloc,
+      return MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => RoomBloc()),
+          BlocProvider(
+            create: (_) => MessageBloc(
+              partnerId: roomId,
+              type: MessageType.room,
+            ),
+          ),
+        ],
         child: RoomScreen(roomId: roomId),
       );
     });
@@ -70,9 +74,17 @@ class _RoomScreenState extends State<RoomScreen> {
                 ),
               ],
             ),
-            body: _showMembers
-                ? _RoomMembers(members: room.members as List<User>)
-                : Messages(type: MessageType.room, room: room),
+            body: Stack(
+              children: [
+                Messages(
+                  type: MessageType.room,
+                  room: room,
+                  bloc: context.read<MessageBloc>(),
+                ),
+                if (_showMembers)
+                  _RoomMembers(members: room.members as List<User>)
+              ],
+            ),
           );
         }
 
@@ -100,32 +112,35 @@ class _RoomMembersState extends State<_RoomMembers> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SwitchListTile(
-          title: Text(_showOnlineUsers ? 'Online Members' : 'All Members'),
-          value: _showOnlineUsers,
-          onChanged: (value) =>
-              setState(() => _showOnlineUsers = !_showOnlineUsers),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemBuilder: (_, index) {
-              final member = widget.members[index];
-
-              if (_showOnlineUsers && !member.online) {
-                return Container();
-              }
-
-              return ListTile(
-                title: Text(member.username),
-                trailing: UserStatus(online: member.online),
-              );
-            },
-            itemCount: widget.members.length,
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          SwitchListTile(
+            title: Text(_showOnlineUsers ? 'Online Members' : 'All Members'),
+            value: _showOnlineUsers,
+            onChanged: (value) =>
+                setState(() => _showOnlineUsers = !_showOnlineUsers),
           ),
-        )
-      ],
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (_, index) {
+                final member = widget.members[index];
+
+                if (_showOnlineUsers && !member.online) {
+                  return Container();
+                }
+
+                return ListTile(
+                  title: Text(member.username),
+                  trailing: UserStatus(online: member.online),
+                );
+              },
+              itemCount: widget.members.length,
+            ),
+          )
+        ],
+      ),
     );
   }
 }

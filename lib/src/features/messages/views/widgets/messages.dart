@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/messages/logic/bloc/message_bloc.dart';
@@ -7,6 +5,7 @@ import 'package:auth/src/features/messages/logic/enum/message_type.dart';
 import 'package:auth/src/features/messages/logic/models/message.dart';
 import 'package:auth/src/features/room/logic/models/room.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -15,20 +14,15 @@ class Messages extends StatefulWidget {
   final Room? room;
   final User? to;
   final MessageType type;
-
-  late final MessageBloc bloc;
+  final MessageBloc bloc;
 
   Messages({
     Key? key,
     this.room,
     this.to,
     required this.type,
-  }) : super(key: key) {
-    bloc = MessageBloc(
-      partnerId: (room != null ? room?.id : to?.id) as String,
-      type: type,
-    );
-  }
+    required this.bloc,
+  }) : super(key: key);
 
   @override
   _MessagesState createState() => _MessagesState();
@@ -37,13 +31,17 @@ class Messages extends StatefulWidget {
 class _MessagesState extends State<Messages> {
   final _scrollController = ScrollController();
 
+  final _showMoreOffset = 0;
+
+  final _scrollToLastOffset = 0;
+
   @override
   void initState() {
     super.initState();
 
-    _scrollController.addListener(_onScroll);
-
     widget.bloc.add(MessagesLoadedEvent());
+
+    _scrollController.addListener(_onScroll);
   }
 
   @override
@@ -55,8 +53,37 @@ class _MessagesState extends State<Messages> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => widget.bloc,
+    return BlocListener<MessageBloc, MessageState>(
+      listener: (context, state) {
+        if (state is PreviousMessagesLoadState) {
+          SchedulerBinding.instance?.addPostFrameCallback(
+            (_) => _scrollController.jumpTo(
+              _scrollController.position.maxScrollExtent -
+                  state.previousScrollHeight,
+            ),
+          );
+        }
+
+        if (state is MessagesLoadSuccessState) {
+          SchedulerBinding.instance?.addPostFrameCallback(
+            (_) => _scrollController.jumpTo(
+              _scrollController.position.maxScrollExtent,
+            ),
+          );
+        }
+
+        if (state is MessageReceiveState) {
+          if (_scrollController.offset >
+              _scrollController.position.maxScrollExtent -
+                  _scrollToLastOffset) {
+            SchedulerBinding.instance?.addPostFrameCallback(
+              (_) => _scrollController.jumpTo(
+                _scrollController.position.maxScrollExtent,
+              ),
+            );
+          }
+        }
+      },
       child: Column(
         children: [
           Expanded(
@@ -87,8 +114,10 @@ class _MessagesState extends State<Messages> {
   }
 
   void _onScroll() {
-    if (_scrollController.offset <= 5) {
-      widget.bloc.add(PreviousMessagesLoadedEvent());
+    if (_scrollController.offset <= _showMoreOffset) {
+      widget.bloc.add(
+        PreviousMessagesLoadedEvent(_scrollController.position.maxScrollExtent),
+      );
     }
   }
 }
@@ -112,7 +141,6 @@ class _Messages extends StatelessWidget {
         }
 
         if (!(state is MessagesState)) {
-          print(state);
           return Container();
         }
 

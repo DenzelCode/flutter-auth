@@ -22,6 +22,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
   final limit = 30;
 
+  bool loading = false;
+
   Message? firstMessage;
 
   MessageBloc({
@@ -38,14 +40,21 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     on<PreviousMessagesLoadedEvent>(_onPreviousMessagesLoaded);
     on<UserTypedEvent>(_onUserTyped);
     on<MessageSentEvent>(_onMessageSent);
+    on<MessageReceivedEvent>(_onMessageReceived);
+    on<MessagesDeletedEvent>(_onMessagesDeleted);
+    on<MessageDeletedEvent>(_onMessageDeleted);
   }
 
   void initSockets() {
-    socket.on('message:${type.name}', (data) {});
+    socket.on('message:${type.name}', (data) {
+      add(MessageReceivedEvent(Message.fromJson(data)));
+    });
 
-    socket.on('${type.name}:delete_messages', (data) {});
+    socket.on(
+        '${type.name}:delete_messages', (data) => add(MessagesDeletedEvent()));
 
-    socket.on('${type.name}:delete_message', (data) {});
+    socket.on('${type.name}:delete_message',
+        (messageId) => add(MessageDeletedEvent(messageId)));
 
     socket.on('message:${type.name}:typing', (data) {});
   }
@@ -67,7 +76,6 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
       emit.call(MessagesLoadSuccessState(messages));
     } catch (_) {
-      print(_);
       emit.call(MessagesLoadFailureState());
     }
   }
@@ -78,15 +86,26 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   ) async {
     final data = state as MessagesState;
 
-    print('object');
+    if (data.messages.length > 0 && data.messages[0].id == firstMessage?.id ||
+        loading) {
+      return;
+    }
+
+    loading = true;
+
     final messages = await repository.getMessages(
       type: type,
       id: partnerId,
       limit: limit,
-      before: data.messages[0].createdAt,
+      before: data.messages.length > 0 ? data.messages[0].createdAt : null,
     );
 
-    emit.call(PreviousMessagesLoadState([...messages, ...data.messages]));
+    emit.call(PreviousMessagesLoadState(
+      [...messages, ...data.messages],
+      event.previousScrollHeight,
+    ));
+
+    loading = false;
   }
 
   FutureOr<void> _onUserTyped(
@@ -98,4 +117,39 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     MessageSentEvent event,
     Emitter<MessageState> emit,
   ) {}
+
+  FutureOr<void> _onMessageReceived(
+    MessageReceivedEvent event,
+    Emitter<MessageState> emit,
+  ) {
+    final data = state as MessagesState;
+
+    data.messages.add(event.message);
+
+    emit.call(MessageReceiveState([...data.messages]));
+  }
+
+  FutureOr<void> _onMessagesDeleted(
+    MessagesDeletedEvent event,
+    Emitter<MessageState> emit,
+  ) {
+    emit.call(MessagesLoadSuccessState([]));
+  }
+
+  FutureOr<void> _onMessageDeleted(
+    MessageDeletedEvent event,
+    Emitter<MessageState> emit,
+  ) {
+    final data = state as MessagesState;
+
+    emit.call(MessagesLoadSuccessState(
+        data.messages.where((e) => e.id == event.messageId).toList()));
+  }
+
+  @override
+  Future<void> close() {
+    socketManager.dispose();
+
+    return super.close();
+  }
 }
