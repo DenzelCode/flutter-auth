@@ -1,4 +1,4 @@
-class User {
+class User implements Comparable {
   late final String id;
   late final String username;
   late final String? email;
@@ -23,5 +23,22 @@ class User {
 
   static List<User> fromList(List<dynamic> list) {
     return list.map((e) => User.fromJson(e)).toList();
+  }
+
+  @override
+  int compareTo(dynamic other) {
+    if (this.online == other.online) {
+      return 0;
+    }
+
+    if (this.online) {
+      return -1;
+    }
+
+    if (other.online) {
+      return 1;
+    }
+
+    return 0;
   }
 }

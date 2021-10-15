@@ -23,6 +23,10 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
   Timer? timer;
 
   RoomBloc({required this.repository}) : super(RoomInitialState()) {
+    initEvents();
+  }
+
+  void initEvents() {
     on<RoomCheckedEvent>(_onRoomChecked);
     on<RoomJoinedEvent>(_onRoomJoined);
     on<RoomUserJoinEvent>(_onRoomUserJoin);
@@ -66,15 +70,25 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
       (data) => (data) => add(RoomUserLeaveEvent(User.fromJson(data))),
     );
 
-    socket.on(
-      'room:update',
-      (data) => add(DirectRoomUpdatedEvent(Room.fromJson(data))),
-    );
+    socket.on('room:update', (data) {
+      final room = Room.fromJson(data);
 
-    socket.on(
-      'room:delete',
-      (data) => add(DirectRoomDeletedEvent()),
-    );
+      if (room.id != lastRoom?.id) {
+        return;
+      }
+
+      add(DirectRoomUpdatedEvent(room));
+    });
+
+    socket.on('room:delete', (data) {
+      final room = Room.fromJson(data);
+
+      if (room.id != lastRoom?.id) {
+        return;
+      }
+
+      add(DirectRoomDeletedEvent());
+    });
   }
 
   @override

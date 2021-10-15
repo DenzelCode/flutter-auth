@@ -21,9 +21,15 @@ class Room {
     isPublic = json['isPublic'];
 
     if (json['members'].length > 0) {
-      members = json['members'][0] is String
-          ? json['members']
-          : User.fromList(json['members']);
+      if (json['members'][0] is String) {
+        members = json['members'];
+      } else {
+        members = User.fromList(json['members']);
+
+        members.sort((a, b) {
+          return a.compareTo(b);
+        });
+      }
     } else {
       members = [];
     }

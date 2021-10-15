@@ -1,7 +1,9 @@
 import 'package:auth/src/features/auth/logic/models/user.dart';
-import 'package:auth/src/features/messages/widgets/messages.dart';
+import 'package:auth/src/features/messages/logic/enum/message_type.dart';
+import 'package:auth/src/features/messages/views/widgets/messages.dart';
 import 'package:auth/src/features/room/logic/bloc/room_bloc.dart';
 import 'package:auth/src/features/room/logic/repository/room_repository.dart';
+import 'package:auth/src/shared/views/widgets/user_status.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -69,13 +71,8 @@ class _RoomScreenState extends State<RoomScreen> {
               ],
             ),
             body: _showMembers
-                ? _RoomMembers(
-                    members: room.members as List<User>,
-                  )
-                : Messages(
-                    type: MessageType.room,
-                    room: room,
-                  ),
+                ? _RoomMembers(members: room.members as List<User>)
+                : Messages(type: MessageType.room, room: room),
           );
         }
 
@@ -122,6 +119,7 @@ class _RoomMembersState extends State<_RoomMembers> {
 
               return ListTile(
                 title: Text(member.username),
+                trailing: UserStatus(online: member.online),
               );
             },
             itemCount: widget.members.length,

@@ -1,11 +1,10 @@
 import 'dart:math';
 
 import 'package:auth/src/features/auth/logic/models/user.dart';
+import 'package:auth/src/features/messages/logic/enum/message_type.dart';
 import 'package:auth/src/features/room/logic/models/room.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
-enum MessageType { room, direct }
 
 class Messages extends StatefulWidget {
   final Room? room;
@@ -24,12 +23,31 @@ class Messages extends StatefulWidget {
 }
 
 class _MessagesState extends State<Messages> {
+  final scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    scrollController.addListener(() {});
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    scrollController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
           child: ListView.builder(
+            controller: scrollController,
+            itemCount: 5,
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             itemBuilder: (context, i) {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -48,12 +66,11 @@ class _MessagesState extends State<Messages> {
                 ),
               );
             },
-            itemCount: 5,
           ),
         ),
         Container(
           padding: const EdgeInsets.all(8.0),
-          color: Colors.white,
+          decoration: BoxDecoration(color: Colors.white),
           child: SafeArea(
             child: Row(
               children: [
