@@ -2,7 +2,7 @@ import 'package:auth/src/features/auth/logic/interceptors/auth_token_interceptor
 import 'package:auth/src/features/auth/logic/models/tokens.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/shared/logic/http/api.dart';
-import 'package:auth/src/shared/logic/http/interceptors/dialog_interceptor.dart';
+import 'package:auth/src/shared/logic/http/interceptors/error_dialog_interceptor.dart';
 
 class AuthAPIProvider {
   Future<Tokens> authenticate(String username, String password) async {
@@ -52,7 +52,7 @@ class AuthAPIProvider {
       '/auth/me',
       options: Options(
         headers: {
-          DialogInterceptor.skipHeader: true,
+          ErrorDialogInterceptor.skipHeader: true,
         },
       ),
     );

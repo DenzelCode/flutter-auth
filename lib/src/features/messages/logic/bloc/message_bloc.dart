@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:auth/src/core/socket.dart';
+import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/messages/logic/enum/message_type.dart';
 import 'package:auth/src/features/messages/logic/models/message.dart';
+import 'package:auth/src/features/messages/logic/models/typing.dart';
 import 'package:auth/src/features/messages/logic/repository/message_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -13,18 +15,17 @@ part 'message_state.dart';
 
 class MessageBloc extends Bloc<MessageEvent, MessageState> {
   final String partnerId;
-
   final MessageType type;
-
   final Socket socket = socketManager.socket;
-
   final repository = MessageRepository();
 
   final limit = 30;
+  final typingTimeout = 5000;
 
   bool loading = false;
-
   Message? firstMessage;
+
+  Map<String, Timer> typingTimers = {};
 
   MessageBloc({
     required this.partnerId,
@@ -38,25 +39,53 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   void initEvents() {
     on<MessagesLoadedEvent>(_onMessagesLoaded);
     on<PreviousMessagesLoadedEvent>(_onPreviousMessagesLoaded);
-    on<UserTypedEvent>(_onUserTyped);
+    on<MessageUserTypedEvent>(_onUserTyped);
     on<MessageSentEvent>(_onMessageSent);
     on<MessageReceivedEvent>(_onMessageReceived);
     on<MessagesDeletedEvent>(_onMessagesDeleted);
     on<MessageDeletedEvent>(_onMessageDeleted);
+    on<TypingRemovedEvent>(_onTypingRemoved);
   }
 
   void initSockets() {
-    socket.on('message:${type.name}', (data) {
-      add(MessageReceivedEvent(Message.fromJson(data)));
-    });
+    socket.on(
+      'message:${type.name}',
+      (data) {
+        add(MessageReceivedEvent(Message.fromJson(data)));
+      },
+    );
 
     socket.on(
-        '${type.name}:delete_messages', (data) => add(MessagesDeletedEvent()));
+      '${type.name}:delete_messages',
+      (data) => add(MessagesDeletedEvent()),
+    );
 
-    socket.on('${type.name}:delete_message',
-        (messageId) => add(MessageDeletedEvent(messageId)));
+    socket.on(
+      '${type.name}:delete_message',
+      (messageId) => add(MessageDeletedEvent(messageId)),
+    );
 
-    socket.on('message:${type.name}:typing', (data) {});
+    socket.on(
+      'message:${type.name}:typing',
+      (data) => add(MessageUserTypedEvent(Typing.fromJson(data))),
+    );
+  }
+
+  @override
+  Future<void> close() {
+    socketManager.dispose();
+
+    return super.close();
+  }
+
+  void createTimer(User user, Timer timer) {
+    cancelTypingTimer(user);
+
+    typingTimers[user.id] = timer;
+  }
+
+  void cancelTypingTimer(User user) {
+    typingTimers[user.id]?.cancel();
   }
 
   FutureOr<void> _onMessagesLoaded(
@@ -109,9 +138,30 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   }
 
   FutureOr<void> _onUserTyped(
-    UserTypedEvent event,
+    MessageUserTypedEvent event,
     Emitter<MessageState> emit,
-  ) {}
+  ) {
+    if (!(state is MessagesState)) {
+      return null;
+    }
+
+    final data = state as MessagesState;
+
+    final user = event.typing.user;
+
+    createTimer(
+      user,
+      Timer(
+        Duration(milliseconds: typingTimeout),
+        () => add(TypingRemovedEvent(user)),
+      ),
+    );
+
+    emit.call(MessageTypingState(
+      data.messages,
+      [...data.usersTyping.where((e) => e.id != user.id).toList(), user],
+    ));
+  }
 
   FutureOr<void> _onMessageSent(
     MessageSentEvent event,
@@ -124,7 +174,15 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   ) {
     final data = state as MessagesState;
 
-    emit.call(MessageReceiveState([...data.messages, event.message]));
+    cancelTypingTimer(event.message.from);
+
+    emit.call(MessageReceiveState(
+      [
+        ...data.messages,
+        event.message,
+      ],
+      data.usersTyping.where((e) => e.id != event.message.from.id).toList(),
+    ));
   }
 
   FutureOr<void> _onMessagesDeleted(
@@ -145,10 +203,15 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     ));
   }
 
-  @override
-  Future<void> close() {
-    socketManager.dispose();
+  FutureOr<void> _onTypingRemoved(
+    TypingRemovedEvent event,
+    Emitter<MessageState> emit,
+  ) {
+    final data = state as MessagesState;
 
-    return super.close();
+    emit.call(MessageTypingState(
+      [...data.messages],
+      data.usersTyping.where((e) => e.id != event.user.id).toList(),
+    ));
   }
 }

@@ -4,6 +4,7 @@ import 'package:auth/src/features/messages/logic/bloc/message_bloc.dart';
 import 'package:auth/src/features/messages/logic/enum/message_type.dart';
 import 'package:auth/src/features/messages/logic/models/message.dart';
 import 'package:auth/src/features/room/logic/models/room.dart';
+import 'package:auth/src/shared/views/widgets/typing_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
@@ -72,7 +73,7 @@ class _MessagesState extends State<Messages> {
           );
         }
 
-        if (state is MessageReceiveState) {
+        if (state is MessageReceiveState || state is MessageTypingState) {
           if (_scrollController.offset >
               _scrollController.position.maxScrollExtent -
                   _scrollToLastOffset) {
@@ -150,33 +151,46 @@ class _Messages extends StatelessWidget {
               return Container();
             }
 
-            return ListView.builder(
+            return ListView(
               controller: scrollController,
-              itemCount: state.messages.length,
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              itemBuilder: (context, i) {
-                final message = state.messages[i];
-
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      if (i == 0)
+              children: [
+                for (final message in state.messages)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (message == state.messages[0])
+                          SizedBox(
+                            height: 20,
+                          ),
+                        _Message(
+                          message: message,
+                          from: message.from,
+                          currentUser: user,
+                        ),
                         SizedBox(
                           height: 20,
                         ),
-                      _Message(
-                        message: message,
-                        currentUser: user,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                );
-              },
+                for (final typing in state.usersTyping)
+                  if (typing.id != user.id)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _Message(
+                            from: typing,
+                            currentUser: user,
+                          ),
+                        ],
+                      ),
+                    ),
+              ],
             );
           },
         );
@@ -186,19 +200,21 @@ class _Messages extends StatelessWidget {
 }
 
 class _Message extends StatelessWidget {
-  final Message message;
+  final User from;
+  final Message? message;
 
   final User currentUser;
 
   const _Message({
     Key? key,
-    required this.message,
+    required this.from,
     required this.currentUser,
+    this.message,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final isMe = message.from.id == currentUser.id;
+    final isMe = from.id == currentUser.id;
 
     return Row(
       mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -210,7 +226,7 @@ class _Message extends StatelessWidget {
             GestureDetector(
               onTap: () {},
               child: Text(
-                message.from.username,
+                from.username,
                 style: TextStyle(fontSize: 12),
               ),
             ),
@@ -220,7 +236,7 @@ class _Message extends StatelessWidget {
             Container(
               alignment: Alignment.centerLeft,
               decoration: BoxDecoration(
-                color: isMe ? Colors.white : Colors.blue,
+                color: isMe || message == null ? Colors.white : Colors.blue,
                 borderRadius: BorderRadius.circular(3),
                 boxShadow: [
                   BoxShadow(
@@ -234,18 +250,23 @@ class _Message extends StatelessWidget {
                 horizontal: 20,
                 vertical: 10,
               ),
-              child: Text(
-                message.message,
-                style: TextStyle(color: isMe ? Colors.black : Colors.white),
-              ),
+              child: message != null
+                  ? Text(
+                      (message as Message).message,
+                      style:
+                          TextStyle(color: isMe ? Colors.black : Colors.white),
+                    )
+                  : TypingIndicator(),
             ),
             SizedBox(
               height: 5,
             ),
-            Text(
-              DateFormat('M/d/yy, h:mm a').format(message.createdAtDate),
-              style: TextStyle(fontSize: 9),
-            )
+            if (message != null)
+              Text(
+                DateFormat('M/d/yy, h:mm a')
+                    .format((message as Message).createdAtDate),
+                style: TextStyle(fontSize: 9),
+              )
           ],
         )
       ],

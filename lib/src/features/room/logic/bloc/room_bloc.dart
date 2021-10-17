@@ -32,15 +32,19 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     on<RoomUserJoinEvent>(_onRoomUserJoin);
     on<UpdateRoomInfoEvent>(_onRoomInfoUpdated);
     on<RoomDisconnectedEvent>(
-        (event, emit) => emit.call(RoomJoinInProgressState()));
+      (event, emit) => emit.call(RoomJoinInProgressState()),
+    );
     on<RoomReconnectedEvent>(
-        (event, emit) => emit.call(RoomJoinSuccessState(event.room)));
+      (event, emit) => emit.call(RoomJoinSuccessState(event.room)),
+    );
     on<DirectRoomDeletedEvent>(
-        (event, emit) => emit.call(DirectRooomDeleteState()));
+      (event, emit) => emit.call(DirectRooomDeleteState()),
+    );
     on<DirectRoomUpdatedEvent>(
-        (event, emit) => emit.call(RoomJoinSuccessState(event.room)));
+      (event, emit) => emit.call(RoomJoinSuccessState(event.room)),
+    );
 
-    timer = Timer(Duration(seconds: 5), () {
+    timer = Timer.periodic(Duration(seconds: 5), (_) {
       if (lastRoom == null) {
         return;
       }

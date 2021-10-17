@@ -1,6 +1,6 @@
 import 'package:auth/src/constants/environments.dart';
 import 'package:auth/src/features/auth/logic/interceptors/auth_token_interceptor.dart';
-import 'package:auth/src/shared/logic/http/interceptors/dialog_interceptor.dart';
+import 'package:auth/src/shared/logic/http/interceptors/error_dialog_interceptor.dart';
 import 'package:dio/dio.dart';
 
 export 'package:dio/dio.dart';
@@ -15,7 +15,7 @@ Dio _createHttpClient() {
   );
 
   api
-    ..interceptors.add(new DialogInterceptor())
+    ..interceptors.add(new ErrorDialogInterceptor())
     ..interceptors.add(new AuthTokenInterceptor(api));
 
   return api;
