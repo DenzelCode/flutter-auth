@@ -115,6 +115,9 @@ class _MessagesState extends State<Messages> {
                     child: TextField(
                       controller: _textController,
                       decoration: InputDecoration(labelText: 'Message'),
+                      keyboardType: TextInputType.multiline,
+                      textInputAction: TextInputAction.newline,
+                      maxLines: null,
                     ),
                   ),
                   IconButton(
