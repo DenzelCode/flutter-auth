@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/messages/logic/bloc/message_bloc.dart';
@@ -37,6 +39,12 @@ class _MessagesState extends State<Messages> {
 
   final _scrollToLastOffset = 50;
 
+  final _textController = TextEditingController();
+
+  Timer? _typingTimer;
+
+  bool _isTyping = false;
+
   @override
   void initState() {
     super.initState();
@@ -44,6 +52,8 @@ class _MessagesState extends State<Messages> {
     widget.bloc.add(MessagesLoadedEvent());
 
     _scrollController.addListener(_onScroll);
+
+    _textController.addListener(_onTyping);
   }
 
   @override
@@ -51,6 +61,10 @@ class _MessagesState extends State<Messages> {
     super.dispose();
 
     _scrollController.dispose();
+
+    _textController.dispose();
+
+    _typingTimer?.cancel();
   }
 
   @override
@@ -99,6 +113,7 @@ class _MessagesState extends State<Messages> {
                 children: [
                   Expanded(
                     child: TextField(
+                      controller: _textController,
                       decoration: InputDecoration(labelText: 'Message'),
                     ),
                   ),
@@ -121,6 +136,21 @@ class _MessagesState extends State<Messages> {
         PreviousMessagesLoadedEvent(_scrollController.position.maxScrollExtent),
       );
     }
+  }
+
+  void _onTyping() {
+    if (_isTyping) {
+      return;
+    }
+
+    _isTyping = true;
+
+    context.read<MessageBloc>().sendTyping();
+
+    _typingTimer = Timer(
+      Duration(milliseconds: widget.bloc.typingTimeout - 1000),
+      () => _isTyping = false,
+    );
   }
 }
 

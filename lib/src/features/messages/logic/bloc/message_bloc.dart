@@ -92,6 +92,10 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     typingTimers[user.id]?.cancel();
   }
 
+  void sendTyping() {
+    socket.emit('message:${type.name}:typing', partnerId);
+  }
+
   FutureOr<void> _onMessagesLoaded(
     MessagesLoadedEvent event,
     Emitter<MessageState> emit,
