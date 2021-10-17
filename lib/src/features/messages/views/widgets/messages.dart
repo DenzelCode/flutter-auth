@@ -229,10 +229,15 @@ class __MessageState extends State<_Message> {
 
     Widget messageWidget = TypingIndicator();
 
+    final maxWidth = MediaQuery.of(context).size.width * 0.7;
+
     if (widget.message != null) {
-      messageWidget = Text(
-        (widget.message as Message).message,
-        style: TextStyle(color: isMe ? Colors.black : Colors.white),
+      messageWidget = ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: maxWidth),
+        child: Text(
+          (widget.message as Message).message,
+          style: TextStyle(color: isMe ? Colors.black : Colors.white),
+        ),
       );
     }
 
@@ -270,7 +275,12 @@ class __MessageState extends State<_Message> {
                       color: isMe || widget.message == null
                           ? Colors.white
                           : Colors.blue,
-                      borderRadius: BorderRadius.circular(3),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(8),
+                        bottomRight: Radius.circular(8),
+                        topLeft: Radius.circular(!isMe ? 0 : 8),
+                        topRight: Radius.circular(isMe ? 0 : 8),
+                      ),
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 5,
