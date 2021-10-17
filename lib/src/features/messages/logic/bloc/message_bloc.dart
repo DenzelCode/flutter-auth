@@ -96,6 +96,18 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     socket.emit('message:${type.name}:typing', partnerId);
   }
 
+  void sendMessage(String message, Function? awknowledge) {
+    socket.emitWithAck(
+      'message:${type.name}',
+      {
+        'roomId': partnerId,
+        'to': partnerId,
+        'message': message,
+      },
+      ack: awknowledge,
+    );
+  }
+
   FutureOr<void> _onMessagesLoaded(
     MessagesLoadedEvent event,
     Emitter<MessageState> emit,

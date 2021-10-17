@@ -119,7 +119,7 @@ class _MessagesState extends State<Messages> {
                   ),
                   IconButton(
                     icon: Icon(Icons.send),
-                    onPressed: () {},
+                    onPressed: _sendMessage,
                   ),
                 ],
               ),
@@ -151,6 +151,16 @@ class _MessagesState extends State<Messages> {
       Duration(milliseconds: widget.bloc.typingTimeout - 1000),
       () => _isTyping = false,
     );
+  }
+
+  void _sendMessage() {
+    if (_textController.text.trim().isEmpty) {
+      return;
+    }
+
+    context
+        .read<MessageBloc>()
+        .sendMessage(_textController.text, (data) => _textController.clear());
   }
 }
 
