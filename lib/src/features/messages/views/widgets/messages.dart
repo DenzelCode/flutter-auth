@@ -4,6 +4,7 @@ import 'package:auth/src/features/messages/logic/bloc/message_bloc.dart';
 import 'package:auth/src/features/messages/logic/enum/message_type.dart';
 import 'package:auth/src/features/messages/logic/models/message.dart';
 import 'package:auth/src/features/room/logic/models/room.dart';
+import 'package:auth/src/shared/views/widgets/dialog/confirm_dialog_widget.dart';
 import 'package:auth/src/shared/views/widgets/typing_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -202,7 +203,7 @@ class _Messages extends StatelessWidget {
   }
 }
 
-class _Message extends StatelessWidget {
+class _Message extends StatefulWidget {
   final User from;
   final Message? message;
 
@@ -216,14 +217,21 @@ class _Message extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  __MessageState createState() => __MessageState();
+}
+
+class __MessageState extends State<_Message> {
+  bool _showDelete = false;
+
+  @override
   Widget build(BuildContext context) {
-    final isMe = from.id == currentUser.id;
+    final isMe = widget.from.id == widget.currentUser.id;
 
     Widget messageWidget = TypingIndicator();
 
-    if (message != null) {
+    if (widget.message != null) {
       messageWidget = Text(
-        (message as Message).message,
+        (widget.message as Message).message,
         style: TextStyle(color: isMe ? Colors.black : Colors.white),
       );
     }
@@ -238,44 +246,82 @@ class _Message extends StatelessWidget {
             GestureDetector(
               onTap: () {},
               child: Text(
-                from.username,
+                widget.from.username,
                 style: TextStyle(fontSize: 12),
               ),
             ),
             SizedBox(
               height: 5,
             ),
-            Container(
-              alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(
-                color: isMe || message == null ? Colors.white : Colors.blue,
-                borderRadius: BorderRadius.circular(3),
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 5,
-                    offset: Offset(2, 2),
-                    color: Colors.black12,
-                  )
+            GestureDetector(
+              onTap: () => setState(() {
+                _showDelete = !_showDelete;
+              }),
+              child: Row(
+                children: [
+                  if (isMe && _showDelete)
+                    IconButton(
+                      onPressed: _showRemoveMessageDialog,
+                      icon: Icon(Icons.delete),
+                    ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    decoration: BoxDecoration(
+                      color: isMe || widget.message == null
+                          ? Colors.white
+                          : Colors.blue,
+                      borderRadius: BorderRadius.circular(3),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 5,
+                          offset: Offset(2, 2),
+                          color: Colors.black12,
+                        )
+                      ],
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                    child: messageWidget,
+                  ),
+                  if (!isMe && _showDelete)
+                    IconButton(
+                      onPressed: _showRemoveMessageDialog,
+                      icon: Icon(Icons.delete),
+                    ),
                 ],
               ),
-              padding: EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 10,
-              ),
-              child: messageWidget,
             ),
             SizedBox(
               height: 5,
             ),
-            if (message != null)
+            if (widget.message != null)
               Text(
                 DateFormat('M/d/yy, h:mm a')
-                    .format((message as Message).createdAtDate),
+                    .format((widget.message as Message).createdAtDate),
                 style: TextStyle(fontSize: 9),
               )
           ],
         )
       ],
     );
+  }
+
+  Future<void> _showRemoveMessageDialog() async {
+    final response = await showDialog<bool>(
+      context: context,
+      builder: (_) => ConfirmDialogWidget(),
+    );
+
+    if (response != null && response) {
+      _removeMessage();
+    }
+  }
+
+  void _removeMessage() {
+    context
+        .read<MessageBloc>()
+        .add(MessageDeletedRequestEvent(widget.message as Message));
   }
 }
