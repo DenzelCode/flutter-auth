@@ -187,6 +187,9 @@ class _Messages extends StatelessWidget {
                             from: typing,
                             currentUser: user,
                           ),
+                          SizedBox(
+                            height: 20,
+                          ),
                         ],
                       ),
                     ),
@@ -215,6 +218,15 @@ class _Message extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMe = from.id == currentUser.id;
+
+    Widget messageWidget = TypingIndicator();
+
+    if (message != null) {
+      messageWidget = Text(
+        (message as Message).message,
+        style: TextStyle(color: isMe ? Colors.black : Colors.white),
+      );
+    }
 
     return Row(
       mainAxisAlignment: isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -250,13 +262,7 @@ class _Message extends StatelessWidget {
                 horizontal: 20,
                 vertical: 10,
               ),
-              child: message != null
-                  ? Text(
-                      (message as Message).message,
-                      style:
-                          TextStyle(color: isMe ? Colors.black : Colors.white),
-                    )
-                  : TypingIndicator(),
+              child: messageWidget,
             ),
             SizedBox(
               height: 5,

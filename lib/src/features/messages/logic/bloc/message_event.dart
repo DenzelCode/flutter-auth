@@ -42,6 +42,15 @@ class MessageDeletedEvent extends MessageEvent {
   List<Object> get props => [messageId];
 }
 
+class MessageDeletedRequestEvent extends MessageEvent {
+  final Message message;
+
+  MessageDeletedRequestEvent(this.message) : super();
+
+  @override
+  List<Object> get props => [message];
+}
+
 class MessagesDeletedEvent extends MessageEvent {}
 
 class TypingRemovedEvent extends MessageEvent {

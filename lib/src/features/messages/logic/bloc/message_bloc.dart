@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:auth/src/app.dart';
 import 'package:auth/src/core/socket.dart';
+import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/messages/logic/enum/message_type.dart';
 import 'package:auth/src/features/messages/logic/models/message.dart';
@@ -8,6 +10,7 @@ import 'package:auth/src/features/messages/logic/models/typing.dart';
 import 'package:auth/src/features/messages/logic/repository/message_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 part 'message_event.dart';
@@ -44,6 +47,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     on<MessageReceivedEvent>(_onMessageReceived);
     on<MessagesDeletedEvent>(_onMessagesDeleted);
     on<MessageDeletedEvent>(_onMessageDeleted);
+    on<MessageDeletedRequestEvent>(_onMessageDeletedRequest);
     on<TypingRemovedEvent>(_onTypingRemoved);
   }
 
@@ -149,6 +153,18 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
     final user = event.typing.user;
 
+    final context = MyApp.materialKey.currentContext;
+
+    if (context == null) {
+      return null;
+    }
+
+    final cubit = context.read<AuthCubit>();
+
+    if (cubit.state?.id == user.id) {
+      return null;
+    }
+
     createTimer(
       user,
       Timer(
@@ -213,5 +229,12 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       [...data.messages],
       data.usersTyping.where((e) => e.id != event.user.id).toList(),
     ));
+  }
+
+  FutureOr<void> _onMessageDeletedRequest(
+    MessageDeletedRequestEvent event,
+    Emitter<MessageState> emit,
+  ) {
+    return repository.deleteMessage(type, event.message);
   }
 }
