@@ -15,6 +15,22 @@ class Room {
     required this.owner,
   });
 
+  Room copyWith({
+    String? id,
+    String? title,
+    bool? isPublic,
+    List<dynamic>? members,
+    dynamic owner,
+  }) {
+    return Room(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      isPublic: isPublic ?? this.isPublic,
+      members: members ?? this.members,
+      owner: owner ?? this.owner,
+    );
+  }
+
   Room.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
     title = json['title'];

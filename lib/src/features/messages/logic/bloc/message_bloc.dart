@@ -11,7 +11,6 @@ import 'package:auth/src/features/messages/logic/repository/message_repository.d
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:socket_io_client/socket_io_client.dart';
 
 part 'message_event.dart';
 part 'message_state.dart';
@@ -19,7 +18,7 @@ part 'message_state.dart';
 class MessageBloc extends Bloc<MessageEvent, MessageState> {
   final String partnerId;
   final MessageType type;
-  final Socket socket = socketManager.socket;
+  final socket = socketManager.socket;
   final repository = MessageRepository();
 
   final limit = 30;
@@ -55,7 +54,13 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     socket.on(
       'message:${type.name}',
       (data) {
-        add(MessageReceivedEvent(Message.fromJson(data)));
+        final message = Message.fromJson(data);
+
+        if (!_isCurrentPartner([message.from.id, message.room])) {
+          return;
+        }
+
+        add(MessageReceivedEvent(message));
       },
     );
 
@@ -71,8 +76,26 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
     socket.on(
       'message:${type.name}:typing',
-      (data) => add(MessageUserTypedEvent(Typing.fromJson(data))),
+      (data) {
+        final typing = Typing.fromJson(data);
+
+        if (!_isCurrentPartner([typing.room?.id, typing.user.id])) {
+          return;
+        }
+
+        add(MessageUserTypedEvent(typing));
+      },
     );
+  }
+
+  bool _isCurrentPartner([List<String?> partners = const []]) {
+    for (final partner in partners) {
+      if (partner == partnerId) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   @override

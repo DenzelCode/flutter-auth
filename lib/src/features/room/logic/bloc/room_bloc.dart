@@ -14,7 +14,7 @@ part 'room_state.dart';
 class RoomBloc extends Bloc<RoomEvent, RoomState> {
   final repository = RoomRepository();
 
-  final Socket socket = socketManager.socket;
+  final socket = socketManager.socket;
 
   Room? lastRoom;
 
@@ -30,6 +30,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     on<RoomCheckedEvent>(_onRoomChecked);
     on<RoomJoinedEvent>(_onRoomJoined);
     on<RoomUserJoinEvent>(_onRoomUserJoin);
+    on<RoomUserLeaveEvent>(_onRoomUserLeave);
     on<UpdateRoomInfoEvent>(_onRoomInfoUpdated);
     on<RoomDisconnectedEvent>(
       (event, emit) => emit.call(RoomJoinInProgressState()),
@@ -71,7 +72,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
 
     socket.on(
       'room:leave',
-      (data) => (data) => add(RoomUserLeaveEvent(User.fromJson(data))),
+      (data) => add(RoomUserLeaveEvent(User.fromJson(data))),
     );
 
     socket.on('room:update', (data) {
@@ -155,9 +156,26 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
 
     final room = data.room;
 
-    room.members.add(event.user);
+    print('user joined');
 
-    emit.call(RoomJoinSuccessState(room));
+    emit.call(RoomJoinSuccessState(
+      room.copyWith(members: [...room.members, event.user]),
+    ));
+  }
+
+  FutureOr<void> _onRoomUserLeave(
+    RoomUserLeaveEvent event,
+    Emitter<RoomState> emit,
+  ) {
+    final data = state as RoomJoinSuccessState;
+
+    final room = data.room;
+
+    emit.call(
+      RoomJoinSuccessState(room.copyWith(
+        members: room.members.where((e) => e.id != event.user.id).toList(),
+      )),
+    );
   }
 
   FutureOr<void> _onRoomInfoUpdated(

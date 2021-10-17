@@ -81,8 +81,7 @@ class _RoomScreenState extends State<RoomScreen> {
                   room: room,
                   bloc: context.read<MessageBloc>(),
                 ),
-                if (_showMembers)
-                  _RoomMembers(members: room.members as List<User>)
+                if (_showMembers) _RoomMembers(members: room.members)
               ],
             ),
           );
@@ -99,7 +98,7 @@ class _RoomScreenState extends State<RoomScreen> {
 }
 
 class _RoomMembers extends StatefulWidget {
-  final List<User> members;
+  final List<dynamic> members;
 
   _RoomMembers({Key? key, required this.members}) : super(key: key);
 
@@ -125,7 +124,7 @@ class _RoomMembersState extends State<_RoomMembers> {
           Expanded(
             child: ListView.builder(
               itemBuilder: (_, index) {
-                final member = widget.members[index];
+                final member = widget.members[index] as User;
 
                 if (_showOnlineUsers && !member.online) {
                   return Container();
