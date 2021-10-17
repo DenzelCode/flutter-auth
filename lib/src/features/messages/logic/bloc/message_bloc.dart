@@ -140,8 +140,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   ) {
     final data = state as MessagesState;
 
-    emit.call(MessagesLoadSuccessState(
-      data.messages.where((e) => e.id == event.messageId).toList(),
+    emit.call(MessageDeleteState(
+      data.messages.where((e) => e.id != event.messageId).toList(),
     ));
   }
 

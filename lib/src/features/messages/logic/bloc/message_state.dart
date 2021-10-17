@@ -30,6 +30,10 @@ class MessageReceiveState extends MessagesState {
   MessageReceiveState(List<Message> messages) : super(messages);
 }
 
+class MessageDeleteState extends MessagesState {
+  MessageDeleteState(List<Message> messages) : super(messages);
+}
+
 class PreviousMessagesLoadState extends MessagesState {
   final double previousScrollHeight;
 
