@@ -55,7 +55,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     socket.on(
       'message:${type.name}',
       (data) {
-        ;
+        add(MessageReceivedEvent(Message.fromJson(data)));
       },
     );
 
