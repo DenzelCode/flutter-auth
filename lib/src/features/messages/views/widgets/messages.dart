@@ -33,7 +33,7 @@ class _MessagesState extends State<Messages> {
 
   final _showMoreOffset = 0;
 
-  final _scrollToLastOffset = 0;
+  final _scrollToLastOffset = 50;
 
   @override
   void initState() {

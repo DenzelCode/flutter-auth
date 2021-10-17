@@ -124,9 +124,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   ) {
     final data = state as MessagesState;
 
-    data.messages.add(event.message);
-
-    emit.call(MessageReceiveState([...data.messages]));
+    emit.call(MessageReceiveState([...data.messages, event.message]));
   }
 
   FutureOr<void> _onMessagesDeleted(
@@ -143,7 +141,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     final data = state as MessagesState;
 
     emit.call(MessagesLoadSuccessState(
-        data.messages.where((e) => e.id == event.messageId).toList()));
+      data.messages.where((e) => e.id == event.messageId).toList(),
+    ));
   }
 
   @override
