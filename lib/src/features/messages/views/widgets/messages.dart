@@ -82,22 +82,14 @@ class _MessagesState extends State<Messages> {
         }
 
         if (state is MessagesLoadSuccessState) {
-          SchedulerBinding.instance?.addPostFrameCallback(
-            (_) => _scrollController.jumpTo(
-              _scrollController.position.maxScrollExtent,
-            ),
-          );
+          _scrollToLastMessages();
         }
 
         if (state is MessageReceiveState || state is MessageTypingState) {
           if (_scrollController.offset >
               _scrollController.position.maxScrollExtent -
                   _scrollToLastOffset) {
-            SchedulerBinding.instance?.addPostFrameCallback(
-              (_) => _scrollController.jumpTo(
-                _scrollController.position.maxScrollExtent,
-              ),
-            );
+            _scrollToLastMessages();
           }
         }
       },
@@ -113,12 +105,19 @@ class _MessagesState extends State<Messages> {
               child: Row(
                 children: [
                   Expanded(
-                    child: TextField(
-                      controller: _textController,
-                      decoration: InputDecoration(labelText: 'Message'),
-                      keyboardType: TextInputType.multiline,
-                      textInputAction: TextInputAction.newline,
-                      maxLines: null,
+                    child: Focus(
+                      onFocusChange: (focus) {
+                        if (focus) {
+                          _scrollToLastMessages();
+                        }
+                      },
+                      child: TextField(
+                        controller: _textController,
+                        decoration: InputDecoration(labelText: 'Message'),
+                        keyboardType: TextInputType.multiline,
+                        textInputAction: TextInputAction.newline,
+                        maxLines: null,
+                      ),
                     ),
                   ),
                   ClipRRect(
@@ -135,6 +134,14 @@ class _MessagesState extends State<Messages> {
             ),
           )
         ],
+      ),
+    );
+  }
+
+  void _scrollToLastMessages() {
+    SchedulerBinding.instance?.addPostFrameCallback(
+      (_) => _scrollController.jumpTo(
+        _scrollController.position.maxScrollExtent,
       ),
     );
   }
