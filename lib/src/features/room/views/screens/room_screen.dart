@@ -62,11 +62,9 @@ class _RoomScreenState extends State<RoomScreen> {
           curr is DirectRooomDeleteState,
       builder: (_, state) {
         if (state is SocketConnectState) {
-          final room = state.room;
-
           return Scaffold(
             appBar: AppBar(
-              title: Text(room.title),
+              title: Text(state.room.title),
               actions: [
                 IconButton(
                   onPressed: () => setState(() {
@@ -80,10 +78,10 @@ class _RoomScreenState extends State<RoomScreen> {
               children: [
                 Messages(
                   type: MessageType.room,
-                  room: room,
+                  room: state.room,
                   bloc: context.read<MessageBloc>(),
                 ),
-                if (_showMembers) _RoomMembers(members: room.members)
+                if (_showMembers) _RoomMembers(members: state.room.members)
               ],
             ),
           );
