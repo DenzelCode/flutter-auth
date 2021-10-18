@@ -13,14 +13,10 @@ part 'room_state.dart';
 
 class RoomBloc extends Bloc<RoomEvent, RoomState> {
   final repository = RoomRepository();
-
   final socket = socketManager.socket;
 
-  Room? lastRoom;
-
-  int connections = 0;
-
-  Timer? timer;
+  Timer? updateRoomTimer;
+  String? joinedRoomId;
 
   RoomBloc() : super(RoomInitialState()) {
     initEvents();
@@ -31,39 +27,29 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     on<RoomJoinedEvent>(_onRoomJoined);
     on<RoomUserJoinEvent>(_onRoomUserJoin);
     on<RoomUserLeaveEvent>(_onRoomUserLeave);
-    on<UpdateRoomInfoEvent>(_onRoomInfoUpdated);
-    on<RoomDisconnectedEvent>(
-      (event, emit) => emit.call(RoomJoinInProgressState()),
-    );
-    on<RoomReconnectedEvent>(
-      (event, emit) => emit.call(RoomJoinSuccessState(event.room)),
-    );
+    on<SocketDisconnectedEvent>(_onSocketDisconnected);
+    on<SocketConnectedEvent>(_onRoomConnected);
+
     on<DirectRoomDeletedEvent>(
       (event, emit) => emit.call(DirectRooomDeleteState()),
     );
+
     on<DirectRoomUpdatedEvent>(
       (event, emit) => emit.call(RoomJoinSuccessState(event.room)),
     );
+  }
 
-    timer = Timer.periodic(Duration(seconds: 5), (_) {
-      if (lastRoom == null) {
-        return;
-      }
-
-      add(UpdateRoomInfoEvent(lastRoom as Room));
-    });
+  void initTimers() {
+    updateRoomTimer = Timer.periodic(
+      Duration(seconds: 5),
+      (_) => add(RoomCheckedEvent(joinedRoomId as String)),
+    );
   }
 
   void initSocket() {
-    socket.onDisconnect((data) => add(RoomDisconnectedEvent()));
+    socket.onDisconnect((data) => add(SocketDisconnectedEvent()));
 
-    socket.onConnect((data) {
-      connections++;
-
-      if (connections > 1) {
-        add(RoomReconnectedEvent(lastRoom as Room));
-      }
-    });
+    socket.onConnect((data) => add(SocketConnectedEvent()));
 
     socket.on(
       'room:join',
@@ -75,32 +61,25 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
       (data) => add(RoomUserLeaveEvent(User.fromJson(data))),
     );
 
-    socket.on('room:update', (data) {
-      final room = Room.fromJson(data);
+    socket.on(
+      'room:update',
+      (data) => add(DirectRoomUpdatedEvent(Room.fromJson(data))),
+    );
 
-      if (room.id != lastRoom?.id) {
-        return;
-      }
+    socket.on('room:delete', (data) => add(DirectRoomDeletedEvent()));
 
-      add(DirectRoomUpdatedEvent(room));
-    });
-
-    socket.on('room:delete', (data) {
-      final room = Room.fromJson(data);
-
-      if (room.id != lastRoom?.id) {
-        return;
-      }
-
-      add(DirectRoomDeletedEvent());
-    });
+    if (!socket.connected) {
+      socketManager.init(
+        () => socket.emit('room:subscribe', joinedRoomId),
+      );
+    }
   }
 
   @override
   Future<void> close() {
     socketManager.dispose();
 
-    timer?.cancel();
+    updateRoomTimer?.cancel();
 
     return super.close();
   }
@@ -113,13 +92,18 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
       return;
     }
 
-    emit.call(RoomCheckInProgressState());
+    if (state is RoomInitialState || joinedRoomId == null) {
+      emit.call(RoomCheckInProgressState());
+    }
 
     try {
-      emit.call(RoomCheckSuccessState(
-        await repository.getRoom(event.roomId),
-        isDialog: event.isDialog,
-      ));
+      final room = await repository.getRoom(event.roomId);
+
+      if (state is SocketConnectState) {
+        emit.call(SocketConnectState(room));
+      } else {
+        emit.call(RoomCheckSuccessState(room, isDialog: event.isDialog));
+      }
     } catch (e) {
       emit.call(RoomCheckFailureState());
     }
@@ -134,15 +118,13 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     try {
       final room = await repository.joinRoom(event.roomId);
 
-      initSocket();
-
-      await socketManager.init(
-        () => socket.emit('room:subscribe', event.roomId),
-      );
-
-      lastRoom = room;
+      joinedRoomId = room.id;
 
       emit.call(RoomJoinSuccessState(room));
+
+      initSocket();
+
+      initTimers();
     } catch (e) {
       emit.call(RoomJoinFailureState());
     }
@@ -152,14 +134,14 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     RoomUserJoinEvent event,
     Emitter<RoomState> emit,
   ) {
-    final data = state as RoomJoinSuccessState;
+    if (!(state is RoomParamState)) {
+      return null;
+    }
 
-    final room = data.room;
-
-    print('user joined');
+    final data = state as RoomParamState;
 
     emit.call(RoomJoinSuccessState(
-      room.copyWith(members: [...room.members, event.user]),
+      data.room.copyWith(members: [...data.room.members, event.user]),
     ));
   }
 
@@ -167,31 +149,42 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
     RoomUserLeaveEvent event,
     Emitter<RoomState> emit,
   ) {
-    final data = state as RoomJoinSuccessState;
+    if (!(state is RoomParamState)) {
+      return null;
+    }
 
-    final room = data.room;
+    final data = state as RoomParamState;
 
     emit.call(
-      RoomJoinSuccessState(room.copyWith(
-        members: room.members.where((e) => e.id != event.user.id).toList(),
+      RoomJoinSuccessState(data.room.copyWith(
+        members: data.room.members.where((e) => e.id != event.user.id).toList(),
       )),
     );
   }
 
-  FutureOr<void> _onRoomInfoUpdated(
-    UpdateRoomInfoEvent event,
+  FutureOr<void> _onRoomConnected(
+    SocketConnectedEvent event,
     Emitter<RoomState> emit,
-  ) async {
-    if (state is RoomCheckInProgressState) {
-      return;
+  ) {
+    if (!(state is RoomParamState)) {
+      return null;
     }
 
-    try {
-      emit.call(RoomJoinSuccessState(
-        await repository.getRoom(event.room.id),
-      ));
-    } catch (e) {
-      emit.call(RoomCheckFailureState());
+    final data = state as RoomParamState;
+
+    emit.call(SocketConnectState(data.room));
+  }
+
+  FutureOr<void> _onSocketDisconnected(
+    SocketDisconnectedEvent event,
+    Emitter<RoomState> emit,
+  ) {
+    if (!(state is RoomParamState)) {
+      return null;
     }
+
+    final data = state as RoomParamState;
+
+    emit.call(SocketDisconnectState(data.room));
   }
 }

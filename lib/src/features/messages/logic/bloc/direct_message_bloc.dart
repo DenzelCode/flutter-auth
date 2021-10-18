@@ -24,25 +24,29 @@ class DirectMessageBloc extends Bloc<DirectMessageEvent, DirectMessageState> {
   DirectMessageBloc(this.username, {this.fromMessages = false})
       : super(DirectMessageInitialState()) {
     initEvents();
+
+    initTimers();
   }
 
   void initSockets() {
     socket.onConnect((_) => add(SocketConnectedEvent()));
 
-    if (socket.connected) {
-      add(SocketConnectedEvent());
-    }
-
     socket.onDisconnect((_) => add(SocketDisconnectedEvent()));
 
-    socket.connect();
+    if (socket.connected) {
+      add(SocketConnectedEvent());
+    } else {
+      socketManager.init();
+    }
   }
 
   void initEvents() {
     on<UserLoadedEvent>(_onLoaded);
     on<SocketConnectedEvent>(_onConnected);
     on<SocketDisconnectedEvent>(_onDisconnected);
+  }
 
+  void initTimers() {
     updateTimer = Timer.periodic(
       Duration(seconds: 5),
       (_) => add(UserLoadedEvent()),
@@ -95,6 +99,10 @@ class DirectMessageBloc extends Bloc<DirectMessageEvent, DirectMessageState> {
     SocketConnectedEvent event,
     Emitter<DirectMessageState> emit,
   ) {
+    if (!(state is DirectUserState)) {
+      return null;
+    }
+
     final data = state as DirectUserState;
 
     emit.call(SocketConnectState(data.user));
@@ -104,6 +112,10 @@ class DirectMessageBloc extends Bloc<DirectMessageEvent, DirectMessageState> {
     SocketDisconnectedEvent event,
     Emitter<DirectMessageState> emit,
   ) {
+    if (!(state is DirectUserState)) {
+      return null;
+    }
+
     final data = state as DirectUserState;
 
     emit.call(SocketDisconnectState(data.user));

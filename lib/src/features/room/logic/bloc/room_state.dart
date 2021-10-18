@@ -13,16 +13,16 @@ class RoomCheckInProgressState extends RoomState {}
 
 class RoomCheckFailureState extends RoomState {}
 
-class _RoomParamState extends RoomState {
+class RoomParamState extends RoomState {
   final Room room;
 
-  _RoomParamState(this.room) : super();
+  RoomParamState(this.room) : super();
 
   @override
   List<Object> get props => [room];
 }
 
-class RoomCheckSuccessState extends _RoomParamState {
+class RoomCheckSuccessState extends RoomParamState {
   final bool isDialog;
 
   RoomCheckSuccessState(Room room, {this.isDialog = false}) : super(room);
@@ -35,8 +35,16 @@ class RoomJoinInProgressState extends RoomState {}
 
 class RoomJoinFailureState extends RoomState {}
 
-class RoomJoinSuccessState extends _RoomParamState {
+class RoomJoinSuccessState extends RoomParamState {
   RoomJoinSuccessState(Room room) : super(room);
 }
 
 class DirectRooomDeleteState extends RoomState {}
+
+class SocketConnectState extends RoomParamState {
+  SocketConnectState(Room room) : super(room);
+}
+
+class SocketDisconnectState extends RoomParamState {
+  SocketDisconnectState(Room room) : super(room);
+}

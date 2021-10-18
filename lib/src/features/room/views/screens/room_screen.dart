@@ -61,7 +61,7 @@ class _RoomScreenState extends State<RoomScreen> {
           curr is RoomCheckFailureState ||
           curr is DirectRooomDeleteState,
       builder: (_, state) {
-        if (state is RoomJoinSuccessState) {
+        if (state is SocketConnectState) {
           final room = state.room;
 
           return Scaffold(

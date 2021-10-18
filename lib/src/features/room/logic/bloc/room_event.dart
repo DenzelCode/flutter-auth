@@ -38,11 +38,9 @@ class _RoomObjectParamEvent extends RoomEvent {
   List<Object> get props => [room];
 }
 
-class RoomDisconnectedEvent extends RoomEvent {}
+class SocketDisconnectedEvent extends RoomEvent {}
 
-class RoomReconnectedEvent extends _RoomObjectParamEvent {
-  RoomReconnectedEvent(Room room) : super(room);
-}
+class SocketConnectedEvent extends RoomEvent {}
 
 class DirectRoomDeletedEvent extends RoomEvent {}
 
@@ -67,6 +65,4 @@ class DirectRoomUpdatedEvent extends _RoomObjectParamEvent {
   DirectRoomUpdatedEvent(Room room) : super(room);
 }
 
-class UpdateRoomInfoEvent extends _RoomObjectParamEvent {
-  UpdateRoomInfoEvent(Room room) : super(room);
-}
+class UpdateRoomInfoEvent extends RoomEvent {}
