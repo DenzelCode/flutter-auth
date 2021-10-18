@@ -45,5 +45,5 @@ class User extends Equatable implements Comparable {
   }
 
   @override
-  List<Object?> get props => [id, username, email];
+  List<Object?> get props => [id, username, email, online];
 }

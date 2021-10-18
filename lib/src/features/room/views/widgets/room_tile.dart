@@ -1,5 +1,6 @@
 import 'package:auth/src/constants/environments.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
+import 'package:auth/src/features/messages/views/screens/direct_message_screen.dart';
 import 'package:auth/src/features/room/logic/bloc/room_bloc.dart';
 import 'package:auth/src/features/room/logic/bloc/rooms_bloc.dart';
 import 'package:auth/src/features/room/logic/models/room.dart';
@@ -27,6 +28,19 @@ class RoomTile extends StatelessWidget {
 
     final isMember = memberRooms.any((e) => e.id == this.room.id);
 
+    Widget ownerWidget = Container();
+
+    if (!isOwner && room.owner is User) {
+      ownerWidget = GestureDetector(
+        onTap: () => Navigator.pushNamed(
+          context,
+          DirectMessageScreen.routeName,
+          arguments: DirectMessageArguments(username: room.owner.username),
+        ),
+        child: Text((room.owner as User).username),
+      );
+    }
+
     return Column(
       children: [
         ListTile(
@@ -34,12 +48,7 @@ class RoomTile extends StatelessWidget {
             child: Icon(Icons.person),
           ),
           title: Text('${room.title} (${room.members.length})'),
-          subtitle: room.owner is String || isOwner
-              ? Container()
-              : GestureDetector(
-                  onTap: () => {},
-                  child: Text((room.owner as User).username),
-                ),
+          subtitle: ownerWidget,
           trailing: TextButton(
             onPressed: () => _join(context),
             child: Text('Join'),

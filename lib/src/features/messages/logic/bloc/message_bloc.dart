@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:auth/src/app.dart';
 import 'package:auth/src/core/socket.dart';
 import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
@@ -10,6 +11,7 @@ import 'package:auth/src/features/messages/logic/models/typing.dart';
 import 'package:auth/src/features/messages/logic/repository/message_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'message_event.dart';
@@ -21,6 +23,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
   final socket = socketManager.socket;
   final repository = MessageRepository();
 
+  final audioCache = AudioCache();
+
   final limit = 30;
   final typingTimeout = 5000;
 
@@ -29,10 +33,20 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
   Map<String, Timer> typingTimers = {};
 
+  final BuildContext context;
+
+  User? currentUser;
+
+  final bool fromMessages;
+
   MessageBloc({
     required this.partnerId,
     required this.type,
+    required this.context,
+    this.fromMessages = false,
   }) : super(MessageInitial()) {
+    currentUser = context.read<AuthCubit>().state;
+
     initEvents();
 
     initSockets();
@@ -56,7 +70,10 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       (data) {
         final message = Message.fromJson(data);
 
-        if (!_isCurrentPartner([message.from.id, message.room])) {
+        if (!_isCurrentPartner([
+          message.to != currentUser?.id ? message.to : message.from.id,
+          message.room
+        ])) {
           return;
         }
 
@@ -90,7 +107,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
   bool _isCurrentPartner([List<String?> partners = const []]) {
     for (final partner in partners) {
-      if (partner == partnerId) {
+      if (partner == partnerId || currentUser?.id == partner) {
         return true;
       }
     }
@@ -100,7 +117,9 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
   @override
   Future<void> close() {
-    socketManager.dispose();
+    if (!fromMessages) {
+      socketManager.dispose();
+    }
 
     return super.close();
   }
@@ -230,6 +249,12 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     final data = state as MessagesState;
 
     cancelTypingTimer(event.message.from);
+
+    final currentUser = context.read<AuthCubit>().state;
+
+    if (event.message.from.id != currentUser?.id) {
+      audioCache.play('tones/message_tone.mp3', isNotification: true);
+    }
 
     emit.call(MessageReceiveState(
       [

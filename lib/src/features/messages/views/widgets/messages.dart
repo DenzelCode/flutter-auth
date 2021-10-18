@@ -5,6 +5,7 @@ import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/messages/logic/bloc/message_bloc.dart';
 import 'package:auth/src/features/messages/logic/enum/message_type.dart';
 import 'package:auth/src/features/messages/logic/models/message.dart';
+import 'package:auth/src/features/messages/views/screens/direct_message_screen.dart';
 import 'package:auth/src/features/room/logic/models/room.dart';
 import 'package:auth/src/shared/views/widgets/dialog/confirm_dialog_widget.dart';
 import 'package:auth/src/shared/views/widgets/typing_indicator.dart';
@@ -120,9 +121,14 @@ class _MessagesState extends State<Messages> {
                       maxLines: null,
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.send),
-                    onPressed: _sendMessage,
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Material(
+                      child: IconButton(
+                        icon: Icon(Icons.send),
+                        onPressed: _sendMessage,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -292,7 +298,14 @@ class __MessageState extends State<_Message> {
               isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           children: [
             GestureDetector(
-              onTap: () {},
+              onTap: () => Navigator.pushNamed(
+                context,
+                DirectMessageScreen.routeName,
+                arguments: DirectMessageArguments(
+                  username: widget.from.username,
+                  fromMessages: true,
+                ),
+              ),
               child: Text(
                 widget.from.username,
                 style: TextStyle(fontSize: 12),

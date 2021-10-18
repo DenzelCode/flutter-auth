@@ -1,6 +1,7 @@
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/messages/logic/bloc/message_bloc.dart';
 import 'package:auth/src/features/messages/logic/enum/message_type.dart';
+import 'package:auth/src/features/messages/views/screens/direct_message_screen.dart';
 import 'package:auth/src/features/messages/views/widgets/messages.dart';
 import 'package:auth/src/features/room/logic/bloc/room_bloc.dart';
 import 'package:auth/src/shared/views/widgets/user_status.dart';
@@ -19,9 +20,10 @@ class RoomScreen extends StatefulWidget {
         providers: [
           BlocProvider(create: (_) => RoomBloc()),
           BlocProvider(
-            create: (_) => MessageBloc(
+            create: (context) => MessageBloc(
               partnerId: roomId,
               type: MessageType.room,
+              context: context,
             ),
           ),
         ],
@@ -130,9 +132,20 @@ class _RoomMembersState extends State<_RoomMembers> {
                   return Container();
                 }
 
-                return ListTile(
-                  title: Text(member.username),
-                  trailing: UserStatus(online: member.online),
+                return MaterialButton(
+                  padding: EdgeInsets.all(0),
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    DirectMessageScreen.routeName,
+                    arguments: DirectMessageArguments(
+                      username: member.username,
+                      fromMessages: true,
+                    ),
+                  ),
+                  child: ListTile(
+                    title: Text(member.username),
+                    trailing: UserStatus(online: member.online),
+                  ),
                 );
               },
               itemCount: widget.members.length,
