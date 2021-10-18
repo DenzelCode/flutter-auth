@@ -3,6 +3,7 @@ import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/auth/logic/repository/auth_repository.dart';
 import 'package:auth/src/features/home/views/screens/home_screen.dart';
+import 'package:auth/src/features/notification/views/widgets/notification_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,16 +17,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _InitProviders(
-      child: MaterialApp(
-        navigatorKey: MyApp.materialKey,
-        debugShowCheckedModeBanner: false,
-        initialRoute: HomeScreen.routeName,
-        onGenerateRoute: appRouter.onGenerateRoute,
-        theme: ThemeData(
-          primaryColor: Color(0xff4C525C),
-          secondaryHeaderColor: Color(0xffFFAE48),
-          highlightColor: Color(0xff58BFE6),
-        ),
+      child: Stack(
+        children: [
+          MaterialApp(
+            navigatorKey: MyApp.materialKey,
+            debugShowCheckedModeBanner: false,
+            initialRoute: HomeScreen.routeName,
+            onGenerateRoute: appRouter.onGenerateRoute,
+            theme: ThemeData(
+              primaryColor: Color(0xff4C525C),
+              secondaryHeaderColor: Color(0xffFFAE48),
+              highlightColor: Color(0xff58BFE6),
+            ),
+          ),
+          NotificationHandler(),
+        ],
       ),
     );
   }

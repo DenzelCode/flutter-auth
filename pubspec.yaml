@@ -41,6 +41,8 @@ dependencies:
   socket_io_client: ^2.0.0-beta.3-nullsafety.0
   intl: ^0.17.0
   audioplayers: ^0.20.1
+  firebase_core: ^1.7.0
+  firebase_messaging: ^10.0.8
 
 flutter_icons:
   android: true
