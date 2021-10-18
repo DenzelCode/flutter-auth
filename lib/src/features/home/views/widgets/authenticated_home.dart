@@ -1,5 +1,6 @@
 import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
+import 'package:auth/src/features/notification/views/widgets/notification_handler.dart';
 import 'package:auth/src/features/room/views/screens/rooms_screen.dart';
 import 'package:auth/src/shared/views/widgets/circles_background.dart';
 import 'package:auth/src/shared/views/widgets/underlined_button.dart';
@@ -29,6 +30,9 @@ class AuthenticatedHome extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            NotificationHandler(
+              key: Key('xd'),
+            ),
             SizedBox(
               height: 80,
             ),

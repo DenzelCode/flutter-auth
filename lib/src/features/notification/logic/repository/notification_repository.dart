@@ -1,16 +1,31 @@
+import 'package:auth/src/features/notification/logic/repository/subscription_repository.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class NotificationRepository {
-  final _fcm = FirebaseMessaging.instance;
+  FirebaseMessaging get _fcm => FirebaseMessaging.instance;
+
+  final subscriptionRepository = SubscriptionRepository();
 
   Future<void> requestPermission() async {
-    try {
-      await _fcm.requestPermission();
+    await _fcm.requestPermission();
 
-      final token = _fcm.getToken();
+    final token = await _fcm.getToken();
 
-      print(token);
-    } catch (_) {}
+    if (token == null) {
+      return;
+    }
+
+    await subscriptionRepository.registerSubscription(token);
+  }
+
+  Future<void> deleteSubscription() async {
+    final token = await _fcm.getToken();
+
+    if (token == null) {
+      return;
+    }
+
+    return subscriptionRepository.deleteSubscription(token);
   }
 }
 

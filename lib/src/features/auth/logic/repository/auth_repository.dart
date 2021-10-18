@@ -7,16 +7,16 @@ import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/auth/logic/provider/auth_api_provider.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart' as store;
-import 'package:google_sign_in/google_sign_in.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthRepository {
   final _provider = AuthAPIProvider();
   late final _storage = new store.FlutterSecureStorage();
 
-  late final _googleSignIn = GoogleSignIn(
-    scopes: ['email', 'profile'],
-  );
+  // late final _googleSignIn = GoogleSignIn(
+  //   scopes: ['email', 'profile'],
+  // );
 
   String getDeviceType() {
     String type = 'web';
@@ -109,19 +109,19 @@ class AuthRepository {
   }
 
   Future<void> loginWithGoogle() async {
-    await _googleSignIn.signOut();
+    // await _googleSignIn.signOut();
 
-    final result = await _googleSignIn.signIn();
+    // final result = await _googleSignIn.signIn();
 
-    if (result == null) {
-      throw Exception('An error occurred authenticating with Google');
-    }
+    // if (result == null) {
+    //   throw Exception('An error occurred authenticating with Google');
+    // }
 
-    final authentication = await result.authentication;
+    // final authentication = await result.authentication;
 
-    return setTokens(
-      await _provider.loginWithGoogle(authentication.accessToken),
-    );
+    // return setTokens(
+    //   await _provider.loginWithGoogle(authentication.accessToken),
+    // );
   }
 
   Future<void> recover(String email) {

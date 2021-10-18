@@ -1,5 +1,6 @@
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/auth/logic/repository/auth_repository.dart';
+import 'package:auth/src/features/notification/logic/repository/notification_repository.dart';
 import 'package:bloc/bloc.dart';
 
 class AuthCubit extends Cubit<User?> {
@@ -34,6 +35,8 @@ class AuthCubit extends Cubit<User?> {
   }
 
   Future<void> logout() async {
+    await notificationRepository.deleteSubscription();
+
     await authRepository.logout();
 
     emit(null);
