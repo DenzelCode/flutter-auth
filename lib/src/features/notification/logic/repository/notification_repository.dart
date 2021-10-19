@@ -111,7 +111,7 @@ class NotificationRepository {
       DirectMessageScreen.routeName,
       arguments: DirectMessageArguments(
         username: username,
-        fromMessages: _isMessages(context),
+        fromMessages: _isCurrentlyOnMessages(context),
       ),
     );
   }
@@ -124,7 +124,7 @@ class NotificationRepository {
     );
   }
 
-  _isMessages(BuildContext context) {
+  _isCurrentlyOnMessages(BuildContext context) {
     final name = ModalRoute.of(context)?.settings.name;
 
     return name == DirectMessageScreen.routeName ||
