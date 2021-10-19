@@ -14,9 +14,7 @@ class DirectMessageArguments {
   DirectMessageArguments({
     required this.username,
     this.fromMessages = false,
-  }) {
-    print(fromMessages);
-  }
+  });
 }
 
 class DirectMessageScreen extends StatefulWidget {

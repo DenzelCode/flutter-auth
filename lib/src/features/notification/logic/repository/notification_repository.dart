@@ -52,11 +52,8 @@ class NotificationRepository {
 
     SnackBar? snackBar;
 
-    if (type == NotificationType.room.name) {
-      if (Messages.partnersHistory.last == message.data['roomId']) {
-        return;
-      }
-
+    if (type == NotificationType.room.name &&
+        !_isCurrentPartner(message.data['roomId'])) {
       snackBar = SnackBar(
         content: Text(
           'Message received from Room: ${message.data['roomTitle']}',
@@ -71,11 +68,8 @@ class NotificationRepository {
       );
     }
 
-    if (type == NotificationType.direct.name) {
-      if (Messages.partnersHistory.last == message.data['username']) {
-        return;
-      }
-
+    if (type == NotificationType.direct.name &&
+        !_isCurrentPartner(message.data['username'])) {
       snackBar = SnackBar(
         content: Text(
           'Message received from User: ${message.data['username']}',
@@ -116,7 +110,7 @@ class NotificationRepository {
   }
 
   _redirectToUser(BuildContext context, String username) {
-    if (Messages.partnersHistory.last == username) {
+    if (_isCurrentPartner(username)) {
       return;
     }
 
@@ -131,7 +125,7 @@ class NotificationRepository {
   }
 
   _redirectToRoom(BuildContext context, String roomId) {
-    if (Messages.partnersHistory.last == roomId) {
+    if (_isCurrentPartner(roomId)) {
       return;
     }
 
@@ -143,6 +137,11 @@ class NotificationRepository {
         fromMessages: socketManager.socket.connected,
       ),
     );
+  }
+
+  bool _isCurrentPartner(String partnerId) {
+    return Messages.partnersHistory.length > 0 &&
+        Messages.partnersHistory.last == partnerId;
   }
 
   Future<void> requestPermission() async {

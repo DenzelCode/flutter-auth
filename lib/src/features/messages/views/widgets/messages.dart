@@ -74,23 +74,9 @@ class _MessagesState extends State<Messages> {
 
     _typingTimer?.cancel();
 
-    bool removed = false;
-
-    Messages.partnersHistory.remove((e) {
-      if (removed) {
-        return false;
-      }
-
-      final isPartner = e == partnerHistoryId;
-
-      if (isPartner) {
-        removed = true;
-
-        return true;
-      }
-
-      return false;
-    });
+    Messages.partnersHistory.removeAt(
+      Messages.partnersHistory.lastIndexOf(partnerHistoryId),
+    );
   }
 
   @override
