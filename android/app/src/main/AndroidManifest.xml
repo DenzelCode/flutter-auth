@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.code.auth">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="auth"
-        android:name=".Application"
+        android:label="CodeAuth"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name="com.aboutyou.dart_packages.sign_in_with_apple.SignInWithAppleCallback"
