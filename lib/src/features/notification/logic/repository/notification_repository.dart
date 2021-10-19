@@ -116,6 +116,10 @@ class NotificationRepository {
   }
 
   _redirectToUser(BuildContext context, String username) {
+    if (Messages.partnersHistory.last == username) {
+      return;
+    }
+
     Navigator.pushNamed(
       context,
       DirectMessageScreen.routeName,
@@ -127,6 +131,10 @@ class NotificationRepository {
   }
 
   _redirectToRoom(BuildContext context, String roomId) {
+    if (Messages.partnersHistory.last == roomId) {
+      return;
+    }
+
     Navigator.pushNamed(
       context,
       RoomScreen.routeName,
