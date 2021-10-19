@@ -25,7 +25,7 @@ class RoomsScreen extends StatelessWidget {
             )..add(RoomsLoadedEvent()),
           ),
           BlocProvider(
-            create: (_) => RoomBloc(),
+            create: (_) => RoomBloc(false),
           )
         ],
         child: RoomsScreen(),

@@ -21,6 +21,8 @@ class Messages extends StatefulWidget {
   final MessageType type;
   final MessageBloc bloc;
 
+  static final List<String> partnersHistory = [];
+
   Messages({
     Key? key,
     this.room,
@@ -46,6 +48,9 @@ class _MessagesState extends State<Messages> {
 
   bool _isTyping = false;
 
+  String get partnerHistoryId =>
+      (widget.room != null ? widget.room?.id : widget.to?.username) as String;
+
   @override
   void initState() {
     super.initState();
@@ -55,6 +60,8 @@ class _MessagesState extends State<Messages> {
     _scrollController.addListener(_onScroll);
 
     _textController.addListener(_onTyping);
+
+    Messages.partnersHistory.add(partnerHistoryId);
   }
 
   @override
@@ -66,6 +73,24 @@ class _MessagesState extends State<Messages> {
     _textController.dispose();
 
     _typingTimer?.cancel();
+
+    bool removed = false;
+
+    Messages.partnersHistory.remove((e) {
+      if (removed) {
+        return false;
+      }
+
+      final isPartner = e == partnerHistoryId;
+
+      if (isPartner) {
+        removed = true;
+
+        return true;
+      }
+
+      return false;
+    });
   }
 
   @override

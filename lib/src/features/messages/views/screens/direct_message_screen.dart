@@ -14,7 +14,9 @@ class DirectMessageArguments {
   DirectMessageArguments({
     required this.username,
     this.fromMessages = false,
-  });
+  }) {
+    print(fromMessages);
+  }
 }
 
 class DirectMessageScreen extends StatefulWidget {
@@ -78,6 +80,7 @@ class _DirectMessageScreenState extends State<DirectMessageScreen> {
                 builder: (context) => Messages(
                   type: MessageType.direct,
                   bloc: context.read<MessageBloc>(),
+                  to: state.user,
                 ),
               ),
             ),

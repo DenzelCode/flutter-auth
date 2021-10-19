@@ -28,7 +28,7 @@ class RoomScreen extends StatefulWidget {
     return MaterialPageRoute(builder: (_) {
       return MultiBlocProvider(
         providers: [
-          BlocProvider(create: (_) => RoomBloc()),
+          BlocProvider(create: (_) => RoomBloc(args.fromMessages)),
           BlocProvider(
             create: (context) => MessageBloc(
               partnerId: args.roomId,

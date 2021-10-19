@@ -1,5 +1,7 @@
 import 'package:auth/src/app.dart';
+import 'package:auth/src/core/socket.dart';
 import 'package:auth/src/features/messages/views/screens/direct_message_screen.dart';
+import 'package:auth/src/features/messages/views/widgets/messages.dart';
 import 'package:auth/src/features/notification/logic/enums/notification_type.dart';
 import 'package:auth/src/features/notification/logic/repository/subscription_repository.dart';
 import 'package:auth/src/features/room/views/screens/room_screen.dart';
@@ -50,11 +52,8 @@ class NotificationRepository {
 
     SnackBar? snackBar;
 
-    final currentScreenArguments = ModalRoute.of(context)?.settings.arguments;
-
     if (type == NotificationType.room.name) {
-      if (currentScreenArguments is RoomArguments &&
-          currentScreenArguments.roomId == message.data['roomId']) {
+      if (Messages.partnersHistory.last == message.data['roomId']) {
         return;
       }
 
@@ -73,8 +72,7 @@ class NotificationRepository {
     }
 
     if (type == NotificationType.direct.name) {
-      if (currentScreenArguments is DirectMessageArguments &&
-          currentScreenArguments.username == message.data['username']) {
+      if (Messages.partnersHistory.last == message.data['username']) {
         return;
       }
 
@@ -123,7 +121,7 @@ class NotificationRepository {
       DirectMessageScreen.routeName,
       arguments: DirectMessageArguments(
         username: username,
-        fromMessages: _isCurrentlyOnMessages(context),
+        fromMessages: socketManager.socket.connected,
       ),
     );
   }
@@ -134,16 +132,9 @@ class NotificationRepository {
       RoomScreen.routeName,
       arguments: RoomArguments(
         roomId: roomId,
-        fromMessages: _isCurrentlyOnMessages(context),
+        fromMessages: socketManager.socket.connected,
       ),
     );
-  }
-
-  _isCurrentlyOnMessages(BuildContext context) {
-    final name = ModalRoute.of(context)?.settings.name;
-
-    return name == DirectMessageScreen.routeName ||
-        name == RoomScreen.routeName;
   }
 
   Future<void> requestPermission() async {

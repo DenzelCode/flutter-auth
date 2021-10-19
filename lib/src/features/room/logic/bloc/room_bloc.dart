@@ -14,11 +14,12 @@ part 'room_state.dart';
 class RoomBloc extends Bloc<RoomEvent, RoomState> {
   final repository = RoomRepository();
   final socket = socketManager.socket;
+  final bool fromMessages;
 
   Timer? updateRoomTimer;
   String? joinedRoomId;
 
-  RoomBloc() : super(RoomInitialState()) {
+  RoomBloc(this.fromMessages) : super(RoomInitialState()) {
     initEvents();
   }
 
@@ -77,7 +78,9 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
 
   @override
   Future<void> close() {
-    socketManager.dispose();
+    if (!fromMessages) {
+      socketManager.dispose();
+    }
 
     updateRoomTimer?.cancel();
 
