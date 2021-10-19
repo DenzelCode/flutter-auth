@@ -30,9 +30,7 @@ class AuthenticatedHome extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            NotificationHandler(
-              key: Key('xd'),
-            ),
+            NotificationHandler(),
             SizedBox(
               height: 80,
             ),

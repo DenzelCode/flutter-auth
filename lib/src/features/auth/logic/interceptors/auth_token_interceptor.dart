@@ -15,7 +15,7 @@ class AuthTokenInterceptor extends Interceptor {
 
   @override
   onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    final context = MyApp.materialKey.currentContext;
+    final context = application.currentContext;
 
     final repository = context?.read<AuthRepository>();
 
@@ -34,7 +34,7 @@ class AuthTokenInterceptor extends Interceptor {
 
   @override
   onError(DioError err, ErrorInterceptorHandler handler) async {
-    final context = MyApp.materialKey.currentContext;
+    final context = application.currentContext;
 
     if (context == null) {
       return;

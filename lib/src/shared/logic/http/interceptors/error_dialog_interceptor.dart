@@ -11,7 +11,7 @@ class ErrorDialogInterceptor extends Interceptor {
 
   @override
   onError(DioError err, ErrorInterceptorHandler handler) async {
-    final context = MyApp.materialKey.currentContext;
+    final context = application.currentContext;
 
     if (context == null) {
       return;

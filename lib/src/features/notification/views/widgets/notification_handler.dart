@@ -25,9 +25,7 @@ class _NotificationHandlerState extends State<NotificationHandler> {
   Widget build(BuildContext context) {
     return BlocListener<AuthCubit, User?>(
       listenWhen: (prev, curr) => curr != null,
-      listener: (context, state) {
-        notificationRepository.requestPermission();
-      },
+      listener: (context, state) => notificationRepository.requestPermission(),
       child: Container(),
     );
   }

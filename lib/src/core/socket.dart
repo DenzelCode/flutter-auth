@@ -23,7 +23,7 @@ class SocketManager {
       return socket;
     }
 
-    final context = MyApp.materialKey.currentContext;
+    final context = application.currentContext;
 
     final repository = context?.read<AuthRepository>();
 

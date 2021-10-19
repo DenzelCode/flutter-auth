@@ -3,21 +3,34 @@ import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/auth/logic/repository/auth_repository.dart';
 import 'package:auth/src/features/home/views/screens/home_screen.dart';
+import 'package:auth/src/features/notification/logic/repository/notification_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MyApp extends StatelessWidget {
-  static GlobalKey<NavigatorState> materialKey = GlobalKey();
+final GlobalKey<NavigatorState> application = GlobalKey();
 
+class MyApp extends StatefulWidget {
+  MyApp({Key? key}) : super(key: key);
+
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   final appRouter = AppRouter();
 
-  MyApp({Key? key}) : super(key: key);
+  @override
+  void initState() {
+    super.initState();
+
+    notificationRepository.init(context);
+  }
 
   @override
   Widget build(BuildContext context) {
     return _InitProviders(
       child: MaterialApp(
-        navigatorKey: MyApp.materialKey,
+        navigatorKey: application,
         debugShowCheckedModeBanner: false,
         initialRoute: HomeScreen.routeName,
         onGenerateRoute: appRouter.onGenerateRoute,

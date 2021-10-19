@@ -1,11 +1,11 @@
 import 'package:auth/src/app.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:auth/src/features/notification/logic/repository/notification_repository.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+  notificationRepository.setup();
 
   runApp(MyApp());
 }

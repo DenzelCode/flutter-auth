@@ -211,7 +211,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
     final user = event.typing.user;
 
-    final context = MyApp.materialKey.currentContext;
+    final context = application.currentContext;
 
     if (context == null) {
       return null;
