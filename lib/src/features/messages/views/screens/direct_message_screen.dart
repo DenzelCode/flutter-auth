@@ -54,7 +54,9 @@ class _DirectMessageScreenState extends State<DirectMessageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DirectMessageBloc, DirectMessageState>(
+    return BlocConsumer<DirectMessageBloc, DirectMessageState>(
+      listenWhen: (_, curr) => curr is UserLoadFailureState,
+      listener: (state, _) => Navigator.pop(context),
       builder: (context, state) {
         if (state is SocketConnectState) {
           return Scaffold(
