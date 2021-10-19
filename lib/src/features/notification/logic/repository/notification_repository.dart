@@ -14,6 +14,12 @@ class NotificationRepository {
 
   Future<void> setup() async {
     await Firebase.initializeApp();
+
+    _fcm.setForegroundNotificationPresentationOptions(
+      alert: false,
+      badge: false,
+      sound: false,
+    );
   }
 
   Future<void> init() async {
