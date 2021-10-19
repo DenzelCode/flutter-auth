@@ -44,7 +44,14 @@ class NotificationRepository {
 
     SnackBar? snackBar;
 
+    final currentScreenArguments = ModalRoute.of(context)?.settings.arguments;
+
     if (type == NotificationType.room.name) {
+      if (currentScreenArguments is RoomArguments &&
+          currentScreenArguments.roomId == message.data['roomId']) {
+        return;
+      }
+
       snackBar = SnackBar(
         content: Text(
           'Message received from Room: ${message.data['roomTitle']}',
@@ -60,6 +67,11 @@ class NotificationRepository {
     }
 
     if (type == NotificationType.direct.name) {
+      if (currentScreenArguments is DirectMessageArguments &&
+          currentScreenArguments.username == message.data['username']) {
+        return;
+      }
+
       snackBar = SnackBar(
         content: Text(
           'Message received from User: ${message.data['username']}',
