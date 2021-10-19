@@ -9,11 +9,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+class RoomArguments {
+  final String roomId;
+  final bool fromMessages;
+
+  RoomArguments({
+    required this.roomId,
+    this.fromMessages = false,
+  });
+}
+
 class RoomScreen extends StatefulWidget {
   static const routeName = '/room';
 
   static route(RouteSettings settings) {
-    final roomId = settings.arguments as String;
+    final args = settings.arguments as RoomArguments;
 
     return MaterialPageRoute(builder: (_) {
       return MultiBlocProvider(
@@ -21,13 +31,14 @@ class RoomScreen extends StatefulWidget {
           BlocProvider(create: (_) => RoomBloc()),
           BlocProvider(
             create: (context) => MessageBloc(
-              partnerId: roomId,
+              partnerId: args.roomId,
               type: MessageType.room,
               context: context,
+              fromMessages: args.fromMessages,
             ),
           ),
         ],
-        child: RoomScreen(roomId: roomId),
+        child: RoomScreen(roomId: args.roomId),
       );
     });
   }

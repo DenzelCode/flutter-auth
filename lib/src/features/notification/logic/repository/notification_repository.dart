@@ -120,7 +120,10 @@ class NotificationRepository {
     Navigator.pushNamed(
       context,
       RoomScreen.routeName,
-      arguments: roomId,
+      arguments: RoomArguments(
+        roomId: roomId,
+        fromMessages: _isCurrentlyOnMessages(context),
+      ),
     );
   }
 

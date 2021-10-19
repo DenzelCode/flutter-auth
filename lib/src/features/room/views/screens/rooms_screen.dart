@@ -68,7 +68,9 @@ class RoomsScreen extends StatelessWidget {
                     Navigator.pushNamed(
                       context,
                       RoomScreen.routeName,
-                      arguments: (state as RoomCheckSuccessState).room.id,
+                      arguments: RoomArguments(
+                        roomId: (state as RoomCheckSuccessState).room.id,
+                      ),
                     );
                   },
                   child: Container(),
