@@ -21,8 +21,8 @@ class AuthAPIProvider {
 
   Future<Tokens> register(
     String username,
-    String email,
     String password,
+    String email,
   ) async {
     final response = await api.post(
       '/auth/register',
