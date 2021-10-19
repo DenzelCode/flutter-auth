@@ -44,6 +44,7 @@ dependencies:
   firebase_core: ^1.7.0
   firebase_messaging: ^10.0.8
   firebase_analytics: ^8.3.3
+  google_sign_in: ^5.1.1
 
 flutter_icons:
   android: true
