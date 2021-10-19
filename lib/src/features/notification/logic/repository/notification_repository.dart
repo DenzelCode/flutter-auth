@@ -1,3 +1,4 @@
+import 'package:auth/src/app.dart';
 import 'package:auth/src/features/messages/views/screens/direct_message_screen.dart';
 import 'package:auth/src/features/notification/logic/enums/notification_type.dart';
 import 'package:auth/src/features/notification/logic/repository/subscription_repository.dart';
@@ -46,7 +47,7 @@ class NotificationRepository {
     if (type == NotificationType.room.name) {
       snackBar = SnackBar(
         content: Text(
-          'Message received from Room: ${message.data['title']}',
+          'Message received from Room: ${message.data['roomTitle']}',
         ),
         action: SnackBarAction(
           label: 'View',
@@ -77,7 +78,7 @@ class NotificationRepository {
       return;
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    scaffoldMessenger.currentState?.showSnackBar(snackBar);
   }
 
   void _handleBackgroundMessage(BuildContext context, RemoteMessage message) {

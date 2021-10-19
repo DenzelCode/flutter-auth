@@ -4,10 +4,12 @@ import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/auth/logic/repository/auth_repository.dart';
 import 'package:auth/src/features/home/views/screens/home_screen.dart';
 import 'package:auth/src/features/notification/logic/repository/notification_repository.dart';
+import 'package:auth/src/features/notification/views/widgets/notification_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 final GlobalKey<NavigatorState> application = GlobalKey();
+final GlobalKey<ScaffoldMessengerState> scaffoldMessenger = GlobalKey();
 
 class MyApp extends StatefulWidget {
   MyApp({Key? key}) : super(key: key);
@@ -31,6 +33,7 @@ class _MyAppState extends State<MyApp> {
     return _InitProviders(
       child: MaterialApp(
         navigatorKey: application,
+        scaffoldMessengerKey: scaffoldMessenger,
         debugShowCheckedModeBanner: false,
         initialRoute: HomeScreen.routeName,
         onGenerateRoute: appRouter.onGenerateRoute,
