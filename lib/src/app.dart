@@ -7,8 +7,8 @@ import 'package:auth/src/features/notification/logic/repository/notification_rep
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-final GlobalKey<NavigatorState> application = GlobalKey();
-final GlobalKey<ScaffoldMessengerState> scaffoldMessenger = GlobalKey();
+final GlobalKey<NavigatorState> applicationKey = GlobalKey();
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey();
 
 class MyApp extends StatefulWidget {
   MyApp({Key? key}) : super(key: key);
@@ -31,8 +31,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return _InitProviders(
       child: MaterialApp(
-        navigatorKey: application,
-        scaffoldMessengerKey: scaffoldMessenger,
+        navigatorKey: applicationKey,
+        scaffoldMessengerKey: scaffoldMessengerKey,
         debugShowCheckedModeBanner: false,
         initialRoute: HomeScreen.routeName,
         onGenerateRoute: appRouter.onGenerateRoute,

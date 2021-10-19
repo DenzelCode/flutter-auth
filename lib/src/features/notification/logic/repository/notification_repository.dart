@@ -40,7 +40,7 @@ class NotificationRepository {
   }
 
   void _handleForegroundMessage(RemoteMessage message) {
-    final context = application.currentContext;
+    final context = applicationKey.currentContext;
 
     if (context == null) {
       return;
@@ -96,11 +96,11 @@ class NotificationRepository {
       return;
     }
 
-    scaffoldMessenger.currentState?.showSnackBar(snackBar);
+    scaffoldMessengerKey.currentState?.showSnackBar(snackBar);
   }
 
   void _handleBackgroundMessage(RemoteMessage message) {
-    final context = application.currentContext;
+    final context = applicationKey.currentContext;
 
     if (context == null) {
       return;
