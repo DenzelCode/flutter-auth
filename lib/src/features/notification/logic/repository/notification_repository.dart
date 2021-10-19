@@ -22,24 +22,30 @@ class NotificationRepository {
     );
   }
 
-  Future<void> init(BuildContext context) async {
+  Future<void> init() async {
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
 
     if (initialMessage != null) {
-      _handleBackgroundMessage(context, initialMessage);
+      _handleBackgroundMessage(initialMessage);
     }
 
     FirebaseMessaging.onMessageOpenedApp.listen(
-      (message) => _handleBackgroundMessage(context, message),
+      (message) => _handleBackgroundMessage(message),
     );
 
     FirebaseMessaging.onMessage.listen(
-      (message) => _handleForegroundMessage(context, message),
+      (message) => _handleForegroundMessage(message),
     );
   }
 
-  void _handleForegroundMessage(BuildContext context, RemoteMessage message) {
+  void _handleForegroundMessage(RemoteMessage message) {
+    final context = application.currentContext;
+
+    if (context == null) {
+      return;
+    }
+
     final type = message.data['type'];
 
     SnackBar? snackBar;
@@ -81,7 +87,13 @@ class NotificationRepository {
     scaffoldMessenger.currentState?.showSnackBar(snackBar);
   }
 
-  void _handleBackgroundMessage(BuildContext context, RemoteMessage message) {
+  void _handleBackgroundMessage(RemoteMessage message) {
+    final context = application.currentContext;
+
+    if (context == null) {
+      return;
+    }
+
     final type = message.data['type'];
 
     if (type == NotificationType.room.name) {
@@ -99,6 +111,7 @@ class NotificationRepository {
       DirectMessageScreen.routeName,
       arguments: DirectMessageArguments(
         username: username,
+        fromMessages: _isMessages(context),
       ),
     );
   }
@@ -109,6 +122,13 @@ class NotificationRepository {
       RoomScreen.routeName,
       arguments: roomId,
     );
+  }
+
+  _isMessages(BuildContext context) {
+    final name = ModalRoute.of(context)?.settings.name;
+
+    return name == DirectMessageScreen.routeName ||
+        name == RoomScreen.routeName;
   }
 
   Future<void> requestPermission() async {
