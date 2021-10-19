@@ -41,8 +41,10 @@ class NotificationRepository {
   void _handleForegroundMessage(BuildContext context, RemoteMessage message) {
     final type = message.data['type'];
 
+    SnackBar? snackBar;
+
     if (type == NotificationType.room.name) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      snackBar = SnackBar(
         content: Text(
           'Message received from Room: ${message.data['title']}',
         ),
@@ -53,11 +55,11 @@ class NotificationRepository {
             message.data['roomId'],
           ),
         ),
-      ));
+      );
     }
 
     if (type == NotificationType.direct.name) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      snackBar = SnackBar(
         content: Text(
           'Message received from User: ${message.data['username']}',
         ),
@@ -68,8 +70,14 @@ class NotificationRepository {
             message.data['username'],
           ),
         ),
-      ));
+      );
     }
+
+    if (snackBar == null) {
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   void _handleBackgroundMessage(BuildContext context, RemoteMessage message) {

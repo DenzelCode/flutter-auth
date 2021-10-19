@@ -211,25 +211,40 @@ class _Messages extends StatelessWidget {
               return Container();
             }
 
-            return Scrollbar(
-              child: ListView(
-                controller: scrollController,
-                keyboardDismissBehavior:
-                    ScrollViewKeyboardDismissBehavior.onDrag,
-                children: [
-                  for (final message in state.messages)
+            return ListView(
+              controller: scrollController,
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              children: [
+                for (final message in state.messages)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (message == state.messages[0])
+                          SizedBox(
+                            height: 20,
+                          ),
+                        _Message(
+                          message: message,
+                          from: message.from,
+                          currentUser: user,
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                for (final typing in state.usersTyping)
+                  if (typing.id != user.id)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (message == state.messages[0])
-                            SizedBox(
-                              height: 20,
-                            ),
                           _Message(
-                            message: message,
-                            from: message.from,
+                            from: typing,
                             currentUser: user,
                           ),
                           SizedBox(
@@ -238,25 +253,7 @@ class _Messages extends StatelessWidget {
                         ],
                       ),
                     ),
-                  for (final typing in state.usersTyping)
-                    if (typing.id != user.id)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _Message(
-                              from: typing,
-                              currentUser: user,
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                          ],
-                        ),
-                      ),
-                ],
-              ),
+              ],
             );
           },
         );
