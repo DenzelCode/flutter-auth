@@ -128,7 +128,7 @@ class RoomBloc extends Bloc<RoomEvent, RoomState> {
       initSocket();
 
       initTimers();
-    } catch (e) {
+    } catch (_) {
       emit.call(RoomJoinFailureState());
     }
   }

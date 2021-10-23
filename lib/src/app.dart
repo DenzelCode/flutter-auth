@@ -66,7 +66,7 @@ class _InitProviders extends StatelessWidget {
 
             if (user == null && route != HomeScreen.routeName) {
               Navigator.pushNamedAndRemoveUntil(
-                context,
+                applicationKey.currentContext as BuildContext,
                 HomeScreen.routeName,
                 (route) => false,
               );
