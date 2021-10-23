@@ -14,7 +14,7 @@ class MessageRepository {
     return provider.getMessages(type, id, limit, before);
   }
 
-  Future<Message> getFirstMessage(MessageType type, String id) {
+  Future<Message?> getFirstMessage(MessageType type, String id) {
     return provider.getFirstMessage(type, id);
   }
 

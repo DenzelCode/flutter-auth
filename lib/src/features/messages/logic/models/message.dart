@@ -6,7 +6,7 @@ class Message extends Equatable {
   late final String message;
   late final String? to;
   late final String? room;
-  late final User from;
+  late final dynamic from;
   late final String createdAt;
   late final DateTime createdAtDate;
 
@@ -24,7 +24,7 @@ class Message extends Equatable {
     message = json['message'];
     to = json['to'];
     room = json['room'];
-    from = User.fromJson(json['from']);
+    from = json['from'] is Map ? User.fromJson(json['from']) : json['from'];
     createdAt = json['createdAt'];
     createdAtDate = DateTime.parse(createdAt);
   }

@@ -26,8 +26,12 @@ class MessageAPIProvider {
     return Message.fromList(response.data);
   }
 
-  Future<Message> getFirstMessage(MessageType type, String id) async {
+  Future<Message?> getFirstMessage(MessageType type, String id) async {
     final response = await api.get('/message/${type.name}-first-message/$id');
+
+    if (response.data is String && (response.data as String).trim().isEmpty) {
+      return null;
+    }
 
     return Message.fromJson(response.data);
   }

@@ -167,6 +167,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
       emit.call(MessagesLoadSuccessState(messages));
     } catch (_) {
+      print(_);
       emit.call(MessagesLoadFailureState());
     }
   }
