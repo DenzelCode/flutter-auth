@@ -1,4 +1,4 @@
-## Flutter Auth App (Login, Register, Google Login, Facebook Login, Apple Login)
+## Flutter Auth App (Messages, Rooms, Login, Register, Google Login, Facebook Login, Apple Login)
 
 To use this client, get the [server](https://github.com/DenzelCode/nest-auth) up and running.
 
