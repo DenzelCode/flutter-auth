@@ -85,6 +85,14 @@ class AuthenticatedHome extends StatelessWidget {
                         context,
                         RoomsScreen.routeName,
                       ),
+                    ),
+                    UnderlinedButton(
+                      child: Text('Settings'),
+                      color: theme.secondaryHeaderColor,
+                      onPressed: () => Navigator.pushNamed(
+                        context,
+                        RoomsScreen.routeName,
+                      ),
                     )
                   ],
                 ),
