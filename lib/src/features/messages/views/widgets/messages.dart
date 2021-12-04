@@ -306,7 +306,7 @@ class __MessageState extends State<_Message> {
         constraints: BoxConstraints(maxWidth: maxWidth),
         child: Text(
           (widget.message as Message).message,
-          style: TextStyle(color: isMe ? Colors.black : Colors.white),
+          style: TextStyle(color: isMe ? Colors.white : Colors.black),
         ),
       );
     }
@@ -350,8 +350,8 @@ class __MessageState extends State<_Message> {
                     alignment: Alignment.centerLeft,
                     decoration: BoxDecoration(
                       color: isMe || widget.message == null
-                          ? Colors.white
-                          : Colors.blue,
+                          ? Colors.blue
+                          : Colors.white,
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(8),
                         bottomRight: Radius.circular(8),

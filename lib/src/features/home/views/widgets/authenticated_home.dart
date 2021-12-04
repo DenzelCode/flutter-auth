@@ -2,6 +2,7 @@ import 'package:auth/src/features/auth/logic/cubit/auth_cubit.dart';
 import 'package:auth/src/features/auth/logic/models/user.dart';
 import 'package:auth/src/features/notification/views/widgets/notification_handler.dart';
 import 'package:auth/src/features/room/views/screens/rooms_screen.dart';
+import 'package:auth/src/features/settings/views/screens/settings_screen.dart';
 import 'package:auth/src/shared/views/widgets/circles_background.dart';
 import 'package:auth/src/shared/views/widgets/underlined_button.dart';
 import 'package:flutter/material.dart';
@@ -91,7 +92,7 @@ class AuthenticatedHome extends StatelessWidget {
                       color: theme.secondaryHeaderColor,
                       onPressed: () => Navigator.pushNamed(
                         context,
-                        RoomsScreen.routeName,
+                        SettingsScreen.routeName,
                       ),
                     )
                   ],

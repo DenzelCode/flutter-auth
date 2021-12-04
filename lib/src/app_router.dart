@@ -5,6 +5,7 @@ import 'package:auth/src/features/home/views/screens/home_screen.dart';
 import 'package:auth/src/features/messages/views/screens/direct_message_screen.dart';
 import 'package:auth/src/features/room/views/screens/room_screen.dart';
 import 'package:auth/src/features/room/views/screens/rooms_screen.dart';
+import 'package:auth/src/features/settings/views/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {
@@ -24,6 +25,8 @@ class AppRouter {
         return RoomScreen.route(settings);
       case DirectMessageScreen.routeName:
         return DirectMessageScreen.route(settings);
+      case SettingsScreen.routeName:
+        return SettingsScreen.route();
       default:
         return HomeScreen.route();
     }
