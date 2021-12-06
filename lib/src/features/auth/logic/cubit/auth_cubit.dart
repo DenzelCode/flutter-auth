@@ -24,6 +24,10 @@ class AuthCubit extends Cubit<User?> {
     return _loginWith(() => authRepository.loginWithGoogle());
   }
 
+  Future<void> logoutFromAllDevices() async {
+    return _loginWith(() => authRepository.logoutFromAllDevices());
+  }
+
   Future<void> loginWithApple() async {
     return _loginWith(() => authRepository.loginWithApple());
   }

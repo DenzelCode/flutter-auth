@@ -8,6 +8,7 @@ import 'package:auth/src/features/messages/logic/models/message.dart';
 import 'package:auth/src/features/messages/views/screens/direct_message_screen.dart';
 import 'package:auth/src/features/room/logic/models/room.dart';
 import 'package:auth/src/shared/views/widgets/dialog/confirm_dialog_widget.dart';
+import 'package:auth/src/shared/views/widgets/main_text_field.dart';
 import 'package:auth/src/shared/views/widgets/typing_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -125,14 +126,15 @@ class _MessagesState extends State<Messages> {
                           );
                         }
                       },
-                      child: TextField(
+                      child: MainTextField(
                         controller: _textController,
-                        decoration: InputDecoration(labelText: 'Message'),
-                        keyboardType: TextInputType.multiline,
-                        textInputAction: TextInputAction.newline,
-                        maxLines: null,
+                        label: 'Message',
+                        messageField: true,
                       ),
                     ),
+                  ),
+                  SizedBox(
+                    width: 8.0,
                   ),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(100),

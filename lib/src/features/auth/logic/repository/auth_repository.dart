@@ -124,6 +124,10 @@ class AuthRepository {
     );
   }
 
+  Future<void> logoutFromAllDevices() async {
+    return setTokens(await _provider.logoutFromAllDevices());
+  }
+
   Future<void> recover(String email) {
     return _provider.recover(email);
   }

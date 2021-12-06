@@ -119,4 +119,10 @@ class AuthAPIProvider {
 
     return Tokens.fromJson(response.data);
   }
+
+  Future<Tokens> logoutFromAllDevices() async {
+    final response = await api.delete('/auth/logout-from-all-devices');
+
+    return Tokens.fromJson(response.data);
+  }
 }
