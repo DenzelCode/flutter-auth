@@ -5,14 +5,14 @@ class User extends Equatable implements Comparable {
   late final String username;
   late final String? email;
   late final bool online;
-  late final bool? isSocial;
+  late final bool isSocial;
 
   User({
     required this.id,
     required this.username,
     required this.email,
     required this.online,
-    required this.isSocial,
+    this.isSocial = false,
   });
 
   User.fromJson(Map<String, dynamic> json) {

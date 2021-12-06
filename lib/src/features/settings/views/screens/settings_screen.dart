@@ -156,15 +156,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          MainTextField(
-                            controller: _currentPasswordController,
-                            label: 'Current Password',
-                            passwordField: true,
-                            onEditingComplete: () => node.nextFocus(),
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
+                          if (state != null && !state.isSocial)
+                            Column(
+                              children: [
+                                MainTextField(
+                                  controller: _currentPasswordController,
+                                  label: 'Current Password',
+                                  passwordField: true,
+                                  onEditingComplete: () => node.nextFocus(),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                              ],
+                            ),
                           MainTextField(
                             controller: _passwordController,
                             label: 'New Password',
