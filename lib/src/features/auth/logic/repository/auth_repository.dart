@@ -43,7 +43,7 @@ class AuthRepository {
     }
 
     try {
-      return _provider.getProfile();
+      return await _provider.getProfile();
     } catch (e) {
       return null;
     }
