@@ -19,8 +19,8 @@ class User extends Equatable implements Comparable {
     id = json['_id'];
     username = json['username'] ?? '';
     email = json['email'];
-    online = json['online'];
-    isSocial = json['isSocial'];
+    online = json['online'] ?? false;
+    isSocial = json['isSocial'] ?? false;
   }
 
   static List<User> fromList(List<dynamic> list) {

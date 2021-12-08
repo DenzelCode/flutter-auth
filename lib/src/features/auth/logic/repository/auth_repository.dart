@@ -43,7 +43,9 @@ class AuthRepository {
     }
 
     try {
-      return await _provider.getProfile();
+      final profile = await _provider.getProfile();
+
+      return profile;
     } catch (e) {
       return null;
     }

@@ -39,11 +39,11 @@ class AuthCubit extends Cubit<User?> {
   }
 
   Future<void> logout() async {
-    await notificationRepository.deleteSubscription();
+    emit(null);
 
     await authRepository.logout();
 
-    emit(null);
+    await notificationRepository.deleteSubscription();
   }
 
   Future<void> updateProfile() async {

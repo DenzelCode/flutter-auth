@@ -6,7 +6,6 @@ import 'package:auth/src/shared/views/widgets/dialog/alert_dialog_widget.dart';
 import 'package:auth/src/shared/views/widgets/dialog/confirm_dialog_widget.dart';
 import 'package:auth/src/shared/views/widgets/main_text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SettingsScreen extends StatefulWidget {

@@ -112,7 +112,9 @@ class AuthTokenInterceptor extends Interceptor {
         return super.onError(err, handler);
       }
     } catch (e) {
-      context.read<AuthCubit>().logout();
+      await context.read<AuthCubit>().logout();
+
+      return super.onError(err, handler);
     }
   }
 }
